@@ -1,0 +1,193 @@
+<?xml version ="1.0" encoding="UTF-8"?>
+<xfdu:XFDU version="esa/safe/sentinel/sentinel-6/level-0/1.0" xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" xmlns:xfdu="urn:ccsds:schema:xfdu:1" xmlns:gml="http://www.opengis.net/gml" xmlns:sentinel6="http://www.esa.int/safe/sentinel/sentinel-6/1.0" xmlns:s6-level0="http://www.esa.int/safe/sentinel/sentinel-6/level-0/1.0">
+   <informationPackageMap>
+      <xfdu:contentUnit unitType="SAFE Archive Information Package" textInfo="SENTINEL-6 P4 ACQ Level 0" dmdID="acquisitionPeriod measurementFrameSet platform generalProductInformation measurementOrbitReference measurementQualityInformation" pdiID="processing">
+         <xfdu:contentUnit unitType="Metadata Unit" textInfo="Level 0 Product Annotation" repID="ISPAnnotationSchema">
+            <dataObjectPointer dataObjectID="ISPAnnotationData"/>
+         </xfdu:contentUnit>
+         <xfdu:contentUnit unitType="Measurement Data Unit" textInfo="ISP Data set" repID="ISPDataSchema" dmdID="ISPAnnotationData">
+            <dataObjectPointer dataObjectID="ISPData"/>
+         </xfdu:contentUnit>
+      </xfdu:contentUnit>
+   </informationPackageMap>
+   <metadataSection>
+      <metadataObject ID="acquisitionPeriod" classification="DESCRIPTION" category="DMD">
+         <metadataWrap mimeType="text/xml" vocabularyName="Sentinel-SAFE" textInfo="Acquisition Period">
+            <xmlData>
+            	<sentinel-safe:acquisitionPeriod>
+            		<sentinel-safe:startTime>2021-04-14T00:14:38.000000Z</sentinel-safe:startTime>
+            		<sentinel-safe:stopTime>2021-04-14T00:21:49.532595Z</sentinel-safe:stopTime>
+            	</sentinel-safe:acquisitionPeriod>
+            </xmlData>
+         </metadataWrap>
+      </metadataObject>
+      <metadataObject ID="measurementFrameSet" classification="DESCRIPTION" category="DMD">
+         <metadataWrap mimeType="text/xml" vocabularyName="Sentinel-SAFE" textInfo="Frame Set">
+            <xmlData>
+            	<sentinel-safe:frameSet>
+            		<sentinel-safe:footPrint srsName="http://www.opengis.net/def/crs/EPGS/0/4326">
+            			<gml:posList>-45.4871 -132.544 -51.5439 -139.044 -57.0386 -147.598 -57.0399 -147.596 -51.5451 -139.042 -45.4882 -132.542 -45.4871 -132.544 </gml:posList>
+            		</sentinel-safe:footPrint>
+            	</sentinel-safe:frameSet>
+            </xmlData>
+         </metadataWrap>
+      </metadataObject>
+      <metadataObject ID="generalProductInformation" classification="DESCRIPTION" category="DMD">
+         <metadataWrap mimeType="text/xml" vocabularyName="Sentinel-SAFE" textInfo="General Product Information">
+            <xmlData>
+            	<sentinel6:generalProductInformation>
+            		<sentinel6:productName>S6A_P4_0__ACQ_____20210414T001438_20210414T002150_20200429T143331_0432_002_127_063_EUM__OPE_NR_TST.SEN6</sentinel6:productName>
+            		<sentinel6:productType>P4_0__ACQ____</sentinel6:productType>
+            		<sentinel6:timeliness>NR</sentinel6:timeliness>
+            		<sentinel6:baselineCollection>TST</sentinel6:baselineCollection>
+            		<sentinel6:creationTime>20200429T143331</sentinel6:creationTime>
+            		<sentinel6:productSize>85536</sentinel6:productSize>
+            		<sentinel6:dumpInformation>
+            			<sentinel6:receivingGroundStation>Fairbanks</sentinel6:receivingGroundStation>
+            			<sentinel6:receivingStartTime>2021-04-14T01:57:04.063613Z</sentinel6:receivingStartTime>
+            			<sentinel6:receivingStopTime>2021-04-14T01:57:04.066110Z</sentinel6:receivingStopTime>
+            		</sentinel6:dumpInformation>
+            		<sentinel6:dispositionMode>Operational</sentinel6:dispositionMode>
+            	</sentinel6:generalProductInformation>
+            </xmlData>
+         </metadataWrap>
+      </metadataObject>
+      <metadataObject ID="measurementOrbitReference" classification="DESCRIPTION" category="DMD">
+         <metadataWrap mimeType="text/xml" vocabularyName="Sentinel-SAFE" textInfo="Orbit Reference">
+            <xmlData>
+            	<sentinel-safe:orbitReference  xmlns="http://www.esa.int/safe/sentinel/1.1">
+            		<sentinel-safe:orbitNumber type="start" groundTrackDirection="ascending">191</sentinel-safe:orbitNumber>
+            		<sentinel-safe:relativeOrbitNumber type="start" groundTrackDirection="ascending">63</sentinel-safe:relativeOrbitNumber>
+            		<sentinel-safe:passNumber type="start" groundTrackDirection="ascending">383</sentinel-safe:passNumber>
+            		<sentinel-safe:relativePassNumber type="start" groundTrackDirection="ascending">127</sentinel-safe:relativePassNumber>
+            		<sentinel-safe:cycleNumber>2</sentinel-safe:cycleNumber>
+            		<sentinel-safe:phaseIdentifier>1</sentinel-safe:phaseIdentifier>
+            		<sentinel-safe:elementSet>
+            			<sentinel-safe:ephemeris>
+            				<sentinel-safe:epoch type="UTC">2021-04-13T22:42:57.411239Z</sentinel-safe:epoch>
+            				<sentinel-safe:epoch type="UT1">2021-04-13T22:42:57.411245</sentinel-safe:epoch>
+            				<sentinel-safe:epoch type="TAI">2021-04-13T22:43:34.411239</sentinel-safe:epoch>
+            				<sentinel-safe:position>
+            					<sentinel-safe:x>1141616.216</sentinel-safe:x>
+            					<sentinel-safe:y>-7632901.301</sentinel-safe:y>
+            					<sentinel-safe:z>0.002</sentinel-safe:z>
+            				</sentinel-safe:position>
+            				<sentinel-safe:velocity>
+            					<sentinel-safe:x>2328.767812</sentinel-safe:x>
+            					<sentinel-safe:y>349.028298</sentinel-safe:y>
+            					<sentinel-safe:z>6569.639236</sentinel-safe:z>
+            				</sentinel-safe:velocity>
+            			</sentinel-safe:ephemeris>
+            			<sentinel-safe:ephemeris>
+            				<sentinel-safe:epoch type="UTC">2021-04-14T00:35:23.292974Z</sentinel-safe:epoch>
+            				<sentinel-safe:epoch type="UT1">2021-04-14T00:35:23.292950</sentinel-safe:epoch>
+            				<sentinel-safe:epoch type="TAI">2021-04-14T00:36:00.292974</sentinel-safe:epoch>
+            				<sentinel-safe:position>
+            					<sentinel-safe:x>-2617339.023</sentinel-safe:x>
+            					<sentinel-safe:y>-7260534.013</sentinel-safe:y>
+            					<sentinel-safe:z>6569.348</sentinel-safe:z>
+            				</sentinel-safe:position>
+            				<sentinel-safe:velocity>
+            					<sentinel-safe:x>2217.382894</sentinel-safe:x>
+            					<sentinel-safe:y>-792.529244</sentinel-safe:y>
+            					<sentinel-safe:z>6569.539666</sentinel-safe:z>
+            				</sentinel-safe:velocity>
+            			</sentinel-safe:ephemeris>
+            		</sentinel-safe:elementSet>
+            	</sentinel-safe:orbitReference>
+            </xmlData>
+         </metadataWrap>
+      </metadataObject>
+      <metadataObject ID="platform" classification="DESCRIPTION" category="DMD">
+         <metadataWrap mimeType="text/xml" vocabularyName="Sentinel-SAFE" textInfo="Platform Description">
+            <xmlData>
+            	<sentinel-safe:platform>
+            		<sentinel-safe:nssdcIdentifier>2021-011A</sentinel-safe:nssdcIdentifier>
+            		<sentinel-safe:familyName>Sentinel-6</sentinel-safe:familyName>
+            		<sentinel-safe:number>A</sentinel-safe:number>
+            		<sentinel-safe:instrument>
+            			<sentinel-safe:familyName abbreviation="P4">P4 Radar Altimeter</sentinel-safe:familyName>
+            			<sentinel-safe:mode identifier="MEA">Measurement</sentinel-safe:mode>
+            		</sentinel-safe:instrument>
+            	</sentinel-safe:platform>
+            </xmlData>
+         </metadataWrap>
+      </metadataObject>
+      <metadataObject ID="processing" classification="PROVENANCE" category="PDI">
+         <metadataWrap mimeType="text/xml" vocabularyName="Sentinel-SAFE" textInfo="Processing">
+            <xmlData>
+            	<sentinel-safe:processing  name="DataProcessing" outputLevel="0" start="2021-04-14T00:14:38.000000Z" stop="2021-04-14T00:21:49.532595Z">
+            		<sentinel-safe:facility name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+            			<sentinel-safe:hardware name="OPE"/>
+            			<sentinel-safe:software name="L0P" version="2.0.0"/>
+            		</sentinel-safe:facility>
+            		<sentinel-safe:resource name="Sentinel-6/Jason-CS Level 0 Product Format Specification: EUM/LEO-JASCS/SPE/17/898270" role="Applicable Document" version="v2B"/>
+            		<sentinel-safe:resource name="S6A_P4_R__ACQ___R_20210414T001456_20210414T002207_20210414T015704_S001_____________UMDA_____R__TST.RAW6" role="Raw Granule"/>
+            		<sentinel-safe:resource name="S6A_AX____OREV_AX_20210411T000000_20210418T000000_20200427T100722__________________FDF__OPE_AL____.SEN6" role="Orbit Revolution File">
+            			<sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+            				<sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+            					<sentinel-safe:hardware name="OPE"/>
+            					<sentinel-safe:software name="ADC" version="2.0"/>
+            				</sentinel-safe:facility>
+            				<sentinel-safe:resource name="S6A_xx_ORBITREVOL_20210411T000000_20210418T000000_20210411T000000_MOC__VAL.EOF" role="Unreformatted Data" version="0011"/>
+            			</sentinel-safe:processing>
+            		</sentinel-safe:resource>
+            		<sentinel-safe:resource name="S6A_AX____RESO_AX_20210408T000000_20210418T000000_20200427T100732__________________FDF__OPE_NR____.SEN6" role="Time Correlation File"/>
+            		<sentinel-safe:resource name="S6A_AX____RESO_AX_20210408T000000_20210418T000000_20200427T100732__________________FDF__OPE_NR____.SEN6" role="FOS Orbit File (Restituted)">
+            			<sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+            				<sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+            					<sentinel-safe:hardware name="OPE"/>
+            					<sentinel-safe:software name="ADC" version="2.0"/>
+            				</sentinel-safe:facility>
+            				<sentinel-safe:resource name="S6A_xx_ORBITREST__20210408T000000_20210418T000000_20210411T000000_MOC__VAL.EOF" role="Unreformatted Data" version="0011"/>
+            			</sentinel-safe:processing>
+            		</sentinel-safe:resource>
+            		<sentinel-safe:resource name="S6A_P4_0__ACQ_____NR_20210414T001456_20210414T002207_20210414T015704" role="timelinessKey"/>
+            	</sentinel-safe:processing>
+            </xmlData>
+         </metadataWrap>
+      </metadataObject>
+      <metadataObject ID="measurementQualityInformation" classification="DESCRIPTION" category="DMD">
+         <metadataWrap mimeType="text/xml" vocabularyName="Sentinel-SAFE" textInfo="Quality Information">
+            <xmlData>
+            	<sentinel-safe:qualityInformation>
+            		<sentinel-safe:extension>
+            			<sentinel6:productQuality>
+            				<sentinel6:onlineQualityCheck>PASSED</sentinel6:onlineQualityCheck>
+            				<s6-level0:rawDataQuality>
+            					<s6-level0:tooManyTransmissionErrors>false</s6-level0:tooManyTransmissionErrors>
+            					<s6-level0:transmissionErrorThreshold>1</s6-level0:transmissionErrorThreshold>
+            					<s6-level0:tooManyFormatErrors>false</s6-level0:tooManyFormatErrors>
+            					<s6-level0:formatErrorThreshold>1</s6-level0:formatErrorThreshold>
+            				</s6-level0:rawDataQuality>
+            			</sentinel6:productQuality>
+            		</sentinel-safe:extension>
+            	</sentinel-safe:qualityInformation>
+            </xmlData>
+         </metadataWrap>
+      </metadataObject>
+      <metadataObject ID="ISPAnnotationSchema" classification="SYNTAX" category="REP">
+         <metadataReference mimeType="text/xml" vocabularyName="SDF" locatorType="URL" href="ISPAnnotation.xsd"/>
+      </metadataObject>
+      <metadataObject ID="ISPDataSchema" classification="SYNTAX" category="REP">
+         <metadataReference mimeType="text/xml" vocabularyName="SDF" locatorType="URL" href="ISPData.xsd"/>
+      </metadataObject>
+      <metadataObject ID="ISPAnnotation" classification="DESCRIPTION" category="DMD">
+         <dataObjectPointer dataObjectID="ISPAnnotationData"/>
+      </metadataObject>
+   </metadataSection>
+   <dataObjectSection>
+      <dataObject ID="ISPAnnotationData" repID="ISPAnnotationSchema">
+         <byteStream mimeType="application/octetstream" size="2112">
+            <fileLocation locatorType="URL" textInfo="Level 0 Product Annotation" href="ISPAnnotation.dat"/>
+            <checksum checksumName="MD5">38a070fa4f8e9cf3dbba407e45b4a3b0</checksum>
+         </byteStream>
+      </dataObject>
+      <dataObject ID="ISPData" repID="ISPDataSchema">
+         <byteStream mimeType="application/octetstream" size="83424">
+            <fileLocation locatorType="URL" textInfo="ISP Data set" href="ISPData.dat"/>
+            <checksum checksumName="MD5">c4cf5f0a97c20c4efc99a04ee9c66db6</checksum>
+         </byteStream>
+      </dataObject>
+   </dataObjectSection>
+</xfdu:XFDU>

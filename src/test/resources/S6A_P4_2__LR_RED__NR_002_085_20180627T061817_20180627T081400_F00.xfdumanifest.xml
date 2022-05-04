@@ -1,0 +1,1791 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xfdu:XFDU xmlns:xfdu="urn:ccsds:schema:xfdu:1" xmlns:alt="http://www.esa.int/safe/sentinel/sentinel-6/alt/level-2/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" xmlns:sentinel6="http://www.esa.int/safe/sentinel/sentinel-6/1.0" version="esa/safe/sentinel/sentinel-6/alt/level-2/1.0">
+  <informationPackageMap>
+    <xfdu:contentUnit dmdID="acquisitionPeriod measurementFrameSet platform generalProductInformation altProductInformation measurementOrbitReference measurementQualityInformation" pdiID="processing" textInfo="SENTINEL-6 P4 LR Level 2" unitType="SAFE Archive Information Package">
+      <xfdu:contentUnit unitType="ALTData0" textInfo="ALT Data set" repID="ALTDataSchema" dmdID="ALTData">
+        <dataObjectPointer dataObjectID="standardMeasurementData"/>
+      </xfdu:contentUnit>
+      <xfdu:contentUnit unitType="ALTData1" textInfo="ALT Data set" repID="ALTDataSchema" dmdID="ALTData">
+        <dataObjectPointer dataObjectID="reducedMeasurementData"/>
+      </xfdu:contentUnit>
+      <xfdu:contentUnit unitType="ALTData2" textInfo="ALT Data set" repID="ALTDataSchema" dmdID="ALTData">
+        <dataObjectPointer dataObjectID="bufrMeasurementData"/>
+      </xfdu:contentUnit>
+    </xfdu:contentUnit>
+  </informationPackageMap>
+  <metadataSection>
+    <metadataObject ID="processing" category="PDI" classification="PROVENANCE">
+      <metadataWrap mimeType="text/xml" textInfo="Processing" vocabularyName="Sentinel-SAFE">
+        <xmlData>
+          <sentinel-safe:processing name="DataProcessing" outputLevel="2" start="2020-09-18T06:22:02.705809Z" stop="2020-09-18T06:35:17.053338Z">
+            <sentinel-safe:facility country="Germany" name="Mission Control Centre (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+              <sentinel-safe:hardware name="OPE"/>
+              <sentinel-safe:software name="ALTL2" version="2.2.1"/>
+            </sentinel-safe:facility>
+            <sentinel-safe:resource name="S6A_P4_0__LR______NR_20180627T061905_20180627T081449_20200410T120350_UMDA" role="timelinessKey"/>
+            <sentinel-safe:resource name="S6A_MW_2__AMR_____20180627T042302_20180627T061817_20200918T042647_6915_002_083_042_EUM__OPE_NR_F00.SEN6" role="Radiometer Data">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="DataProcessing" outputLevel="2" start="2018-06-27T04:23:02.121000Z" stop="2018-06-27T06:18:16.944875Z">
+                <sentinel-safe:facility name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="OPE"/>
+                  <sentinel-safe:software name="S6AMRCWrapper" version="3.0.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="D97812_S6_AMR_Science_Data_Product_Description" role="reference document" version="Revision C"/>
+                <sentinel-safe:resource name="S6__P4____SURF_AX_20170101T000000_20991231T235959_20200807T123947__________________EUM__OPE_AL_001.SEN6" role="Surface Class Map File">
+                  <sentinel-safe:processing name="AUX TDS RECONDITIONING">
+                    <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="VAL"/>
+                      <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_TEST_AUX_SURCLA_00000000T000000_99999999T999999_002D.NC" role="Aux Data" version="001"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_MW_2__CONF_AX_20151008T000000_20991231T235959_20200807T112600__________________EUM__OPE_AL_001.SEN6" role="Configuration Parameter File">
+                  <sentinel-safe:processing name="AUX TDS RECONDITIONING">
+                    <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="VAL"/>
+                      <sentinel-safe:software name="./static_aux_conv.py" version="1.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_MW_2__CONF_AX_20151008T000000_20991231T235959_20200805T112600__________________EUM__OPE____TST.XML" role="Aux Data" version="001"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_MW____CHD__AX_20160101T000000_20990101T000000_20200916T094426__________________JPL__OPE_AL_001.SEN6" role="Static Rad Cal File">
+                  <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                    <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="ADC" version="2.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_MW____CHD__AX_20160101T000000_20990101T000000_20200302T172420__________________JPL__OPE_AL____.nc" role="Unreformatted Data" version="0011"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_MW____MAP__AX_20160101T000000_20990101T000000_20200916T094436__________________JPL__OPE_AL_001.SEN6" role="Static Rad Map File">
+                  <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                    <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="ADC" version="2.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_MW____MAP__AX_20160101T000000_20990101T000000_20200211T000000__________________JPL__OPE_AL____.nc" role="Unreformatted Data" version="0011"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_MW____CAL__AX_20160119T000000_20190103T220031_20200916T094418__________________JPL__OPE_AL_001.SEN6" role="Dynamic Rad Cal File">
+                  <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                    <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="ADC" version="2.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_MW____CAL__AX_20160119T000000_20190103T220031_20200218T222520__________________JPL__OPE_AL_001.nc" role="Unreformatted Data" version="0011"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_DO_0__NAV_____20180627T024353_20180627T042323_20200918T023054_5970_002_082_041_EUM__OPE_NR____.SEN6" role="Orbit File">
+                  <sentinel-safe:processing name="DataProcessing" start="2018-06-27T02:43:53.000000Z" stop="2018-06-27T04:23:23.000000Z">
+                    <sentinel-safe:facility name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="L0P" version="2.0.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="Sentinel-6/Jason-CS Level 0 Product Format Specification: EUM/LEO-JASCS/SPE/17/898270" role="Applicable Document" version="v2B"/>
+                    <sentinel-safe:resource name="S6A_DO_R__NAV___R_20180627T024411_20180627T042341_20200409T210138_S001_____________UMDA_____R__TST.RAW6" role="Raw Granule"/>
+                    <sentinel-safe:resource name="S6A_AX____OREV_AX_20180624T000000_20180701T000000_20200916T094450__________________MOC__OPE_AL____.SEN6" role="Orbit Revolution File">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREVOL_20180624T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="Time Correlation File"/>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="FOS Orbit File (Restituted)">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREST__20180621T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_DO_0__NAV_____NR_20180627T024411_20180627T042341_20200409T210138_UMDA" role="timelinessKey"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_DO_0__NAV_____20180627T042333_20180627T061843_20200918T042348_6910_002_083_042_EUM__OPE_NR____.SEN6" role="Orbit File">
+                  <sentinel-safe:processing name="DataProcessing" start="2018-06-27T04:23:33.000000Z" stop="2018-06-27T06:18:43.000000Z">
+                    <sentinel-safe:facility name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="L0P" version="2.0.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="Sentinel-6/Jason-CS Level 0 Product Format Specification: EUM/LEO-JASCS/SPE/17/898270" role="Applicable Document" version="v2B"/>
+                    <sentinel-safe:resource name="S6A_DO_R__NAV___R_20180627T042351_20180627T061901_20200409T210151_S001_____________UMDA_____R__TST.RAW6" role="Raw Granule"/>
+                    <sentinel-safe:resource name="S6A_AX____OREV_AX_20180624T000000_20180701T000000_20200916T094450__________________MOC__OPE_AL____.SEN6" role="Orbit Revolution File">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREVOL_20180624T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="Time Correlation File"/>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="FOS Orbit File (Restituted)">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREST__20180621T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_DO_0__NAV_____NR_20180627T042351_20180627T061901_20200409T210151_UMDA" role="timelinessKey"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="Time Initialization File">
+                  <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                    <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="ADC" version="2.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_xx_ORBITREST__20180621T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_MW_0__AMR_____20180627T024352_20180627T042331_20200918T023231_5979_002_082_041_EUM__OPE_NR____.SEN6" role="AMR-C Level0 File">
+                  <sentinel-safe:processing name="DataProcessing" start="2018-06-27T02:43:52.000000Z" stop="2018-06-27T04:23:31.000000Z">
+                    <sentinel-safe:facility name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="L0P" version="2.0.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="Sentinel-6/Jason-CS Level 0 Product Format Specification: EUM/LEO-JASCS/SPE/17/898270" role="Applicable Document" version="v2B"/>
+                    <sentinel-safe:resource name="S6A_AM_R__AMR___R_20180627T024351_20180627T042330_20200806T141102_S001_____________UMDA_____R__TST.RAW6" role="Raw Granule"/>
+                    <sentinel-safe:resource name="S6A_AX____OREV_AX_20180624T000000_20180701T000000_20200916T094450__________________MOC__OPE_AL____.SEN6" role="Orbit Revolution File">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREVOL_20180624T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="Time Correlation File"/>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="FOS Orbit File (Restituted)">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREST__20180621T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_MW_0__AMR_____NR_20180627T024351_20180627T042330_20200806T141102_UMDA" role="timelinessKey"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_MW_0__AMR_____20180627T042332_20180627T061847_20200918T042531_6915_002_083_042_EUM__OPE_NR____.SEN6" role="AMR-C Level0 File">
+                  <sentinel-safe:processing name="DataProcessing" start="2018-06-27T04:23:32.000000Z" stop="2018-06-27T06:18:47.000000Z">
+                    <sentinel-safe:facility name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="L0P" version="2.0.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="Sentinel-6/Jason-CS Level 0 Product Format Specification: EUM/LEO-JASCS/SPE/17/898270" role="Applicable Document" version="v2B"/>
+                    <sentinel-safe:resource name="S6A_AM_R__AMR___R_20180627T042331_20180627T061846_20200806T141233_S001_____________UMDA_____R__TST.RAW6" role="Raw Granule"/>
+                    <sentinel-safe:resource name="S6A_AX____OREV_AX_20180624T000000_20180701T000000_20200916T094450__________________MOC__OPE_AL____.SEN6" role="Orbit Revolution File">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREVOL_20180624T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="Time Correlation File"/>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="FOS Orbit File (Restituted)">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREST__20180621T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_MW_0__AMR_____NR_20180627T042331_20180627T061846_20200806T141233_UMDA" role="timelinessKey"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_MW_0__AMR_____NR_20180627T042331_20180627T061846_20200806T141233_UMDA" role="timelinessKey"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6A_MW_2__AMR_____20180627T061818_20180627T081402_20200918T062008_6944_002_085_043_EUM__OPE_NR_F00.SEN6" role="Radiometer Data">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="DataProcessing" outputLevel="2" start="2018-06-27T06:18:18.066000Z" stop="2018-06-27T08:14:01.972250Z">
+                <sentinel-safe:facility name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="OPE"/>
+                  <sentinel-safe:software name="S6AMRCWrapper" version="3.0.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="D97812_S6_AMR_Science_Data_Product_Description" role="reference document" version="Revision C"/>
+                <sentinel-safe:resource name="S6__P4____SURF_AX_20170101T000000_20991231T235959_20200807T123947__________________EUM__OPE_AL_001.SEN6" role="Surface Class Map File">
+                  <sentinel-safe:processing name="AUX TDS RECONDITIONING">
+                    <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="VAL"/>
+                      <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_TEST_AUX_SURCLA_00000000T000000_99999999T999999_002D.NC" role="Aux Data" version="001"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_MW_2__CONF_AX_20151008T000000_20991231T235959_20200807T112600__________________EUM__OPE_AL_001.SEN6" role="Configuration Parameter File">
+                  <sentinel-safe:processing name="AUX TDS RECONDITIONING">
+                    <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="VAL"/>
+                      <sentinel-safe:software name="./static_aux_conv.py" version="1.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_MW_2__CONF_AX_20151008T000000_20991231T235959_20200805T112600__________________EUM__OPE____TST.XML" role="Aux Data" version="001"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_MW____CHD__AX_20160101T000000_20990101T000000_20200916T094426__________________JPL__OPE_AL_001.SEN6" role="Static Rad Cal File">
+                  <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                    <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="ADC" version="2.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_MW____CHD__AX_20160101T000000_20990101T000000_20200302T172420__________________JPL__OPE_AL____.nc" role="Unreformatted Data" version="0011"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_MW____MAP__AX_20160101T000000_20990101T000000_20200916T094436__________________JPL__OPE_AL_001.SEN6" role="Static Rad Map File">
+                  <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                    <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="ADC" version="2.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_MW____MAP__AX_20160101T000000_20990101T000000_20200211T000000__________________JPL__OPE_AL____.nc" role="Unreformatted Data" version="0011"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_MW____CAL__AX_20160119T000000_20190103T220031_20200916T094418__________________JPL__OPE_AL_001.SEN6" role="Dynamic Rad Cal File">
+                  <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                    <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="ADC" version="2.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_MW____CAL__AX_20160119T000000_20190103T220031_20200218T222520__________________JPL__OPE_AL_001.nc" role="Unreformatted Data" version="0011"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_DO_0__NAV_____20180627T042333_20180627T061843_20200918T042348_6910_002_083_042_EUM__OPE_NR____.SEN6" role="Orbit File">
+                  <sentinel-safe:processing name="DataProcessing" start="2018-06-27T04:23:33.000000Z" stop="2018-06-27T06:18:43.000000Z">
+                    <sentinel-safe:facility name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="L0P" version="2.0.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="Sentinel-6/Jason-CS Level 0 Product Format Specification: EUM/LEO-JASCS/SPE/17/898270" role="Applicable Document" version="v2B"/>
+                    <sentinel-safe:resource name="S6A_DO_R__NAV___R_20180627T042351_20180627T061901_20200409T210151_S001_____________UMDA_____R__TST.RAW6" role="Raw Granule"/>
+                    <sentinel-safe:resource name="S6A_AX____OREV_AX_20180624T000000_20180701T000000_20200916T094450__________________MOC__OPE_AL____.SEN6" role="Orbit Revolution File">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREVOL_20180624T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="Time Correlation File"/>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="FOS Orbit File (Restituted)">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREST__20180621T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_DO_0__NAV_____NR_20180627T042351_20180627T061901_20200409T210151_UMDA" role="timelinessKey"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_DO_0__NAV_____20180627T061853_20180627T081423_20200918T061718_6930_002_085_043_EUM__OPE_NR____.SEN6" role="Orbit File">
+                  <sentinel-safe:processing name="DataProcessing" start="2018-06-27T06:18:53.000000Z" stop="2018-06-27T08:14:23.000000Z">
+                    <sentinel-safe:facility name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="L0P" version="2.0.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="Sentinel-6/Jason-CS Level 0 Product Format Specification: EUM/LEO-JASCS/SPE/17/898270" role="Applicable Document" version="v2B"/>
+                    <sentinel-safe:resource name="S6A_DO_R__NAV___R_20180627T061911_20180627T081441_20200409T210204_S001_____________UMDA_____R__TST.RAW6" role="Raw Granule"/>
+                    <sentinel-safe:resource name="S6A_AX____OREV_AX_20180624T000000_20180701T000000_20200916T094450__________________MOC__OPE_AL____.SEN6" role="Orbit Revolution File">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREVOL_20180624T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="Time Correlation File"/>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="FOS Orbit File (Restituted)">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREST__20180621T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_DO_0__NAV_____NR_20180627T061911_20180627T081441_20200409T210204_UMDA" role="timelinessKey"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="Time Initialization File">
+                  <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                    <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="ADC" version="2.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_xx_ORBITREST__20180621T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_MW_0__AMR_____20180627T042332_20180627T061847_20200918T042531_6915_002_083_042_EUM__OPE_NR____.SEN6" role="AMR-C Level0 File">
+                  <sentinel-safe:processing name="DataProcessing" start="2018-06-27T04:23:32.000000Z" stop="2018-06-27T06:18:47.000000Z">
+                    <sentinel-safe:facility name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="L0P" version="2.0.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="Sentinel-6/Jason-CS Level 0 Product Format Specification: EUM/LEO-JASCS/SPE/17/898270" role="Applicable Document" version="v2B"/>
+                    <sentinel-safe:resource name="S6A_AM_R__AMR___R_20180627T042331_20180627T061846_20200806T141233_S001_____________UMDA_____R__TST.RAW6" role="Raw Granule"/>
+                    <sentinel-safe:resource name="S6A_AX____OREV_AX_20180624T000000_20180701T000000_20200916T094450__________________MOC__OPE_AL____.SEN6" role="Orbit Revolution File">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREVOL_20180624T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="Time Correlation File"/>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="FOS Orbit File (Restituted)">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREST__20180621T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_MW_0__AMR_____NR_20180627T042331_20180627T061846_20200806T141233_UMDA" role="timelinessKey"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_MW_0__AMR_____20180627T061848_20180627T081432_20200918T061855_6944_002_085_043_EUM__OPE_NR____.SEN6" role="AMR-C Level0 File">
+                  <sentinel-safe:processing name="DataProcessing" start="2018-06-27T06:18:48.000000Z" stop="2018-06-27T08:14:32.000000Z">
+                    <sentinel-safe:facility name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="L0P" version="2.0.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="Sentinel-6/Jason-CS Level 0 Product Format Specification: EUM/LEO-JASCS/SPE/17/898270" role="Applicable Document" version="v2B"/>
+                    <sentinel-safe:resource name="S6A_AM_R__AMR___R_20180627T061847_20180627T081431_20200806T141405_S001_____________UMDA_____R__TST.RAW6" role="Raw Granule"/>
+                    <sentinel-safe:resource name="S6A_AX____OREV_AX_20180624T000000_20180701T000000_20200916T094450__________________MOC__OPE_AL____.SEN6" role="Orbit Revolution File">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREVOL_20180624T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="Time Correlation File"/>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="FOS Orbit File (Restituted)">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREST__20180621T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_MW_0__AMR_____NR_20180627T061847_20180627T081431_20200806T141405_UMDA" role="timelinessKey"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_MW_0__AMR_____NR_20180627T061847_20180627T081431_20200806T141405_UMDA" role="timelinessKey"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6A_P4_2__GIMP_AX_20180627T000000_20180627T235959_20200917T075430__________________SALP_OPE_NS____.SEN6" role="Along-Track Ionospheric data (GIM preliminary data)">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="GIM">
+                <sentinel-safe:facility country="France" name="CNES" organisation="Centre National d’Etudes Spatiales" site="Toulouse">
+                  <sentinel-safe:hardware name="OPE"/>
+                  <sentinel-safe:software name="Jason-CS GIM" version="2.4.4-3"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6A_P4_2__GIMP_AX_20180627T000000_20180627T235959_20200917T075430__________________SALP_OPE_NS____.DBL" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__P4_2__ODLE_AX_20170101T000000_20991231T235959_20200807T123942__________________EUM__OPE_AL_001.SEN6" role="Bathymetry/topography map ACE (Altimeter Corrected Elevation)">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6A_TEST_AUX_ODLE___00000000T000000_99999999T999999_0001.NC" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__P4_2__CLIP_AX_20170101T000000_20991231T235959_20200807T160233__________________EUM__OPE_AL_001.SEN6" role="Climatology pressure grid">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="./static_aux_conv.py" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6__P4_2__CLIP_AX_20170101T000000_20991231T235959_20191009T160233__________________EUM__OPE_AL_001.SEN6/S6A_TEST_AUX_CP00___00000000T000000_99999999T999999_0001.NC" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__CLIP_AX_20170101T000000_20991231T235959_20191009T160233__________________EUM__OPE_AL_001.SEN6/S6A_TEST_AUX_CP06___00000000T000000_99999999T999999_0001.NC" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__CLIP_AX_20170101T000000_20991231T235959_20191009T160233__________________EUM__OPE_AL_001.SEN6/S6A_TEST_AUX_CP12___00000000T000000_99999999T999999_0001.NC" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__CLIP_AX_20170101T000000_20991231T235959_20191009T160233__________________EUM__OPE_AL_001.SEN6/S6A_TEST_AUX_CP18___00000000T000000_99999999T999999_0001.NC" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__P4_2__DSTC_AX_20170101T000000_20991231T235959_20200807T160355__________________EUM__OPE_AL_001.SEN6" role="Distance to the Coast">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="./static_aux_conv.py" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6__P4_2__DSTC_AX_20170101T000000_20991231T235959_20191009T160355__________________EUM__OPE_AL_001.SEN6/angle-to-coast_1m_s6.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__DSTC_AX_20170101T000000_20991231T235959_20191009T160355__________________EUM__OPE_AL_001.SEN6/distance-to-coast_1m.nc" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6A_P4_2__SIGL_AX_20170101T000000_20991231T235959_20200807T123947__________________EUM__OPE_AL_001.SEN6" role="Expected Ku-band Sigma0 table for LR">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6A_TEST_AUX_SIGL___00000000T000000_99999999T999999_0001.NC" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__P4_2__GEOH_AX_20170101T000000_20991231T235959_20200807T123938__________________EUM__OPE_AL_001.SEN6" role="Official Earth GRavitational Model (EGM2008)">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6A_TEST_AUX_GEOH___00000000T000000_99999999T999999_0001.NC" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__P4_2__ITD__AX_20170101T000000_20991231T235959_20200807T125907__________________EUM__OPE_AL_001.SEN6" role="Internal Tide">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="./static_aux_conv.py" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6__P4_2__ITD__AX_20170101T000000_20991231T235959_20191009T125907__________________EUM__OPE_AL_001.SEN6/HRET_v8.1_compressed.nc" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__P4_2__LTD1_AX_20170101T000000_20991231T235959_20200807T123939__________________EUM__OPE_AL_001.SEN6" role="Load Tide Solution 1 GOT4.10">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6A_TEST_AUX_LTD1___00000000T000000_99999999T999999_0001.NC" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20200807T160511__________________EUM__OPE_AL_001.SEN6" role="Load Tide Solution 2 FES2014">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="./static_aux_conv.py" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/mm.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/j1.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/s4.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/s1.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/m4.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/msqm.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/l2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/ssa.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/mu2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/mn4.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/o1.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/msf.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/2n2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/n4.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/k2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/eps2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/p1.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/mtm.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/nu2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/m6.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/mf.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/n2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/m8.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/q1.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/mks2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/load_tide.ini" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/t2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/m2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/la2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/k1.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/r2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/ms4.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/s2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/m3.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__LTD2_AX_20170101T000000_20991231T235959_20191009T160511__________________EUM__OPE_AL_001.SEN6/sa.nc" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__P4_2__MSSG_AX_20170101T000000_20991231T235959_20200807T123941__________________EUM__OPE_AL_001.SEN6" role="MSS/Geoid slopes map ">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6A_TEST_AUX_MSSG___00000000T000000_99999999T999999_0001.NC" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__P4_2__MDT__AX_20170101T000000_20991231T235959_20200807T123939__________________EUM__OPE_AL_001.SEN6" role="Mean Dynamic Topography">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6A_TEST_AUX_MDT____00000000T000000_99999999T999999_0001.NC" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__P4_2__MSS1_AX_20170101T000000_20991231T235959_20200807T123939__________________EUM__OPE_AL_001.SEN6" role="Mean sea surface height map CNES-CLS15">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6A_TEST_AUX_MSS1___00000000T000000_99999999T999999_0002.NC" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__P4_2__MSS2_AX_20170101T000000_20991231T235959_20200807T162029__________________EUM__OPE_AL_001.SEN6" role="Mean sea surface height map DTU15">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="DTU18MSS_1min_WGS84.nc" role="Aux Data" version="TST"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__P4_2__MAGG_AX_20170101T000000_20991231T235959_20200807T162037__________________EUM__OPE_NR_001.SEN6" role="Meteo Altimeter Gaussian Grid LUT">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="MeteoAltimeterGaussian_N640_typeSurf.txt" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__AX____MTF1_AX_20180627T030000_20180627T030000_20180626T180350__________________ECMW_OPE_NR____.SEN6" role="ECMWF Meteofiles forecast">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="ADC_AUX_REFORMATTER">
+                <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="OPE"/>
+                  <sentinel-safe:software name="ADC" version="2.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="T1D06261200062703001" role="Raw Data" version="0001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__AX____MTF1_AX_20180627T090000_20180627T090000_20180627T060227__________________ECMW_OPE_NR____.SEN6" role="ECMWF Meteofiles forecast">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="ADC_AUX_REFORMATTER">
+                <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="OPE"/>
+                  <sentinel-safe:software name="ADC" version="2.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="T1D06270000062709001" role="Raw Data" version="0001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__AX____MTF2_AX_20180627T030000_20180627T030000_20180626T180426__________________ECMW_OPE_NR____.SEN6" role="ECMWF Meteofiles forecast">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="ADC_AUX_REFORMATTER">
+                <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="OPE"/>
+                  <sentinel-safe:software name="ADC" version="2.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="T2D06261200062703001" role="Raw Data" version="0001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__AX____MTF2_AX_20180627T090000_20180627T090000_20180627T060229__________________ECMW_OPE_NR____.SEN6" role="ECMWF Meteofiles forecast">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="ADC_AUX_REFORMATTER">
+                <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="OPE"/>
+                  <sentinel-safe:software name="ADC" version="2.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="T2D06270000062709001" role="Raw Data" version="0001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6A_P4_2__MLUT_AX_20170101T000000_20991231T235959_20200807T123939__________________EUM__OPE_AL_001.SEN6" role="Modelled corrections LUT">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6A_TEST_AUX_MLUT___00000000T000000_99999999T999999_0001.NC" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6A_DO_0__NAV_____20180627T042333_20180627T061843_20200918T042348_6910_002_083_042_EUM__OPE_NR____.SEN6" role="Doris">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="DataProcessing" outputLevel="0" start="2018-06-27T04:23:33.000000Z" stop="2018-06-27T06:18:43.000000Z">
+                <sentinel-safe:facility name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="OPE"/>
+                  <sentinel-safe:software name="L0P" version="2.0.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="Sentinel-6/Jason-CS Level 0 Product Format Specification: EUM/LEO-JASCS/SPE/17/898270" role="Applicable Document" version="v2B"/>
+                <sentinel-safe:resource name="S6A_DO_R__NAV___R_20180627T042351_20180627T061901_20200409T210151_S001_____________UMDA_____R__TST.RAW6" role="Raw Granule"/>
+                <sentinel-safe:resource name="S6A_AX____OREV_AX_20180624T000000_20180701T000000_20200916T094450__________________MOC__OPE_AL____.SEN6" role="Orbit Revolution File">
+                  <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                    <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="ADC" version="2.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_xx_ORBITREVOL_20180624T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="Time Correlation File"/>
+                <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="FOS Orbit File (Restituted)">
+                  <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                    <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="ADC" version="2.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_xx_ORBITREST__20180621T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_DO_0__NAV_____NR_20180627T042351_20180627T061901_20200409T210151_UMDA" role="timelinessKey"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6A_DO_0__NAV_____20180627T061853_20180627T081423_20200918T061718_6930_002_085_043_EUM__OPE_NR____.SEN6" role="Doris">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="DataProcessing" outputLevel="0" start="2018-06-27T06:18:53.000000Z" stop="2018-06-27T08:14:23.000000Z">
+                <sentinel-safe:facility name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="OPE"/>
+                  <sentinel-safe:software name="L0P" version="2.0.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="Sentinel-6/Jason-CS Level 0 Product Format Specification: EUM/LEO-JASCS/SPE/17/898270" role="Applicable Document" version="v2B"/>
+                <sentinel-safe:resource name="S6A_DO_R__NAV___R_20180627T061911_20180627T081441_20200409T210204_S001_____________UMDA_____R__TST.RAW6" role="Raw Granule"/>
+                <sentinel-safe:resource name="S6A_AX____OREV_AX_20180624T000000_20180701T000000_20200916T094450__________________MOC__OPE_AL____.SEN6" role="Orbit Revolution File">
+                  <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                    <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="ADC" version="2.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_xx_ORBITREVOL_20180624T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="Time Correlation File"/>
+                <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="FOS Orbit File (Restituted)">
+                  <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                    <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="ADC" version="2.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_xx_ORBITREST__20180621T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_DO_0__NAV_____NR_20180627T061911_20180627T081441_20200409T210204_UMDA" role="timelinessKey"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__P4_2__OTD1_AX_20170101T000000_20991231T235959_20200807T123946__________________EUM__OPE_AL_001.SEN6" role="Elastic Ocean Tide Solution 1 GOT4.10">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6A_TEST_AUX_OTD1___00000000T000000_99999999T999999_0001.NC" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20200807T154659__________________EUM__OPE_AL_001.SEN6" role="Elastic Ocean Tide Solution 2 FES2014">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="./static_aux_conv.py" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/mm.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/j1.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/s4.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/s1.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/m4.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/msqm.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/l2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/ssa.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/mu2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/mn4.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/o1.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/msf.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/2n2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/n4.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/k2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/eps2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/p1.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/mtm.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/nu2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/m6.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/mf.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/n2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/m8.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/q1.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/mks2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/ocean_tide_extrapolated.ini" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/t2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/long_period_ocean_tide_extrapolated.ini" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/m2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/la2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/k1.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/r2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/ms4.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/s2.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/m3.nc" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__OTD2_AX_20170101T000000_20991231T235959_20191009T154659__________________EUM__OPE_AL_001.SEN6/sa.nc" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6A_P4_1B_LR______20180627T061817_20180627T081400_20200918T062157_6943_002_085_043_EUM__OPE_NR_F00.SEN6" role="L1 Product">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="DataProcessing" outputLevel="1" start="2018-06-27T06:18:17.597692Z" stop="2018-06-27T08:14:00.783134Z">
+                <sentinel-safe:facility country="Germany" name="Mission Control Centre (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                  <sentinel-safe:hardware name="OPE"/>
+                  <sentinel-safe:software name="ALT L1 PGF" version="2.4.1"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6A_P4_1__CONF_AX_20151008T000000_20991231T235959_20200915T151530__________________EUM__OPE_AL_003.SEN6" role="ALT L1 PGF configuration file containing the L1 processors switches, which can be modified without the need of re-compiling the s/w">
+                  <sentinel-safe:processing name="AUX TDS RECONDITIONING">
+                    <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                      <sentinel-safe:hardware name="VAL"/>
+                      <sentinel-safe:software name="/raid0/tdgmgr/tergemTDS/jsonreformatter/json_staticauxiliaryreformatter/static_aux_conv.py" version="1.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_P4_1__CONF_AX_ALTL1-1111-TDS-1_J3Adapted_003.XML" role="Aux Data" version="001"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_TM_0__NAT_____20180627T042330_20180627T061846_20200918T042320_6916_002_083_042_EUM__OPE_NR____.SEN6" role="Attitude file containing information about the satellite mispointing">
+                  <sentinel-safe:processing name="DataProcessing" outputLevel="0" start="2018-06-27T04:23:30.015016Z" stop="2018-06-27T06:18:46.015016Z">
+                    <sentinel-safe:facility country="Germany" name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="L0P" version="2.0.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="Sentinel-6/Jason-CS Level 0 Product Format Specification: EUM/LEO-JASCS/SPE/17/898270" role="Applicable Document" version="v2B"/>
+                    <sentinel-safe:resource name="S6A_TM_R__NAT___R_20180627T042348_20180627T061904_20200429T174847_S001_____________UMDA_____R__TST.RAW6" role="Raw Granule"/>
+                    <sentinel-safe:resource name="S6A_AX____OREV_AX_20180624T000000_20180701T000000_20200916T094450__________________MOC__OPE_AL____.SEN6" role="Orbit Revolution File">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREVOL_20180624T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="Time Correlation File"/>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="FOS Orbit File (Restituted)">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREST__20180621T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_TM_0__NAT_____NR_20180627T042348_20180627T061904_20200429T174847_UMDA" role="timelinessKey"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_TM_0__NAT_____20180627T061847_20180627T081430_20200918T061650_6943_002_085_043_EUM__OPE_NR____.SEN6" role="Attitude file containing information about the satellite mispointing">
+                  <sentinel-safe:processing name="DataProcessing" outputLevel="0" start="2018-06-27T06:18:47.015016Z" stop="2018-06-27T08:14:30.015766Z">
+                    <sentinel-safe:facility country="Germany" name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="L0P" version="2.0.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="Sentinel-6/Jason-CS Level 0 Product Format Specification: EUM/LEO-JASCS/SPE/17/898270" role="Applicable Document" version="v2B"/>
+                    <sentinel-safe:resource name="S6A_TM_R__NAT___R_20180627T061905_20180627T081448_20200429T174910_S001_____________UMDA_____R__TST.RAW6" role="Raw Granule"/>
+                    <sentinel-safe:resource name="S6A_AX____OREV_AX_20180624T000000_20180701T000000_20200916T094450__________________MOC__OPE_AL____.SEN6" role="Orbit Revolution File">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREVOL_20180624T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="Time Correlation File"/>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="FOS Orbit File (Restituted)">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREST__20180621T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_TM_0__NAT_____NR_20180627T061905_20180627T081448_20200429T174910_UMDA" role="timelinessKey"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_AX____SMR__AX_20180524T081153_20180524T081153_20200916T094452__________________MOC__OPE_AL____.SEN6" role="CoM file containing the satellite centre of mass coordinates">
+                  <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                    <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="ADC" version="2.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_xx_SATMASSREP_20180524T081153_20180524T081153_20180524T081153_MOC__OPE.txt" role="Unreformatted Data" version="0011"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_TM_0__NAT_____20180627T042330_20180627T061846_20200918T042320_6916_002_083_042_EUM__OPE_NR____.SEN6" role="Manoeuvre flags file containing the satellite manoeuvre information">
+                  <sentinel-safe:processing name="DataProcessing" outputLevel="0" start="2018-06-27T04:23:30.015016Z" stop="2018-06-27T06:18:46.015016Z">
+                    <sentinel-safe:facility country="Germany" name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="L0P" version="2.0.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="Sentinel-6/Jason-CS Level 0 Product Format Specification: EUM/LEO-JASCS/SPE/17/898270" role="Applicable Document" version="v2B"/>
+                    <sentinel-safe:resource name="S6A_TM_R__NAT___R_20180627T042348_20180627T061904_20200429T174847_S001_____________UMDA_____R__TST.RAW6" role="Raw Granule"/>
+                    <sentinel-safe:resource name="S6A_AX____OREV_AX_20180624T000000_20180701T000000_20200916T094450__________________MOC__OPE_AL____.SEN6" role="Orbit Revolution File">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREVOL_20180624T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="Time Correlation File"/>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="FOS Orbit File (Restituted)">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREST__20180621T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_TM_0__NAT_____NR_20180627T042348_20180627T061904_20200429T174847_UMDA" role="timelinessKey"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_TM_0__NAT_____20180627T061847_20180627T081430_20200918T061650_6943_002_085_043_EUM__OPE_NR____.SEN6" role="Manoeuvre flags file containing the satellite manoeuvre information">
+                  <sentinel-safe:processing name="DataProcessing" outputLevel="0" start="2018-06-27T06:18:47.015016Z" stop="2018-06-27T08:14:30.015766Z">
+                    <sentinel-safe:facility country="Germany" name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="L0P" version="2.0.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="Sentinel-6/Jason-CS Level 0 Product Format Specification: EUM/LEO-JASCS/SPE/17/898270" role="Applicable Document" version="v2B"/>
+                    <sentinel-safe:resource name="S6A_TM_R__NAT___R_20180627T061905_20180627T081448_20200429T174910_S001_____________UMDA_____R__TST.RAW6" role="Raw Granule"/>
+                    <sentinel-safe:resource name="S6A_AX____OREV_AX_20180624T000000_20180701T000000_20200916T094450__________________MOC__OPE_AL____.SEN6" role="Orbit Revolution File">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREVOL_20180624T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="Time Correlation File"/>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="FOS Orbit File (Restituted)">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREST__20180621T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_TM_0__NAT_____NR_20180627T061905_20180627T081448_20200429T174910_UMDA" role="timelinessKey"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_DO_0__NAV_____20180627T042333_20180627T061843_20200918T042348_6910_002_083_042_EUM__OPE_NR____.SEN6" role="Orbit file containing the Orbit State Vectors (OSV) information along the orbit and the TAI/UTC/UT1 time correlations">
+                  <sentinel-safe:processing name="DataProcessing" outputLevel="0" start="2018-06-27T04:23:33.000000Z" stop="2018-06-27T06:18:43.000000Z">
+                    <sentinel-safe:facility country="Germany" name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="L0P" version="2.0.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="Sentinel-6/Jason-CS Level 0 Product Format Specification: EUM/LEO-JASCS/SPE/17/898270" role="Applicable Document" version="v2B"/>
+                    <sentinel-safe:resource name="S6A_DO_R__NAV___R_20180627T042351_20180627T061901_20200409T210151_S001_____________UMDA_____R__TST.RAW6" role="Raw Granule"/>
+                    <sentinel-safe:resource name="S6A_AX____OREV_AX_20180624T000000_20180701T000000_20200916T094450__________________MOC__OPE_AL____.SEN6" role="Orbit Revolution File">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREVOL_20180624T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="Time Correlation File"/>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="FOS Orbit File (Restituted)">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREST__20180621T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_DO_0__NAV_____NR_20180627T042351_20180627T061901_20200409T210151_UMDA" role="timelinessKey"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_DO_0__NAV_____20180627T061853_20180627T081423_20200918T061718_6930_002_085_043_EUM__OPE_NR____.SEN6" role="Orbit file containing the Orbit State Vectors (OSV) information along the orbit and the TAI/UTC/UT1 time correlations">
+                  <sentinel-safe:processing name="DataProcessing" outputLevel="0" start="2018-06-27T06:18:53.000000Z" stop="2018-06-27T08:14:23.000000Z">
+                    <sentinel-safe:facility country="Germany" name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="L0P" version="2.0.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="Sentinel-6/Jason-CS Level 0 Product Format Specification: EUM/LEO-JASCS/SPE/17/898270" role="Applicable Document" version="v2B"/>
+                    <sentinel-safe:resource name="S6A_DO_R__NAV___R_20180627T061911_20180627T081441_20200409T210204_S001_____________UMDA_____R__TST.RAW6" role="Raw Granule"/>
+                    <sentinel-safe:resource name="S6A_AX____OREV_AX_20180624T000000_20180701T000000_20200916T094450__________________MOC__OPE_AL____.SEN6" role="Orbit Revolution File">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREVOL_20180624T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="Time Correlation File"/>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="FOS Orbit File (Restituted)">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREST__20180621T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_DO_0__NAV_____NR_20180627T061911_20180627T081441_20200409T210204_UMDA" role="timelinessKey"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_P4_0__LR______20180627T042332_20180627T061848_20200918T042514_6915_002_083_042_EUM__OPE_NR____.SEN6" role="P4 L0 file containing the altimeter measurements">
+                  <sentinel-safe:processing name="DataProcessing" outputLevel="0" start="2018-06-27T04:23:32.151078Z" stop="2018-06-27T06:18:47.582011Z">
+                    <sentinel-safe:facility country="Germany" name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="L0P" version="2.0.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="Sentinel-6/Jason-CS Level 0 Product Format Specification: EUM/LEO-JASCS/SPE/17/898270" role="Applicable Document" version="v2B"/>
+                    <sentinel-safe:resource name="S6A_P4_R__LR____R_20180627T042350_20180627T061905_20200410T113629_S001_____________UMDA_____R__TST.RAW6" role="Raw Granule"/>
+                    <sentinel-safe:resource name="S6A_AX____OREV_AX_20180624T000000_20180701T000000_20200916T094450__________________MOC__OPE_AL____.SEN6" role="Orbit Revolution File">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREVOL_20180624T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="Time Correlation File"/>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="FOS Orbit File (Restituted)">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREST__20180621T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_P4_0__LR______NR_20180627T042350_20180627T061905_20200410T113629_UMDA" role="timelinessKey"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_P4_0__LR______20180627T061848_20180627T081432_20200918T061838_6944_002_085_043_EUM__OPE_NR____.SEN6" role="P4 L0 file containing the altimeter measurements">
+                  <sentinel-safe:processing name="DataProcessing" outputLevel="0" start="2018-06-27T06:18:47.632947Z" stop="2018-06-27T08:14:31.782770Z">
+                    <sentinel-safe:facility country="Germany" name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="L0P" version="2.0.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="Sentinel-6/Jason-CS Level 0 Product Format Specification: EUM/LEO-JASCS/SPE/17/898270" role="Applicable Document" version="v2B"/>
+                    <sentinel-safe:resource name="S6A_P4_R__LR____R_20180627T061905_20180627T081449_20200410T120350_S001_____________UMDA_____R__TST.RAW6" role="Raw Granule"/>
+                    <sentinel-safe:resource name="S6A_AX____OREV_AX_20180624T000000_20180701T000000_20200916T094450__________________MOC__OPE_AL____.SEN6" role="Orbit Revolution File">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREVOL_20180624T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="Time Correlation File"/>
+                    <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="FOS Orbit File (Restituted)">
+                      <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                        <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                          <sentinel-safe:hardware name="OPE"/>
+                          <sentinel-safe:software name="ADC" version="2.0"/>
+                        </sentinel-safe:facility>
+                        <sentinel-safe:resource name="S6A_xx_ORBITREST__20180621T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+                      </sentinel-safe:processing>
+                    </sentinel-safe:resource>
+                    <sentinel-safe:resource name="S6A_P4_0__LR______NR_20180627T061905_20180627T081449_20200410T120350_UMDA" role="timelinessKey"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_P4_1__CHAN_AX_20151008T000000_20991231T235959_20200807T153338__________________EUM__OPE_AL_001.SEN6" role="P4 characterisation file containing the system on-ground characterisation array parameters">
+                  <sentinel-safe:processing name="AUX TDS RECONDITIONING">
+                    <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                      <sentinel-safe:hardware name="VAL"/>
+                      <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_TEST_AUX_CARRA__20151008T000000_99999999T999999_0002.NC" role="Aux Data" version="001"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_P4____CHDN_AX_20151008T000000_20991231T235959_20200901T104625__________________EUM__OPE_AL_002.SEN6" role="P4 characterisation file containing the system on-ground characterisation parameters">
+                  <sentinel-safe:processing name="AUX TDS RECONDITIONING">
+                    <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                      <sentinel-safe:hardware name="VAL"/>
+                      <sentinel-safe:software name="./static_aux_conv.py" version="1.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_TEST_AUX_CHDA___20151008T000000_20991231T235959_J3A2.XML" role="Aux Data" version="002"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6__P4____CST__AX_20170101T000000_20991231T235959_20200807T102855__________________EUM__OPE_AL_001.SEN6" role="P4 constants file containing the main physical constants used by the processors">
+                  <sentinel-safe:processing name="AUX TDS RECONDITIONING">
+                    <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                      <sentinel-safe:hardware name="VAL"/>
+                      <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_TEST_AUX_CONST__20151008T000000_99999999T999999_0001.XML" role="Aux Data" version="001"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6__P4____SURF_AX_20170101T000000_20991231T235959_20200807T123947__________________EUM__OPE_AL_001.SEN6" role="Surface Classification file providing information on the surface type">
+                  <sentinel-safe:processing name="AUX TDS RECONDITIONING">
+                    <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                      <sentinel-safe:hardware name="VAL"/>
+                      <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_TEST_AUX_SURCLA_00000000T000000_99999999T999999_002D.NC" role="Aux Data" version="001"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_P4_1__USO__AX_20180625T001422_20180625T230204_20200917T063432__________________SALP_OPE_AL____.SEN6" role="USO Drift file containing the measured drift of the USO from its nominal clock (10 MHz)">
+                  <sentinel-safe:processing name="HISTO_FOUS">
+                    <sentinel-safe:facility country="France" name="CNES" organisation="Centre National d'Etudes Spatiales" site="Toulouse">
+                      <sentinel-safe:hardware name="OPE"/>
+                      <sentinel-safe:software name="histo_fous" version="1.0"/>
+                    </sentinel-safe:facility>
+                    <sentinel-safe:resource name="S6A_P4_1__USO__AX_20180625T001422_20180625T230204_20200917T063432__________________SALP_OPE_AL____.DBL" role="Aux Data" version="001"/>
+                  </sentinel-safe:processing>
+                </sentinel-safe:resource>
+                <sentinel-safe:resource name="S6A_P4_0__LR______NR_20180627T061905_20180627T081449_20200410T120350_UMDA" role="timelinessKey"/>
+                <sentinel-safe:resource name="Jason-CS/Sentinel-6 ALT Level 1 Product Format Specification (L1 ALT PFS) v4 - 19 November 2019 - EUM/LEO-JASCS/SPE/17/899201, Sentinel-6/Jason-CS ALT Level 1 NetCDF Dump v4B - 18 June 2020 - EUM/LEO-JASCS/SPE/17/947129" role="L1 Product Format Specification document"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__P4_2__POLE_AX_19870101T000000_20210915T000000_20200917T085344__________________SALP_OPE_AL____.SEN6" role="Pole Location">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="HISTO-POLE Processor">
+                <sentinel-safe:facility country="France" name="SALP (CNES)" organisation="Centre National d'Etudes Spatiales" site="Toulouse">
+                  <sentinel-safe:hardware name="OPE"/>
+                  <sentinel-safe:software name="HistPole" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6__P4_2__POLE_AX_19870101T000000_20210915T000000_20200917T085344__________________SALP_OPE_AL____.DBL" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__P4_2__POTD_AX_20170101T000000_20991231T235959_20200807T123947__________________EUM__OPE_AL_001.SEN6" role="Pole Tide">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6A_TEST_AUX_POTD___00000000T000000_99999999T999999_0001.NC" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6A_P4____CHDN_AX_20151008T000000_20991231T235959_20200901T104625__________________EUM__OPE_AL_002.SEN6" role="Poseidon-4 Characterisation file Nominal">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="./static_aux_conv.py" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6A_TEST_AUX_CHDA___20151008T000000_20991231T235959_J3A2.XML" role="Aux Data" version="002"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__P4____CST__AX_20170101T000000_20991231T235959_20200807T102855__________________EUM__OPE_AL_001.SEN6" role="Poseidon-4 Constants file">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6A_TEST_AUX_CONST__20151008T000000_99999999T999999_0001.XML" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6A_P4_2__CONF_AX_20170101T000000_20991231T235959_20200916T121800__________________EUM__OPE_AL_003.SEN6" role="Poseidon-4 L2 configuration file">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="/opt/facilities/dgs-client/bin/static_aux_conv.py" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6__PDAP_AUX_PMAP_RED_HR_Nominal_PFS-V4+.xml" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="xfdumanifest.xml" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6A_PDAP_AUX_CNF2_LR_Nominal_8threads_V3.XML" role="Aux Data" version="003"/>
+                <sentinel-safe:resource name="S6__PDAP_AUX_PMAP_STD_LR_Nominal_PFS-V4+.xml" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="NamingConfFile_S6A_ALTL2_Nominal_V3.xml" role="Aux Data" version="003"/>
+                <sentinel-safe:resource name="S6__PDAP_AUX_PMAP_STD_HR_Nominal_PFS-V4+.xml" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__PDAP_AUX_PMAP_RED_LR_Nominal_PFS-V4+.xml" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__P4_2__S12P_AX_20170101T000000_20991231T235959_20200807T154515__________________EUM__OPE_AL_001.SEN6" role="Pressure variability file">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="./static_aux_conv.py" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6__P4_2__S12P_AX_20170101T000000_20991231T235959_20191009T154515__________________EUM__OPE_AL_001.SEN6/S6A_TEST_AUX_S1AP___00000000T000000_99999999T999999_0001.NC" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6__P4_2__S12P_AX_20170101T000000_20991231T235959_20191009T154515__________________EUM__OPE_AL_001.SEN6/S6A_TEST_AUX_S2AP___00000000T000000_99999999T999999_0001.NC" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6A_P4_2__SSBL_AX_20170101T000000_20991231T235959_20200807T154016__________________EUM__OPE_AL_001.SEN6" role="Sea State Bias correction table for LR">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="./static_aux_conv.py" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6A_P4_2__SSBL_AX_20170101T000000_20991231T235959_20191009T154016__________________EUM__OPE_AL_001.SEN6/S6A_TEST_AUX_SBLC___00000000T000000_99999999T999999_0001.NC" role="Aux Data" version="001"/>
+                <sentinel-safe:resource name="S6A_P4_2__SSBL_AX_20170101T000000_20991231T235959_20191009T154016__________________EUM__OPE_AL_001.SEN6/S6A_TEST_AUX_SBLK___00000000T000000_99999999T999999_0001.NC" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__P4_2__SETD_AX_20170101T000000_20991231T235959_20200807T123947__________________EUM__OPE_AL_001.SEN6" role="Solid Earth Tide">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6A_TEST_AUX_SETD___00000000T000000_99999999T999999_0001.NC" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__P4____SURF_AX_20170101T000000_20991231T235959_20200807T123947__________________EUM__OPE_AL_001.SEN6" role="Surface Classification File (7 States)">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6A_TEST_AUX_SURCLA_00000000T000000_99999999T999999_002D.NC" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6A_AX____RESO_AX_20180621T000000_20180701T000000_20200916T094448__________________MOC__OPE_NR____.SEN6" role="Restituted Orbit file">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="ADC_AUX_REFORMATTER">
+                <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="OPE"/>
+                  <sentinel-safe:software name="ADC" version="2.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6A_xx_ORBITREST__20180621T000000_20180701T000000_20180624T220000_MOC__OPE.EOF" role="Unreformatted Data" version="0011"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6A_P4_2__WNDL_AX_20170101T000000_20991231T235959_20200807T123947__________________EUM__OPE_AL_001.SEN6" role="Altimeter Wind Speed for LR">
+              <sentinel-safe:processing xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt" country="Germany">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6A_TEST_AUX_WNDL___00000000T000000_99999999T999999_0001.NC" role="Aux Data" version="001"/>
+              </sentinel-safe:processing>
+            </sentinel-safe:resource>
+            <sentinel-safe:resource name="Sentinel-6_Jason-CS ALT Generic Product Format Specification (897975 v4), Sentinel-6_Jason-CS ALT Level 2 Product Format Specification (901187 v4B), Sentinel-6_Jason-CS ALT Level 2 NetCDF Dump (957846 v4B)" role="L2 Product Format Specification document"/>
+          </sentinel-safe:processing>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="acquisitionPeriod" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="Acquisition Period" vocabularyName="Sentinel-SAFE">
+        <xmlData>
+          <sentinel-safe:acquisitionPeriod>
+            <sentinel-safe:startTime>2018-06-27T06:18:17.597692Z</sentinel-safe:startTime>
+            <sentinel-safe:stopTime>2018-06-27T08:14:00.783134Z</sentinel-safe:stopTime>
+          </sentinel-safe:acquisitionPeriod>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="platform" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="Platform Description" vocabularyName="Sentinel-SAFE">
+        <xmlData>
+          <sentinel-safe:platform>
+            <sentinel-safe:nssdcIdentifier>0000-000A</sentinel-safe:nssdcIdentifier>
+            <sentinel-safe:familyName>Sentinel-6</sentinel-safe:familyName>
+            <sentinel-safe:number>A</sentinel-safe:number>
+            <sentinel-safe:instrument>
+              <sentinel-safe:familyName abbreviation="P4">P4 Radar Altimeter</sentinel-safe:familyName>
+              <sentinel-safe:mode identifier="MEA">Measurement</sentinel-safe:mode>
+            </sentinel-safe:instrument>
+          </sentinel-safe:platform>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="generalProductInformation" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="General Product Information" vocabularyName="Sentinel-SAFE">
+        <xmlData>
+          <sentinel6:generalProductInformation>
+            <sentinel6:productName/>
+            <sentinel6:productType>P4_2__LR_____</sentinel6:productType>
+            <sentinel6:timeliness>NR</sentinel6:timeliness>
+            <sentinel6:baselineCollection>F00</sentinel6:baselineCollection>
+            <sentinel6:creationTime>20200918T063517</sentinel6:creationTime>
+            <sentinel6:productSize>50934271</sentinel6:productSize>
+            <sentinel6:dumpInformation>
+              <sentinel6:receivingGroundStation>Fairbanks</sentinel6:receivingGroundStation>
+              <sentinel6:receivingStartTime>2018-06-27T08:14:30.633082Z</sentinel6:receivingStartTime>
+              <sentinel6:receivingStopTime>2018-06-27T08:14:41.524962Z</sentinel6:receivingStopTime>
+            </sentinel6:dumpInformation>
+            <sentinel6:dispositionMode>Operational</sentinel6:dispositionMode>
+          </sentinel6:generalProductInformation>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="measurementOrbitReference" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="Orbit Reference" vocabularyName="Sentinel-SAFE">
+        <xmlData>
+          <sentinel-safe:orbitReference>
+            <sentinel-safe:orbitNumber groundTrackDirection="ascending" type="start">170</sentinel-safe:orbitNumber>
+            <sentinel-safe:orbitNumber groundTrackDirection="descending" type="stop">171</sentinel-safe:orbitNumber>
+            <sentinel-safe:relativeOrbitNumber groundTrackDirection="ascending" type="start">43</sentinel-safe:relativeOrbitNumber>
+            <sentinel-safe:relativeOrbitNumber groundTrackDirection="descending" type="stop">44</sentinel-safe:relativeOrbitNumber>
+            <sentinel-safe:passNumber groundTrackDirection="ascending" type="start">339</sentinel-safe:passNumber>
+            <sentinel-safe:passNumber groundTrackDirection="descending" type="stop">342</sentinel-safe:passNumber>
+            <sentinel-safe:relativePassNumber groundTrackDirection="ascending" type="start">85</sentinel-safe:relativePassNumber>
+            <sentinel-safe:relativePassNumber groundTrackDirection="descending" type="stop">88</sentinel-safe:relativePassNumber>
+            <sentinel-safe:cycleNumber>2</sentinel-safe:cycleNumber>
+            <sentinel-safe:phaseIdentifier>1</sentinel-safe:phaseIdentifier>
+            <sentinel-safe:elementSet>
+              <sentinel-safe:ephemeris>
+                <sentinel-safe:epoch type="UTC">2018-06-27T05:52:11.787703Z</sentinel-safe:epoch>
+                <sentinel-safe:epoch type="UT1">2018-06-27T05:52:11.855955</sentinel-safe:epoch>
+                <sentinel-safe:epoch type="TAI">2018-06-27T05:52:48.787703</sentinel-safe:epoch>
+                <sentinel-safe:position>
+                  <sentinel-safe:x>3830981.233763</sentinel-safe:x>
+                  <sentinel-safe:y>6699770.157900</sentinel-safe:y>
+                  <sentinel-safe:z>0.000498</sentinel-safe:z>
+                </sentinel-safe:position>
+                <sentinel-safe:velocity>
+                  <sentinel-safe:x>-2044.998024</sentinel-safe:x>
+                  <sentinel-safe:y>1168.473581</sentinel-safe:y>
+                  <sentinel-safe:z>6569.442090</sentinel-safe:z>
+                </sentinel-safe:velocity>
+              </sentinel-safe:ephemeris>
+              <sentinel-safe:ephemeris>
+                <sentinel-safe:epoch type="UTC">2018-06-27T07:44:37.575542Z</sentinel-safe:epoch>
+                <sentinel-safe:epoch type="UT1">2018-06-27T07:44:37.643873</sentinel-safe:epoch>
+                <sentinel-safe:epoch type="TAI">2018-06-27T07:45:14.575542</sentinel-safe:epoch>
+                <sentinel-safe:position>
+                  <sentinel-safe:x>6552638.053957</sentinel-safe:x>
+                  <sentinel-safe:y>4077393.317380</sentinel-safe:y>
+                  <sentinel-safe:z>0.516753</sentinel-safe:z>
+                </sentinel-safe:position>
+                <sentinel-safe:velocity>
+                  <sentinel-safe:x>-1244.927618</sentinel-safe:x>
+                  <sentinel-safe:y>1999.314783</sentinel-safe:y>
+                  <sentinel-safe:z>6569.572920</sentinel-safe:z>
+                </sentinel-safe:velocity>
+              </sentinel-safe:ephemeris>
+            </sentinel-safe:elementSet>
+          </sentinel-safe:orbitReference>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="measurementQualityInformation" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="Quality Information" vocabularyName="Sentinel-SAFE">
+        <xmlData>
+          <sentinel-safe:qualityInformation>
+            <sentinel-safe:extension>
+              <sentinel6:productQuality>
+                <sentinel6:onlineQualityCheck>PASSED</sentinel6:onlineQualityCheck>
+                <sentinel6:degradationFlags>NON_NOMINAL_INPUT INPUT_GAPS MISSING_NAVATT</sentinel6:degradationFlags>
+              </sentinel6:productQuality>
+            </sentinel-safe:extension>
+          </sentinel-safe:qualityInformation>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="measurementFrameSet" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="Frame Set" vocabularyName="Sentinel-SAFE">
+        <xmlData>
+          <sentinel-safe:frameSet>
+            <sentinel-safe:footPrint srsName="EPSG:4326">
+              <gml:posList>66.634180 141.296659 63.946270 170.019427 56.573491 -169.789710 46.818325 -157.199845 35.969751 -148.928933 24.592825 -142.938568 12.952779 -138.125384 1.203724 -133.834385 -10.536934 -129.589463 -22.150628 -124.931568 -33.483692 -119.267854 -44.295838 -111.635166 -54.135212 -100.231757 -61.952278 -81.901537 -65.608237 -54.572981 -63.285736 -25.826146 -56.246232 -5.421950 -46.765483 7.292044 -36.109747 15.634236 -22.188399 22.867269 -10.551995 27.536427 1.207130 31.788324 12.974693 36.086562 24.637801 40.912178 36.059961 46.938472 46.930780 55.262848 56.664945 67.906319 63.984626 88.101293 66.634757 116.798890 64.860105 136.983664 63.863948 136.896082 65.638599 116.711308 62.988888 88.193527 55.725053 68.247791 46.139318 55.874067 35.452968 47.733179 24.171646 41.796881 12.592533 37.010658 0.864072 32.727638 -10.892032 28.476839 -22.560771 23.795353 -36.570661 16.521681 -47.381431 8.079831 -57.047226 -4.823278 -64.230701 -25.498973 -66.604945 -54.491905 -62.943502 -82.033725 -55.055415 -100.623199 -45.053978 -112.287258 -34.061323 -120.084152 -22.598070 -125.825881 -10.909306 -130.517547 0.863686 -134.774797 12.609722 -139.064698 24.210670 -143.862666 35.503704 -149.813693 46.211628 -157.994779 55.782366 -170.401365 63.006558 169.677461 65.638478 141.204048 66.634180 141.296659</gml:posList>
+            </sentinel-safe:footPrint>
+          </sentinel-safe:frameSet>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="altProductInformation" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="Altimeter Product Information" vocabularyName="Sentinel-SAFE">
+        <xmlData>
+          <alt:altProductInformation>
+            <alt:ellipsoidSemiMajorAxis>6378137.000000</alt:ellipsoidSemiMajorAxis>
+            <alt:ellipsoidFlattening>0.00335281066474700</alt:ellipsoidFlattening>
+            <alt:lrmModePercentage>100</alt:lrmModePercentage>
+            <alt:sarModePercentage>0</alt:sarModePercentage>
+            <alt:openOceanPercentage>62</alt:openOceanPercentage>
+            <alt:landPercentage>33</alt:landPercentage>
+            <alt:continentalWatersPercentage>3</alt:continentalWatersPercentage>
+            <alt:aquaticVegetationPercentage>1</alt:aquaticVegetationPercentage>
+            <alt:continentalIceSnowPercentage>0</alt:continentalIceSnowPercentage>
+            <alt:floatingIcePercentage>0</alt:floatingIcePercentage>
+            <alt:saltedBasinPercentage>0</alt:saltedBasinPercentage>
+            <alt:expectedSecOceanSurfaces>4126</alt:expectedSecOceanSurfaces>
+            <alt:actualSecOceanSurfaces>4126</alt:actualSecOceanSurfaces>
+            <alt:expectedSecNonOceanSurfaces>2818</alt:expectedSecNonOceanSurfaces>
+            <alt:actualSecNonOceanSurfaces>2747</alt:actualSecNonOceanSurfaces>
+            <alt:landWaterMaskFlag>FALSE</alt:landWaterMaskFlag>
+            <alt:bandDescriptions bands="2">
+              <sentinel6:band name="C-band">
+                <sentinel6:centralFrequency>5300000000.000000</sentinel6:centralFrequency>
+                <sentinel6:bandwidth>320000000.000000</sentinel6:bandwidth>
+              </sentinel6:band>
+              <sentinel6:band name="Ku-band">
+                <sentinel6:centralFrequency>13575000000.000000</sentinel6:centralFrequency>
+                <sentinel6:bandwidth>320000000.000000</sentinel6:bandwidth>
+              </sentinel6:band>
+            </alt:bandDescriptions>
+            <alt:missingElements>
+              <alt:numberOfGaps>472</alt:numberOfGaps>
+              <alt:elementMissing startTime="2018-06-27T06:18:17.500000Z" stopTime="2018-06-27T06:18:17.597692Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:19.329499Z" stopTime="2018-06-27T06:18:20.107599Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:21.330050Z" stopTime="2018-06-27T06:18:21.807387Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:21.858322Z" stopTime="2018-06-27T06:18:22.337602Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:22.388537Z" stopTime="2018-06-27T06:18:22.867818Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:22.918754Z" stopTime="2018-06-27T06:18:23.399973Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:23.450909Z" stopTime="2018-06-27T06:18:23.943770Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:23.994706Z" stopTime="2018-06-27T06:18:24.496301Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:24.598172Z" stopTime="2018-06-27T06:18:25.649864Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:25.700800Z" stopTime="2018-06-27T06:18:26.182020Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:26.232955Z" stopTime="2018-06-27T06:18:26.716117Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:27.404959Z" stopTime="2018-06-27T06:18:27.891999Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:30.475157Z" stopTime="2018-06-27T06:18:30.971901Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:39.732806Z" stopTime="2018-06-27T06:18:39.929272Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:39.929272Z" stopTime="2018-06-27T06:18:40.424074Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:45.925107Z" stopTime="2018-06-27T06:18:46.121573Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:46.121573Z" stopTime="2018-06-27T06:18:46.602789Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:47.519628Z" stopTime="2018-06-27T06:18:47.996966Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:48.047902Z" stopTime="2018-06-27T06:18:48.525242Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:50.002370Z" stopTime="2018-06-27T06:18:50.475828Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:50.577699Z" stopTime="2018-06-27T06:18:51.051157Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:51.102092Z" stopTime="2018-06-27T06:18:51.575548Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:51.626484Z" stopTime="2018-06-27T06:18:52.101882Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:52.203753Z" stopTime="2018-06-27T06:18:53.043945Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:53.094880Z" stopTime="2018-06-27T06:18:53.568339Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:53.619275Z" stopTime="2018-06-27T06:18:54.090792Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:54.141728Z" stopTime="2018-06-27T06:18:54.611304Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:56.699658Z" stopTime="2018-06-27T06:18:57.163414Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:57.214349Z" stopTime="2018-06-27T06:18:57.681987Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:57.936665Z" stopTime="2018-06-27T06:18:58.404301Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:58.455237Z" stopTime="2018-06-27T06:18:58.924815Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:18:59.128557Z" stopTime="2018-06-27T06:18:59.596190Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:00.269509Z" stopTime="2018-06-27T06:19:00.742966Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:00.793901Z" stopTime="2018-06-27T06:19:01.267359Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:01.318294Z" stopTime="2018-06-27T06:19:01.793696Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:01.895566Z" stopTime="2018-06-27T06:19:02.370964Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:02.625640Z" stopTime="2018-06-27T06:19:03.102979Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:03.153914Z" stopTime="2018-06-27T06:19:04.005752Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:04.056687Z" stopTime="2018-06-27T06:19:04.539845Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:04.590781Z" stopTime="2018-06-27T06:19:05.073940Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:05.124876Z" stopTime="2018-06-27T06:19:05.606095Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:05.860773Z" stopTime="2018-06-27T06:19:06.341992Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:06.392928Z" stopTime="2018-06-27T06:19:06.874147Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:06.925082Z" stopTime="2018-06-27T06:19:07.406302Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:07.457237Z" stopTime="2018-06-27T06:19:07.940398Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:08.042269Z" stopTime="2018-06-27T06:19:08.527367Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:08.629238Z" stopTime="2018-06-27T06:19:09.114338Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:09.165274Z" stopTime="2018-06-27T06:19:09.652316Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:09.703251Z" stopTime="2018-06-27T06:19:10.192233Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:10.243168Z" stopTime="2018-06-27T06:19:10.734089Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:10.785024Z" stopTime="2018-06-27T06:19:11.311844Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:13.247391Z" stopTime="2018-06-27T06:19:13.746076Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:14.000754Z" stopTime="2018-06-27T06:19:14.501375Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:26.114669Z" stopTime="2018-06-27T06:19:26.663803Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:34.405999Z" stopTime="2018-06-27T06:19:34.602466Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:34.602466Z" stopTime="2018-06-27T06:19:35.143837Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:41.510774Z" stopTime="2018-06-27T06:19:42.017216Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:43.341541Z" stopTime="2018-06-27T06:19:43.864478Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:50.027671Z" stopTime="2018-06-27T06:19:50.530236Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:51.440283Z" stopTime="2018-06-27T06:19:51.940906Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:53.265230Z" stopTime="2018-06-27T06:19:53.761970Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:53.812905Z" stopTime="2018-06-27T06:19:54.309648Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:54.360583Z" stopTime="2018-06-27T06:19:54.857328Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:54.908263Z" stopTime="2018-06-27T06:19:55.406945Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:56.833140Z" stopTime="2018-06-27T06:19:57.329882Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:57.431753Z" stopTime="2018-06-27T06:19:57.928494Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:57.979429Z" stopTime="2018-06-27T06:19:58.476171Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:58.527107Z" stopTime="2018-06-27T06:19:59.021908Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:59.276585Z" stopTime="2018-06-27T06:19:59.769449Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:19:59.871320Z" stopTime="2018-06-27T06:20:00.364181Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:01.266467Z" stopTime="2018-06-27T06:20:01.761269Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:01.812205Z" stopTime="2018-06-27T06:20:02.705760Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:02.756696Z" stopTime="2018-06-27T06:20:03.270903Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:08.262579Z" stopTime="2018-06-27T06:20:08.761261Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:11.002426Z" stopTime="2018-06-27T06:20:11.504989Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:12.167150Z" stopTime="2018-06-27T06:20:12.721135Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:15.369778Z" stopTime="2018-06-27T06:20:15.925706Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:27.631167Z" stopTime="2018-06-27T06:20:28.517927Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:32.032477Z" stopTime="2018-06-27T06:20:32.519517Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:32.774194Z" stopTime="2018-06-27T06:20:33.263175Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:33.314111Z" stopTime="2018-06-27T06:20:33.806974Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:34.505518Z" stopTime="2018-06-27T06:20:35.000319Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:35.051254Z" stopTime="2018-06-27T06:20:35.547999Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:35.598934Z" stopTime="2018-06-27T06:20:36.095676Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:36.146612Z" stopTime="2018-06-27T06:20:36.643353Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:36.694288Z" stopTime="2018-06-27T06:20:37.513138Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:37.564074Z" stopTime="2018-06-27T06:20:38.058876Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:39.979870Z" stopTime="2018-06-27T06:20:40.793868Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:40.844803Z" stopTime="2018-06-27T06:20:41.345427Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:41.396362Z" stopTime="2018-06-27T06:20:41.910568Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:45.985408Z" stopTime="2018-06-27T06:20:46.476330Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:46.527266Z" stopTime="2018-06-27T06:20:47.018185Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:47.120056Z" stopTime="2018-06-27T06:20:47.612918Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:48.122273Z" stopTime="2018-06-27T06:20:48.657825Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:54.056989Z" stopTime="2018-06-27T06:20:54.253455Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:20:54.253455Z" stopTime="2018-06-27T06:20:54.789974Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:03.550877Z" stopTime="2018-06-27T06:21:04.041798Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:04.092734Z" stopTime="2018-06-27T06:21:04.583656Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:07.334172Z" stopTime="2018-06-27T06:21:07.815390Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:08.732229Z" stopTime="2018-06-27T06:21:09.211508Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:09.262443Z" stopTime="2018-06-27T06:21:09.741722Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:09.792658Z" stopTime="2018-06-27T06:21:10.278728Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:11.704921Z" stopTime="2018-06-27T06:21:12.182260Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:12.436937Z" stopTime="2018-06-27T06:21:12.912334Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:13.574495Z" stopTime="2018-06-27T06:21:14.047953Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:16.522934Z" stopTime="2018-06-27T06:21:16.998332Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:17.100204Z" stopTime="2018-06-27T06:21:17.577541Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:18.392509Z" stopTime="2018-06-27T06:21:18.869849Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:22.180656Z" stopTime="2018-06-27T06:21:22.665755Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:23.923135Z" stopTime="2018-06-27T06:21:24.410175Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:25.457505Z" stopTime="2018-06-27T06:21:25.940666Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:25.991602Z" stopTime="2018-06-27T06:21:26.472820Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:26.523756Z" stopTime="2018-06-27T06:21:27.004975Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:27.106846Z" stopTime="2018-06-27T06:21:27.590005Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:27.640941Z" stopTime="2018-06-27T06:21:28.124100Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:28.327842Z" stopTime="2018-06-27T06:21:28.814882Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:28.865818Z" stopTime="2018-06-27T06:21:29.354799Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:29.405734Z" stopTime="2018-06-27T06:21:29.896656Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:32.188754Z" stopTime="2018-06-27T06:21:32.706839Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:32.757775Z" stopTime="2018-06-27T06:21:33.250637Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:39.652016Z" stopTime="2018-06-27T06:21:40.144878Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:40.195814Z" stopTime="2018-06-27T06:21:40.688674Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:43.388256Z" stopTime="2018-06-27T06:21:43.884999Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:43.935935Z" stopTime="2018-06-27T06:21:44.434618Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:44.485553Z" stopTime="2018-06-27T06:21:44.986177Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:46.556444Z" stopTime="2018-06-27T06:21:47.057067Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:47.108002Z" stopTime="2018-06-27T06:21:47.608625Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:47.659560Z" stopTime="2018-06-27T06:21:48.160184Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:48.211120Z" stopTime="2018-06-27T06:21:48.703980Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:48.907722Z" stopTime="2018-06-27T06:21:49.408347Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:49.459282Z" stopTime="2018-06-27T06:21:49.959907Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:50.010842Z" stopTime="2018-06-27T06:21:50.511465Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:50.562400Z" stopTime="2018-06-27T06:21:51.456925Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:51.507860Z" stopTime="2018-06-27T06:21:52.406267Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:52.457203Z" stopTime="2018-06-27T06:21:52.961704Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:53.012640Z" stopTime="2018-06-27T06:21:53.515204Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:53.922688Z" stopTime="2018-06-27T06:21:54.425253Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:56.601895Z" stopTime="2018-06-27T06:21:57.102518Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:21:58.882351Z" stopTime="2018-06-27T06:21:59.433425Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:22:14.357523Z" stopTime="2018-06-27T06:22:14.862028Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:22:15.167641Z" stopTime="2018-06-27T06:22:15.735209Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:22:21.490919Z" stopTime="2018-06-27T06:22:21.987659Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:22:24.310317Z" stopTime="2018-06-27T06:22:24.801241Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:22:24.852176Z" stopTime="2018-06-27T06:22:25.730206Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:22:36.171984Z" stopTime="2018-06-27T06:22:36.368449Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:22:36.368449Z" stopTime="2018-06-27T06:22:36.867133Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:22:51.034961Z" stopTime="2018-06-27T06:22:51.537525Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:22:58.057268Z" stopTime="2018-06-27T06:22:58.559831Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:22:58.763573Z" stopTime="2018-06-27T06:22:59.304945Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:23:03.787269Z" stopTime="2018-06-27T06:23:04.293714Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:23:04.344649Z" stopTime="2018-06-27T06:23:04.853034Z"/>
+              <alt:elementMissing startTime="2018-06-27T06:23:05.668003Z" stopTime="2018-06-27T06:23:06.200644Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:13:05.998725Z" stopTime="2018-06-27T07:13:06.195190Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:13:06.195190Z" stopTime="2018-06-27T07:13:06.625950Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:13:07.950273Z" stopTime="2018-06-27T07:13:08.384922Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:13:08.435858Z" stopTime="2018-06-27T07:13:09.176124Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:13:13.047221Z" stopTime="2018-06-27T07:13:13.523589Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:13:14.593234Z" stopTime="2018-06-27T07:13:15.080277Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:13:15.182148Z" stopTime="2018-06-27T07:13:15.671130Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:13:15.722065Z" stopTime="2018-06-27T07:13:16.212987Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:13:16.263923Z" stopTime="2018-06-27T07:13:16.758723Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:13:16.809659Z" stopTime="2018-06-27T07:13:17.306402Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:13:17.357337Z" stopTime="2018-06-27T07:13:17.876397Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:13:18.946044Z" stopTime="2018-06-27T07:13:19.929825Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:31:45.535680Z" stopTime="2018-06-27T07:31:45.732145Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:31:45.732145Z" stopTime="2018-06-27T07:31:46.254112Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:31:52.261591Z" stopTime="2018-06-27T07:31:52.768035Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:31:52.818970Z" stopTime="2018-06-27T07:31:53.313771Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:31:53.364707Z" stopTime="2018-06-27T07:31:53.855628Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:32:06.792275Z" stopTime="2018-06-27T07:32:07.273492Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:32:09.616525Z" stopTime="2018-06-27T07:32:10.105506Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:35:13.119164Z" stopTime="2018-06-27T07:35:13.606203Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:36:50.078028Z" stopTime="2018-06-27T07:36:50.274493Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:36:50.274493Z" stopTime="2018-06-27T07:36:50.747951Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:39:10.930682Z" stopTime="2018-06-27T07:39:11.392496Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:39:11.443431Z" stopTime="2018-06-27T07:39:11.932411Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:39:14.784800Z" stopTime="2018-06-27T07:39:15.252437Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:39:15.303373Z" stopTime="2018-06-27T07:39:15.806906Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:39:23.752842Z" stopTime="2018-06-27T07:39:24.260257Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:40:01.239427Z" stopTime="2018-06-27T07:40:01.435893Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:40:01.435893Z" stopTime="2018-06-27T07:40:02.277057Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:40:15.374270Z" stopTime="2018-06-27T07:40:16.188265Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:40:16.290136Z" stopTime="2018-06-27T07:40:16.746131Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:40:16.797066Z" stopTime="2018-06-27T07:40:17.253060Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:40:17.303996Z" stopTime="2018-06-27T07:40:17.758049Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:40:17.808985Z" stopTime="2018-06-27T07:40:18.263038Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:40:18.568652Z" stopTime="2018-06-27T07:40:19.022705Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:40:20.550769Z" stopTime="2018-06-27T07:40:20.999002Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:40:21.406486Z" stopTime="2018-06-27T07:40:21.854718Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:40:22.058460Z" stopTime="2018-06-27T07:40:22.756034Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:40:23.061647Z" stopTime="2018-06-27T07:40:24.128866Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:40:24.179802Z" stopTime="2018-06-27T07:40:26.385067Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:40:26.690681Z" stopTime="2018-06-27T07:40:27.502738Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:40:27.553673Z" stopTime="2018-06-27T07:40:28.017429Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:40:28.953188Z" stopTime="2018-06-27T07:40:29.446048Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:40:29.547919Z" stopTime="2018-06-27T07:40:30.698578Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:41:00.277065Z" stopTime="2018-06-27T07:41:00.473531Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:41:00.473531Z" stopTime="2018-06-27T07:41:00.991618Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:41:19.735880Z" stopTime="2018-06-27T07:41:19.932345Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:41:19.932345Z" stopTime="2018-06-27T07:41:20.397068Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:41:28.950351Z" stopTime="2018-06-27T07:41:29.414107Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:41:39.445973Z" stopTime="2018-06-27T07:41:39.965029Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:41:48.827806Z" stopTime="2018-06-27T07:41:49.324549Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:41:57.728421Z" stopTime="2018-06-27T07:41:58.188296Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:41:58.239231Z" stopTime="2018-06-27T07:41:58.699107Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:41:58.750043Z" stopTime="2018-06-27T07:41:59.235143Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:42:07.386278Z" stopTime="2018-06-27T07:42:08.140122Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:42:08.191058Z" stopTime="2018-06-27T07:42:08.654812Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:42:08.858554Z" stopTime="2018-06-27T07:42:09.320369Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:42:10.033467Z" stopTime="2018-06-27T07:42:10.544764Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:42:24.042670Z" stopTime="2018-06-27T07:42:24.239135Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:42:24.239135Z" stopTime="2018-06-27T07:42:24.704831Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:42:52.151786Z" stopTime="2018-06-27T07:42:52.658232Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:43:01.673817Z" stopTime="2018-06-27T07:43:01.870282Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:43:01.870282Z" stopTime="2018-06-27T07:43:02.364113Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:43:30.751679Z" stopTime="2018-06-27T07:43:30.948144Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:43:30.948144Z" stopTime="2018-06-27T07:43:31.444886Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:44:06.488509Z" stopTime="2018-06-27T07:44:06.958084Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:44:10.268892Z" stopTime="2018-06-27T07:44:10.764664Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:44:19.118086Z" stopTime="2018-06-27T07:44:19.589603Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:44:19.640538Z" stopTime="2018-06-27T07:44:20.113996Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:44:20.791195Z" stopTime="2018-06-27T07:44:21.273385Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:44:21.324320Z" stopTime="2018-06-27T07:44:21.799718Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:44:21.850653Z" stopTime="2018-06-27T07:44:22.327992Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:44:22.786411Z" stopTime="2018-06-27T07:44:23.261809Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:44:23.312745Z" stopTime="2018-06-27T07:44:23.788143Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:45:26.171516Z" stopTime="2018-06-27T07:45:26.671170Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:45:30.134785Z" stopTime="2018-06-27T07:45:30.670336Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:45:37.393820Z" stopTime="2018-06-27T07:45:37.886681Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:45:37.937617Z" stopTime="2018-06-27T07:45:38.466376Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:45:42.592152Z" stopTime="2018-06-27T07:45:43.086951Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:45:44.156595Z" stopTime="2018-06-27T07:45:46.073709Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:45:46.684937Z" stopTime="2018-06-27T07:45:47.724019Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:45:47.774955Z" stopTime="2018-06-27T07:45:48.227068Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:45:48.882926Z" stopTime="2018-06-27T07:45:49.336979Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:45:49.591655Z" stopTime="2018-06-27T07:45:50.045708Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:45:50.249450Z" stopTime="2018-06-27T07:45:50.703505Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:45:57.471619Z" stopTime="2018-06-27T07:45:57.940226Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:10.191909Z" stopTime="2018-06-27T07:46:10.634320Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:10.685255Z" stopTime="2018-06-27T07:46:11.131548Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:11.182483Z" stopTime="2018-06-27T07:46:12.304038Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:12.609652Z" stopTime="2018-06-27T07:46:13.083110Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:20.155868Z" stopTime="2018-06-27T07:46:20.631265Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:21.751845Z" stopTime="2018-06-27T07:46:22.225303Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:23.511787Z" stopTime="2018-06-27T07:46:23.985246Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:24.036182Z" stopTime="2018-06-27T07:46:24.511579Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:24.562514Z" stopTime="2018-06-27T07:46:25.041793Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:25.092729Z" stopTime="2018-06-27T07:46:25.533196Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:25.584132Z" stopTime="2018-06-27T07:46:25.997435Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:26.048370Z" stopTime="2018-06-27T07:46:26.457794Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:26.508730Z" stopTime="2018-06-27T07:46:26.918153Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:28.242477Z" stopTime="2018-06-27T07:46:28.685858Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:30.519535Z" stopTime="2018-06-27T07:46:30.983297Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:31.034232Z" stopTime="2018-06-27T07:46:31.501870Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:31.756547Z" stopTime="2018-06-27T07:46:32.273665Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:33.765831Z" stopTime="2018-06-27T07:46:34.246081Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:34.653563Z" stopTime="2018-06-27T07:46:35.128962Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:35.179897Z" stopTime="2018-06-27T07:46:35.657237Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:44.825624Z" stopTime="2018-06-27T07:46:45.289380Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:45.340316Z" stopTime="2018-06-27T07:46:45.804070Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:45.855005Z" stopTime="2018-06-27T07:46:46.320701Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:46.371637Z" stopTime="2018-06-27T07:46:46.839276Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:48.112663Z" stopTime="2018-06-27T07:46:48.582240Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:49.244402Z" stopTime="2018-06-27T07:46:49.715917Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:49.766853Z" stopTime="2018-06-27T07:46:50.238370Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:50.289306Z" stopTime="2018-06-27T07:46:50.760825Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:50.811760Z" stopTime="2018-06-27T07:46:51.283278Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:51.334213Z" stopTime="2018-06-27T07:46:51.805728Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:52.671633Z" stopTime="2018-06-27T07:46:53.139269Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:53.190205Z" stopTime="2018-06-27T07:46:53.673364Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:54.348624Z" stopTime="2018-06-27T07:46:54.822081Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:54.873016Z" stopTime="2018-06-27T07:46:55.348414Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:55.450285Z" stopTime="2018-06-27T07:46:55.925684Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:56.129426Z" stopTime="2018-06-27T07:46:56.608706Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:56.710576Z" stopTime="2018-06-27T07:46:57.187915Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:57.238850Z" stopTime="2018-06-27T07:46:57.712306Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:57.763242Z" stopTime="2018-06-27T07:46:58.234759Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:58.285694Z" stopTime="2018-06-27T07:46:58.759153Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:46:58.810088Z" stopTime="2018-06-27T07:46:59.827825Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:47:04.740437Z" stopTime="2018-06-27T07:47:05.223597Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:47:06.038563Z" stopTime="2018-06-27T07:47:06.899129Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:47:06.950065Z" stopTime="2018-06-27T07:47:07.433226Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:47:11.406195Z" stopTime="2018-06-27T07:47:11.871890Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:47:39.706927Z" stopTime="2018-06-27T07:47:40.453011Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:47:40.962367Z" stopTime="2018-06-27T07:47:41.437764Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:47:45.940948Z" stopTime="2018-06-27T07:47:46.422168Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:47:46.524039Z" stopTime="2018-06-27T07:47:47.005258Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:47:47.310871Z" stopTime="2018-06-27T07:47:47.790150Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:47:51.661248Z" stopTime="2018-06-27T07:47:52.134706Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:47:52.338447Z" stopTime="2018-06-27T07:47:52.813845Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:47:53.068522Z" stopTime="2018-06-27T07:47:53.573028Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:48:03.199836Z" stopTime="2018-06-27T07:48:04.058461Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:48:04.949106Z" stopTime="2018-06-27T07:48:05.434206Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:48:21.173277Z" stopTime="2018-06-27T07:48:21.627325Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:48:21.678260Z" stopTime="2018-06-27T07:48:23.844719Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:48:23.946590Z" stopTime="2018-06-27T07:48:24.448184Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:48:37.538609Z" stopTime="2018-06-27T07:48:38.030499Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:48:43.837146Z" stopTime="2018-06-27T07:48:44.909217Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:48:48.882185Z" stopTime="2018-06-27T07:48:49.430352Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:49:54.882470Z" stopTime="2018-06-27T07:49:55.078936Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:49:55.078936Z" stopTime="2018-06-27T07:49:55.645530Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:50:16.466506Z" stopTime="2018-06-27T07:50:16.953545Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:50:29.025257Z" stopTime="2018-06-27T07:50:29.490952Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:50:30.305920Z" stopTime="2018-06-27T07:50:30.787140Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:54:07.619565Z" stopTime="2018-06-27T07:54:07.816031Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:54:07.816031Z" stopTime="2018-06-27T07:54:08.359343Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:54:34.845798Z" stopTime="2018-06-27T07:54:35.329928Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:54:37.265477Z" stopTime="2018-06-27T07:54:37.715648Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:54:37.766584Z" stopTime="2018-06-27T07:54:38.218697Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:54:38.269633Z" stopTime="2018-06-27T07:54:38.723688Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:54:38.774623Z" stopTime="2018-06-27T07:54:39.926249Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:54:39.977184Z" stopTime="2018-06-27T07:54:40.431240Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:54:43.976833Z" stopTime="2018-06-27T07:54:44.427005Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:54:44.885425Z" stopTime="2018-06-27T07:54:45.337538Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:54:45.388474Z" stopTime="2018-06-27T07:54:45.856113Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:54:55.126371Z" stopTime="2018-06-27T07:54:55.551319Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:05.566695Z" stopTime="2018-06-27T07:55:06.000373Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:06.509727Z" stopTime="2018-06-27T07:55:06.955049Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:07.362533Z" stopTime="2018-06-27T07:55:07.795244Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:10.621919Z" stopTime="2018-06-27T07:55:11.082764Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:13.149291Z" stopTime="2018-06-27T07:55:13.585882Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:13.636818Z" stopTime="2018-06-27T07:55:14.073408Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:14.124343Z" stopTime="2018-06-27T07:55:14.562873Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:14.613808Z" stopTime="2018-06-27T07:55:15.052339Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:15.103274Z" stopTime="2018-06-27T07:55:15.541805Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:15.592740Z" stopTime="2018-06-27T07:55:16.031270Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:16.082206Z" stopTime="2018-06-27T07:55:16.528498Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:16.579433Z" stopTime="2018-06-27T07:55:17.017963Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:17.068899Z" stopTime="2018-06-27T07:55:17.507431Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:17.558366Z" stopTime="2018-06-27T07:55:17.996897Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:18.047832Z" stopTime="2018-06-27T07:55:18.488301Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:18.539237Z" stopTime="2018-06-27T07:55:19.019487Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:21.878665Z" stopTime="2018-06-27T07:55:22.363765Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:26.031124Z" stopTime="2018-06-27T07:55:26.461890Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:26.869375Z" stopTime="2018-06-27T07:55:27.349627Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:32.646919Z" stopTime="2018-06-27T07:55:33.110671Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:33.620026Z" stopTime="2018-06-27T07:55:34.063407Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:34.318084Z" stopTime="2018-06-27T07:55:34.745941Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:35.153426Z" stopTime="2018-06-27T07:55:35.882047Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:36.085789Z" stopTime="2018-06-27T07:55:36.858071Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:36.909006Z" stopTime="2018-06-27T07:55:37.366940Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:37.417876Z" stopTime="2018-06-27T07:55:37.873870Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:37.975741Z" stopTime="2018-06-27T07:55:38.431736Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:39.089531Z" stopTime="2018-06-27T07:55:39.543583Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:39.594519Z" stopTime="2018-06-27T07:55:40.048572Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:41.663954Z" stopTime="2018-06-27T07:55:42.104425Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:42.155360Z" stopTime="2018-06-27T07:55:42.593892Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:42.644828Z" stopTime="2018-06-27T07:55:43.081417Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:43.132353Z" stopTime="2018-06-27T07:55:43.582524Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:43.633460Z" stopTime="2018-06-27T07:55:45.063541Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:50.157090Z" stopTime="2018-06-27T07:55:50.629574Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:53.329155Z" stopTime="2018-06-27T07:55:53.763804Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:53.814739Z" stopTime="2018-06-27T07:55:54.269764Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:54.779118Z" stopTime="2018-06-27T07:55:55.224440Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:55.479118Z" stopTime="2018-06-27T07:55:58.662348Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:55:59.324509Z" stopTime="2018-06-27T07:55:59.796993Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:56:00.306348Z" stopTime="2018-06-27T07:56:00.830263Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:57:51.716845Z" stopTime="2018-06-27T07:57:51.913311Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:57:51.913311Z" stopTime="2018-06-27T07:57:52.452744Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:58:03.302006Z" stopTime="2018-06-27T07:58:03.498472Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:58:03.498472Z" stopTime="2018-06-27T07:58:04.004916Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:58:19.183694Z" stopTime="2018-06-27T07:58:19.724093Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:58:50.183524Z" stopTime="2018-06-27T07:58:50.379990Z"/>
+              <alt:elementMissing startTime="2018-06-27T07:58:50.379990Z" stopTime="2018-06-27T07:58:50.911658Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:01:48.923953Z" stopTime="2018-06-27T08:01:49.466295Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:02:17.113115Z" stopTime="2018-06-27T08:02:17.652546Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:03:53.309413Z" stopTime="2018-06-27T08:03:53.505879Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:03:53.505879Z" stopTime="2018-06-27T08:03:54.074417Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:03:59.473579Z" stopTime="2018-06-27T08:03:59.670045Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:03:59.670045Z" stopTime="2018-06-27T08:04:00.223059Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:07:11.231180Z" stopTime="2018-06-27T08:07:11.765759Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:07:49.254284Z" stopTime="2018-06-27T08:07:49.752968Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:03.908184Z" stopTime="2018-06-27T08:08:04.426272Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:05.542003Z" stopTime="2018-06-27T08:08:06.071732Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:08.618505Z" stopTime="2018-06-27T08:08:09.129801Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:15.140189Z" stopTime="2018-06-27T08:08:15.633050Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:17.021892Z" stopTime="2018-06-27T08:08:17.510871Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:17.561806Z" stopTime="2018-06-27T08:08:18.050787Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:18.101722Z" stopTime="2018-06-27T08:08:18.925424Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:18.976359Z" stopTime="2018-06-27T08:08:19.469221Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:19.520157Z" stopTime="2018-06-27T08:08:20.018840Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:20.324452Z" stopTime="2018-06-27T08:08:20.825077Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:21.945656Z" stopTime="2018-06-27T08:08:22.440458Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:22.491394Z" stopTime="2018-06-27T08:08:22.988137Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:23.039073Z" stopTime="2018-06-27T08:08:23.535813Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:23.586749Z" stopTime="2018-06-27T08:08:24.081550Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:24.132486Z" stopTime="2018-06-27T08:08:24.627291Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:30.383001Z" stopTime="2018-06-27T08:08:30.579467Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:30.579467Z" stopTime="2018-06-27T08:08:31.118898Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:33.563801Z" stopTime="2018-06-27T08:08:34.068304Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:34.730464Z" stopTime="2018-06-27T08:08:35.221386Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:35.272322Z" stopTime="2018-06-27T08:08:35.767124Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:35.818060Z" stopTime="2018-06-27T08:08:36.314802Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:36.365738Z" stopTime="2018-06-27T08:08:36.862482Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:36.913417Z" stopTime="2018-06-27T08:08:37.790477Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:37.841413Z" stopTime="2018-06-27T08:08:38.332333Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:38.383269Z" stopTime="2018-06-27T08:08:38.896504Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:41.035795Z" stopTime="2018-06-27T08:08:41.891513Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:42.095255Z" stopTime="2018-06-27T08:08:43.240089Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:43.545703Z" stopTime="2018-06-27T08:08:44.111331Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:48.593656Z" stopTime="2018-06-27T08:08:49.114650Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:49.318393Z" stopTime="2018-06-27T08:08:49.812225Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:51.340289Z" stopTime="2018-06-27T08:08:51.829271Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:56.617206Z" stopTime="2018-06-27T08:08:56.813672Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:08:56.813672Z" stopTime="2018-06-27T08:08:57.304592Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:09:07.491695Z" stopTime="2018-06-27T08:09:07.688159Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:09:07.688159Z" stopTime="2018-06-27T08:09:08.233410Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:09:11.697027Z" stopTime="2018-06-27T08:09:12.240340Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:09:15.143661Z" stopTime="2018-06-27T08:09:15.642342Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:09:16.966666Z" stopTime="2018-06-27T08:09:17.461469Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:09:26.120501Z" stopTime="2018-06-27T08:09:26.611423Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:09:26.662359Z" stopTime="2018-06-27T08:09:27.167832Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:09:27.575318Z" stopTime="2018-06-27T08:09:28.110870Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:09:33.777320Z" stopTime="2018-06-27T08:09:34.303169Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:09:45.712722Z" stopTime="2018-06-27T08:09:45.909187Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:09:45.909187Z" stopTime="2018-06-27T08:09:46.403989Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:09:54.699199Z" stopTime="2018-06-27T08:09:55.215345Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:09:57.507441Z" stopTime="2018-06-27T08:09:58.013886Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:10:00.305983Z" stopTime="2018-06-27T08:10:00.502448Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:10:00.502448Z" stopTime="2018-06-27T08:10:01.033149Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:10:12.238956Z" stopTime="2018-06-27T08:10:12.737638Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:10:23.128481Z" stopTime="2018-06-27T08:10:23.627165Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:10:24.747744Z" stopTime="2018-06-27T08:10:25.246428Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:10:36.452238Z" stopTime="2018-06-27T08:10:36.947040Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:10:37.812942Z" stopTime="2018-06-27T08:10:38.338791Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:10:51.582024Z" stopTime="2018-06-27T08:10:52.126305Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:10:58.571342Z" stopTime="2018-06-27T08:10:58.767807Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:10:58.767807Z" stopTime="2018-06-27T08:10:59.297536Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:11:39.580240Z" stopTime="2018-06-27T08:11:40.129373Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:12:09.315412Z" stopTime="2018-06-27T08:12:09.875217Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:12:15.376251Z" stopTime="2018-06-27T08:12:15.572716Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:12:15.572716Z" stopTime="2018-06-27T08:12:16.112147Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:12:32.411505Z" stopTime="2018-06-27T08:12:32.607971Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:12:32.607971Z" stopTime="2018-06-27T08:12:33.100832Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:12:34.323284Z" stopTime="2018-06-27T08:12:34.810324Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:12:34.861259Z" stopTime="2018-06-27T08:12:35.348300Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:12:35.399235Z" stopTime="2018-06-27T08:12:35.595702Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:12:44.254735Z" stopTime="2018-06-27T08:12:44.451201Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:12:44.451201Z" stopTime="2018-06-27T08:12:44.932417Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:12:44.983353Z" stopTime="2018-06-27T08:12:45.464573Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:12:47.036297Z" stopTime="2018-06-27T08:12:47.505874Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:12:47.556809Z" stopTime="2018-06-27T08:12:48.028327Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:12:53.784038Z" stopTime="2018-06-27T08:12:53.980503Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:12:53.980503Z" stopTime="2018-06-27T08:12:54.771213Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:04.492618Z" stopTime="2018-06-27T08:13:04.982569Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:05.390053Z" stopTime="2018-06-27T08:13:05.897469Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:07.221791Z" stopTime="2018-06-27T08:13:07.700587Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:20.587267Z" stopTime="2018-06-27T08:13:20.783733Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:20.783733Z" stopTime="2018-06-27T08:13:21.259130Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:21.513808Z" stopTime="2018-06-27T08:13:21.991145Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:27.492179Z" stopTime="2018-06-27T08:13:27.688644Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:27.688644Z" stopTime="2018-06-27T08:13:28.164040Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:35.396883Z" stopTime="2018-06-27T08:13:35.593347Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:35.593347Z" stopTime="2018-06-27T08:13:36.057101Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:37.126749Z" stopTime="2018-06-27T08:13:37.588562Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:38.457861Z" stopTime="2018-06-27T08:13:38.921615Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:39.845732Z" stopTime="2018-06-27T08:13:40.311428Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:43.782321Z" stopTime="2018-06-27T08:13:43.978786Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:43.978786Z" stopTime="2018-06-27T08:13:44.440600Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:44.491535Z" stopTime="2018-06-27T08:13:44.955291Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:45.006227Z" stopTime="2018-06-27T08:13:45.471923Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:45.522859Z" stopTime="2018-06-27T08:13:45.990494Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:46.041430Z" stopTime="2018-06-27T08:13:46.511007Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:46.765684Z" stopTime="2018-06-27T08:13:47.237201Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:47.288137Z" stopTime="2018-06-27T08:13:47.761595Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:52.796935Z" stopTime="2018-06-27T08:13:53.278153Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:54.755281Z" stopTime="2018-06-27T08:13:55.230679Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:55.281615Z" stopTime="2018-06-27T08:13:55.760895Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:55.811830Z" stopTime="2018-06-27T08:13:56.293049Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:57.943843Z" stopTime="2018-06-27T08:13:58.421181Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:58.472117Z" stopTime="2018-06-27T08:13:58.949455Z"/>
+              <alt:elementMissing startTime="2018-06-27T08:13:59.000390Z" stopTime="2018-06-27T08:13:59.475790Z"/>
+            </alt:missingElements>
+          </alt:altProductInformation>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+  </metadataSection>
+  <dataObjectSection>
+    <dataObject ID="ALTData0">
+      <byteStream mimeType="application/x-netcdf" size="48124179">
+        <fileLocation locatorType="URL" textInfo="Standard Measurement Data Set" href="S6A_P4_2__LR_STD__NR_002_085_20180627T061817_20180627T081400_F00.nc"/>
+        <checksum checksumName="MD5">6c3784ebc73350a5fd92fb8b3cbab66</checksum>
+      </byteStream>
+    </dataObject>
+    <dataObject ID="ALTData1">
+      <byteStream mimeType="application/x-netcdf" size="2810060">
+        <fileLocation locatorType="URL" textInfo="Reduced Measurement Data Set" href="S6A_P4_2__LR_RED__NR_002_085_20180627T061817_20180627T081400_F00.nc"/>
+        <checksum checksumName="MD5">568436638420afaa2ec064512825b962</checksum>
+      </byteStream>
+    </dataObject>
+    <dataObject ID="ALTData2">
+      <byteStream mimeType="application/octet-stream" size="32">
+        <fileLocation locatorType="URL" textInfo="BUFR Measurement Data Set" href="W_XX-EUMETSAT-Darmstadt,SURFACE+SATELLITE,S6A+P4+L2+LR_C_EUMS_20180627061817_F00_002_085_20180627081400.bin"/>
+        <checksum checksumName="MD5">c12a1cdcc917eecca420a8c97188b05</checksum>
+      </byteStream>
+    </dataObject>
+  </dataObjectSection>
+</xfdu:XFDU>

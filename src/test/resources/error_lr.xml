@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xfdu:XFDU xmlns:xfdu="urn:ccsds:schema:xfdu:1" xmlns:alt="http://www.esa.int/safe/sentinel/sentinel-6/alt/level-1/nom/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" xmlns:sentinel6="http://www.esa.int/safe/sentinel/sentinel-6/1.0" version="esa/safe/sentinel/sentinel-6/alt/level-1/nom/1.0">
+
+  <informationPackageMap>
+    <xfdu:contentUnit dmdID="acquisitionPeriod measurementFrameSet platform generalProductInformation altProductInformation measurementOrbitReference measurementQualityInformation" pdiID="processing" textInfo="SENTINEL-6 P4 LR Level 2P" unitType="SAFE Archive Information Package">
+      <contentUnit unitType="standardMeasurementUnit" textInfo="ALT Data set" repID="ALTDataSchema" dmdID="ALTData">
+        <dataObjectPointer dataObjectID="standardMeasurementData"/>
+      </contentUnit>
+    </xfdu:contentUnit>
+  </informationPackageMap>
+  <metadataSection>
+
+    <metadataObject ID="acquisitionPeriod" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="Acquisition Period" vocabularyName="Sentinel-SAFE">
+        <xmlData>
+          <sentinel-safe:acquisitionPeriod>
+            <sentinel-safe:startTime>2021-04-23T00:31:04.000000Z</sentinel-safe:startTime>
+            <sentinel-safe:stopTime>2021-04-23T01:27:15.000000Z</sentinel-safe:stopTime>
+          </sentinel-safe:acquisitionPeriod>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+
+    <metadataObject ID="platform" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="Platform Description" vocabularyName="Sentinel-SAFE">
+        <xmlData>
+          <sentinel-safe:platform>
+            <sentinel-safe:nssdcIdentifier>2020-086A</sentinel-safe:nssdcIdentifier>
+            <sentinel-safe:familyName>Sentinel-6</sentinel-safe:familyName>
+            <sentinel-safe:number>A</sentinel-safe:number>
+            <sentinel-safe:instrument>
+              <sentinel-safe:familyName abbreviation="P4">P4 Radar Altimeter</sentinel-safe:familyName>
+              <sentinel-safe:mode identifier="MEA">Measurement</sentinel-safe:mode>
+            </sentinel-safe:instrument>
+          </sentinel-safe:platform>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+
+    <metadataObject ID="generalProductInformation" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="General Product Information" vocabularyName="Sentinel-SAFE">
+        <xmlData>
+          <sentinel6:generalProductInformation>
+            <sentinel6:productName>S6A_P4_2P_LR______20210423T003104_20210423T012715_20210701T102336_3371_016_196_098_CNES_OPE_NT_F00.SEN6</sentinel6:productName>
+            <sentinel6:productType>P4_2P_LR_____</sentinel6:productType>
+            <sentinel6:timeliness>NT</sentinel6:timeliness>
+            <sentinel6:baselineCollection>___</sentinel6:baselineCollection>
+            <sentinel6:creationTime>20210701T102336</sentinel6:creationTime>
+            <sentinel6:productSize>259130</sentinel6:productSize>
+          </sentinel6:generalProductInformation>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+ 
+    <metadataObject ID="processing" category="PDI" classification="PROVENANCE">
+      <metadataWrap mimeType="text/xml" textInfo="Processing" vocabularyName="Sentinel-SAFE">
+        <xmlData>
+          <sentinel-safe:processing name="DataProcessing" outputLevel="2P" start="2021-07-01T09:59:13.000000Z" stop="2021-07-01T09:59:59.000000Z">
+            <sentinel-safe:facility country="France" name="SALP (CNES)" organisation="Centre National d'Etudes Spatiales" site="Toulouse">
+              <sentinel-safe:hardware name="OPE"/>
+              <sentinel-safe:software name="ALTL2P" version="0.0.1"/>
+            </sentinel-safe:facility>
+          </sentinel-safe:processing>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+
+    <metadataObject ID="measurementFrameSet" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="Frame Set" vocabularyName="Sentinel-SAFE">
+        <xmlData>
+          <sentinel-safe:frameSet>
+            <sentinel-safe:footPrint srsName="EPSG:4326">
+              <gml:posList>66.642941 -46.669640 63.585584 -18.326514 56.001675 1.279512 46.148338 13.508383 35.253998 21.586761 23.854235 27.476418 12.202893 32.240471 0.449279 36.516521 -11.288768 40.774979 -22.891298 45.478819 -34.200561 51.236156 -44.966654 59.046028 -54.716645 70.788027 -62.341505 89.693286 -65.638365 117.524488 -65.646489 118.993118 66.642941 -46.669640 63.585584 -18.326514 56.001675 1.279512 46.148338 13.508383 35.253998 21.586761 23.854235 27.476418 12.202893 32.240471 0.449279 36.516521 -11.288768 40.774979 -22.891298 45.478819 -34.200561 51.236156 -44.966654 59.046028 -54.716645 70.788027 -62.341505 89.693286 -65.638363 117.524266 -65.646492 119.121752 -66.646479 119.116664 -66.638350 117.519178 -63.334575 89.575761 -55.644375 70.414777 -45.736991 58.408392 -34.788699 50.427395 -23.345408 44.587873 -11.664617 39.848299 0.108212 35.576482 11.861008 31.300729 23.475737 26.550816 34.794855 20.698399 45.552321 12.705411 55.222347 0.652896 62.652521 -18.686227 65.648645 -46.776296 -66.646474 118.987585 -66.638349 117.518956 -63.334575 89.575761 -55.644375 70.414777 -45.736991 58.408392 -34.788699 50.427395 -23.345408 44.587873 -11.664617 39.848299 0.108212 35.576482 11.861008 31.300729 23.475737 26.550816 34.794855 20.698399 45.552321 12.705411 55.222347 0.652896 62.652521 -18.686227 65.648645 -46.776296 66.642941 -46.669640</gml:posList>
+            </sentinel-safe:footPrint>
+          </sentinel-safe:frameSet>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+  </metadataSection>
+
+  <dataObjectSection>
+    <dataObject ID="standardMeasurementData">
+      <byteStream mimeType="application/x-netcdf" size="259130">
+        <fileLocation locatorType="URL" textInfo="Standard Measurement Data Set" href="global_sla_l2p_ntc_s6a_lr_C0016_P0196_20210423T003104_20210423T012715_20210701T095913.nc">
+          <checksum checksumName="MD5">57fe772b5e0fb0808a62904181e7ca71</checksum>
+        </fileLocation>
+      </byteStream>
+    </dataObject>
+  </dataObjectSection>
+</xfdu:XFDU>

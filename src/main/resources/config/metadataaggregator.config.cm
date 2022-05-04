@@ -1,0 +1,12 @@
+podaac.cmr.host=https://cmr.uat.earthdata.nasa.gov/ingest/
+podaac.token.host=https://api.launchpad.nasa.gov/icam/api/sm/v1/gettoken
+podaac.echo.auth.certfile=/path/to/store/file/echo.auth
+podaac.echo.auth.tknfile=/path/to/store/file/echo.token
+podaac.cmr.provider=POCUMULUS
+podaac.cmr.thumbnail.url=https://podaac.jpl.nasa.gov/Podaac/thumbnails
+
+distribute.schemas=${distribute.home}/config/schemas
+distribute.granule.file.size=100
+distribute.data.location=${distribute.data.location}
+distribute.solr.url=${distribute.solr.url}
+distribute.solr.items.per.page=${distribute.solr.items.per.page}

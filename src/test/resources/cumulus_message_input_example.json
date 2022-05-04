@@ -1,0 +1,106 @@
+{
+  "input": [
+    {
+      "granuleId": "20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0",
+      "dataType": "MODIS_A-JPL-L2P-v2019.0",
+      "sync_granule_duration": 2915,
+      "files": [
+        {
+          "bucket": "dyen-cumulus-protected",
+          "path": "MODIS_A-JPL-L2P-v2019.0/2020/001",
+          "filename": "s3://dyen-cumulus-protected/MODIS_A-JPL-L2P-v2019.0/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc",
+          "size": 18232098,
+          "name": "20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc",
+          "checksumType": "md5",
+          "checksum": "aa5204f125ae83847b3b80fa2e571b00",
+          "type": "data",
+          "url_path": "{cmrMetadata.CollectionReference.ShortName}",
+          "filepath": "MODIS_A-JPL-L2P-v2019.0/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc",
+          "duplicate_found": true
+        },
+        {
+          "bucket": "dyen-cumulus-public",
+          "path": "MODIS_A-JPL-L2P-v2019.0/2020/001",
+          "filename": "s3://dyen-cumulus-public/MODIS_A-JPL-L2P-v2019.0/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc.md5",
+          "size": 98,
+          "name": "20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc.md5",
+          "type": "metadata",
+          "url_path": "{cmrMetadata.CollectionReference.ShortName}",
+          "filepath": "MODIS_A-JPL-L2P-v2019.0/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc.md5",
+          "duplicate_found": true
+        },
+        {
+          "bucket": "dyen-cumulus-public",
+          "filename": "s3://dyen-cumulus-public/MODIS_A-JPL-L2P-v2019.0/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.cmr.json",
+          "size": 1617,
+          "name": "20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.cmr.json",
+          "type": "metadata",
+          "url_path": "{cmrMetadata.CollectionReference.ShortName}",
+          "filepath": "MODIS_A-JPL-L2P-v2019.0/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.cmr.json",
+          "etag": "\"9aed615d7ad4a265a25b6293daacb15b\""
+        },
+        {
+          "bucket": "dyen-cumulus-internal",
+          "filename": "s3://dyen-cumulus-internal/dataset-footprint/MODIS_A-JPL-L2P-v2019.0/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.fp/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.fp",
+          "filepath": "dataset-footprint/MODIS_A-JPL-L2P-v2019.0/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.fp",
+          "size": 452,
+          "name": "20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.fp",
+          "type": "metadata"
+        },
+        {
+          "bucket": "dyen-cumulus-public",
+          "filename": "s3://dyen-cumulus-public/dataset-image/MODIS_A-JPL-L2P-v2019.0/sst.png",
+          "filepath": "dataset-image/MODIS_A-JPL-L2P-v2019.0/sst.png",
+          "size": 7152,
+          "name": "sst.png",
+          "type": "metadata"
+        },
+        {
+          "bucket": "dyen-cumulus-public",
+          "filename": "s3://dyen-cumulus-public/dataset-image/MODIS_A-JPL-L2P-v2019.0/standard-deviation.jpg",
+          "filepath": "dataset-image/MODIS_A-JPL-L2P-v2019.0/standard-deviation.jpg",
+          "size": 7552,
+          "name": "standard-deviation.jpg",
+          "type": "metadata"
+        }
+      ],
+      "version": "2019.0",
+      "cmrLink": "https://cmr.uat.earthdata.nasa.gov/search/granules.json?concept_id=G1238611022-POCUMULUS",
+      "cmrConceptId": "G1238611022-POCUMULUS",
+      "published": true,
+      "cmrMetadataFormat": "umm_json_v1_6",
+      "post_to_cmr_duration": 21842
+    }
+  ],
+  "config": {
+    "internalBucket": "dyen-cumulus-internal",
+    "publicBucket": "dyen-cumulus-public",
+    "collection": "MODIS_A-JPL-L2P-v2019.0",
+    "version": "2019.0",
+    "rangeIs360": null,
+    "boundingBox": null,
+    "isoRegex": null,
+    "archiveXmlRegex": null,
+    "granuleId": "20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0",
+    "distribution_endpoint": "https://distribution_endpoint.jpl.nasa.gov/s3distribute/",
+    "launchpadConfig": {
+      "api": "https://api.launchpad.really.yes/icam/api/sm/v1/gettoken",
+      "certificate": "ll33.pfx",
+      "passphraseSecretName": "dyen-cumulus-message-template-launchpad-thisissecret"
+    },
+    "systemBucket": "my-cumulus-internal"
+  },
+  "messageConfig": {
+    "input": "{$.payload.granules}",
+    "outputs": [
+      {
+        "source": "{$.output}",
+        "destination": "{$.payload.granules}"
+      }
+    ]
+  },
+  "cumulus_config": {
+    "state_machine": "arn:aws:states:us-west-2:065089468788:stateMachine:dyen-cumulus-ForgeWorkflow",
+    "execution_name": "068f9a69-4def-4851-b8f8-64cafe318bc2"
+  }
+}

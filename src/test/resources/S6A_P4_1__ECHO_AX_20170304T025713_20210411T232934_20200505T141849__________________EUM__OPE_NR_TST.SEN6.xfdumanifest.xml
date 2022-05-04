@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<xfdu:XFDU xmlns:xfdu="urn:ccsds:schema:xfdu:1" version="esa/safe/sentinel/sentinel-6/adf/1.0" xmlns:sentinel-6="http://www.esa.int/safe/sentinel/sentinel-6" xmlns:sentinel-safe="http://www.esa.int/safe/sentinel/1.1" xmlns:sentinel6aux="http://www.esa.int/safe/sentinel/sentinel-6/adf/1.0">
+
+  <informationPackageMap>
+    <xfdu:contentUnit ID="packageUnit" dmdID="generalProductInformation measurementQualityInformation processing" pdiID="processing" textInfo="SENTINEL-6 ADF Package" unitType="Information Package">
+      <xfdu:contentUnit ID="ADFUnit" dmdID="ADFData" repID="ADFData" textInfo="ADFData" unitType="Information Package">
+        <dataObjectPointer dataObjectID="ADFData"/>
+      </xfdu:contentUnit>
+    </xfdu:contentUnit>
+  </informationPackageMap>
+
+  <metadataSection>
+    <metadataObject ID="generalProductInformation" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="General Product Information" vocabularyName="Sentinel-SAFE">
+        <xmlData>
+          <sentinel6aux:generalProductInformation>
+            <sentinel6aux:fileName>S6A_P4_1__ECHO_AX_20170304T025713_20210411T232934_20200505T141849__________________EUM__OPE_NR_TST.SEN6</sentinel6aux:fileName>
+            <sentinel6aux:fileType>P4_1__ECHO_AX</sentinel6aux:fileType>
+            <sentinel6aux:timeliness>NR</sentinel6aux:timeliness>
+            <sentinel6aux:fileVersion>TST</sentinel6aux:fileVersion>
+            <sentinel6aux:familyName>Sentinel-6</sentinel6aux:familyName>
+            <sentinel6aux:number>A</sentinel6aux:number>
+            <sentinel6aux:productSize>31687827</sentinel6aux:productSize>
+            <sentinel6aux:creationTime>20200505T141849</sentinel6aux:creationTime>
+            <sentinel6aux:validityStartTime>2017-03-04T02:57:13.000000Z</sentinel6aux:validityStartTime>
+            <sentinel6aux:validityStopTime>2021-04-11T23:29:34.000000Z</sentinel6aux:validityStopTime>
+          </sentinel6aux:generalProductInformation>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="measurementQualityInformation" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="Quality Information" vocabularyName="Sentinel-SAFE">
+        <xmlData>
+          <sentinel-safe:qualityInformation>
+            <sentinel-safe:extension>
+              <sentinel6aux:adfQuality>
+                <sentinel6aux:adfQualityCheck>PASSED</sentinel6aux:adfQualityCheck>
+              </sentinel6aux:adfQuality>
+            </sentinel-safe:extension>
+          </sentinel-safe:qualityInformation>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="processing" category="PDI" classification="PROVENANCE">
+      <metadataWrap mimeType="text/xml" textInfo="Processing" vocabularyName="Sentinel-SAFE">
+        <xmlData>
+          <sentinel-safe:processing name="TBD1">
+            <sentinel-safe:facility country="Germany" name="Mission Control Centre (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+              <sentinel-safe:hardware name="OPE"/>
+              <sentinel-safe:software name="ALT L1 PGF" version="2.2.1"/>
+            </sentinel-safe:facility>
+            <sentinel-safe:resource name="S6A_P4_1__CONF_AX_20151008T000000_20991231T235959_20190619T123706__________________EUM__VAL____TST.SEN6" role="ALT L1 PGF configuration file containing the L1 processors switches, which can be modified without the need of re-compiling the s/w">
+              <sentinel-safe:processing name="AUX TDS RECONDITIONING">
+                     <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                        <sentinel-safe:hardware name="VAL"/>
+                        <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                     </sentinel-safe:facility>
+                     <sentinel-safe:resource name="S6A_TEST_AUX_CONF1__20151008T000000_99999999T999999_1000.XML" role="Aux Data" version="001"/>
+                  </sentinel-safe:processing></sentinel-safe:resource>
+            <sentinel-safe:resource name="S6A_P4_1__CAL2_AX_20170305T064323_20210411T193802_20200505T122413__________________EUM__OPE_NR_TST.SEN6" role="CAL2 Long Term Monitoring file providing the historical corrections for the instrument transfer function, for Ku- and C-band"/>
+            <sentinel-safe:resource name="S6A_P4_1__ECHO_AX_20170304T025713_20210411T213346_20200505T122534__________________EUM__OPE_NR_TST.SEN6" role="Echo CAL Long Term Monitoring file providing the historical corrections for delay and power, for Ku-band"/>
+            <sentinel-safe:resource name="S6A_AX____RESO_AX_20210408T000000_20210418T000000_20200505T121728__________________FDF__OPE_NR____.SEN6" role="Orbit file containing the Orbit State Vectors (OSV) information along the orbit">
+              <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                     <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                        <sentinel-safe:hardware name="OPE"/>
+                        <sentinel-safe:software name="ADC" version="2.0"/>
+                     </sentinel-safe:facility>
+                     <sentinel-safe:resource name="S6A_xx_ORBITREST__20210408T000000_20210418T000000_20210411T000000_MOC__VAL.EOF" role="Unreformatted Data" version="0011"/>
+                  </sentinel-safe:processing></sentinel-safe:resource>
+            <sentinel-safe:resource name="S6A_P4_0__CAL_____20210411T213347_20210411T232934_20200505T141654_6947_002_073_036_EUM__OPE_NR_TST.SEN6" role="P4 L0 file containing the altimeter measurements">
+              <sentinel-safe:processing name="DataProcessing" outputLevel="0" start="2021-04-11T21:33:47.000000Z" stop="2021-04-11T23:29:34.000000Z">
+            		  <sentinel-safe:facility country="Germany" name="Mission Control Center (EUM)" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+            			  <sentinel-safe:hardware name="OPE"/>
+            			  <sentinel-safe:software name="L0P" version="2.0.0"/>
+            		</sentinel-safe:facility>
+            		  <sentinel-safe:resource name="Sentinel-6/Jason-CS Level 0 Product Format Specification: EUM/LEO-JASCS/SPE/17/898270" role="Applicable Document" version="v2B"/>
+            		  <sentinel-safe:resource name="S6A_P4_R__CAL___R_20210411T213405_20210411T232952_20210411T233024_S001_____________EMDA_____R__TST.RAW6" role="Raw Granule"/>
+            		  <sentinel-safe:resource name="S6A_AX____OREV_AX_20210411T000000_20210418T000000_20200505T121728__________________FDF__OPE_AL____.SEN6" role="Orbit Revolution File">
+            			  <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+            				    <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+            					    <sentinel-safe:hardware name="OPE"/>
+            					    <sentinel-safe:software name="ADC" version="2.0"/>
+            				</sentinel-safe:facility>
+            				    <sentinel-safe:resource name="S6A_xx_ORBITREVOL_20210411T000000_20210418T000000_20210411T000000_MOC__VAL.EOF" role="Unreformatted Data" version="0011"/>
+            			</sentinel-safe:processing>
+            		</sentinel-safe:resource>
+            		  <sentinel-safe:resource name="S6A_AX____RESO_AX_20210408T000000_20210418T000000_20200505T121728__________________FDF__OPE_NR____.SEN6" role="Time Correlation File"/>
+            		  <sentinel-safe:resource name="S6A_AX____RESO_AX_20210408T000000_20210418T000000_20200505T121728__________________FDF__OPE_NR____.SEN6" role="FOS Orbit File (Restituted)">
+            			  <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+            				    <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+            					    <sentinel-safe:hardware name="OPE"/>
+            					    <sentinel-safe:software name="ADC" version="2.0"/>
+            				</sentinel-safe:facility>
+            				    <sentinel-safe:resource name="S6A_xx_ORBITREST__20210408T000000_20210418T000000_20210411T000000_MOC__VAL.EOF" role="Unreformatted Data" version="0011"/>
+            			</sentinel-safe:processing>
+            		</sentinel-safe:resource>
+            		  <sentinel-safe:resource name="S6A_P4_0__CAL_____NR_20210411T213405_20210411T232952_20210411T233024" role="timelinessKey"/>
+            	</sentinel-safe:processing></sentinel-safe:resource>
+            <sentinel-safe:resource name="S6A_P4_1__CHAN_AX_20151008T000000_20991231T235959_20190612T153338__________________EUM__VAL____TST.SEN6" role="P4 characterisation file containing the system on-ground characterisation array parameters">
+              <sentinel-safe:processing name="AUX TDS RECONDITIONING">
+                     <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                        <sentinel-safe:hardware name="VAL"/>
+                        <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                     </sentinel-safe:facility>
+                     <sentinel-safe:resource name="S6A_TEST_AUX_CARRA__20151008T000000_99999999T999999_0002.NC" role="Aux Data" version="001"/>
+                  </sentinel-safe:processing></sentinel-safe:resource>
+            <sentinel-safe:resource name="S6A_P4____CHDN_AX_20151008T000000_20991231T235959_20191009T124625__________________EUM__VAL____TST.SEN6" role="P4 characterisation file containing the system on-ground characterisation parameters">
+              <sentinel-safe:processing name="AUX TDS RECONDITIONING">
+                <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                  <sentinel-safe:hardware name="VAL"/>
+                  <sentinel-safe:software name="./static_aux_conv.py" version="1.0"/>
+            </sentinel-safe:facility>
+                <sentinel-safe:resource name="S6A_P4____CHDN_AX_20151008T000000_20991231T235959_20190612T153625__________________EUM__VAL____TST.SEN6/S6A_TEST_AUX_CHDA___20151008T000000_99999999T999999_0001.XML" role="Aux Data" version="001"/>
+          </sentinel-safe:processing>  </sentinel-safe:resource>
+            <sentinel-safe:resource name="S6__P4____CST__AX_20170101T000000_20991231T235959_20190520T102855__________________EUM__VAL____TST.SEN6" role="P4 constants file containing the main physical constants used by the processors">
+              <sentinel-safe:processing name="AUX TDS RECONDITIONING">
+                     <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                        <sentinel-safe:hardware name="VAL"/>
+                        <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                     </sentinel-safe:facility>
+                     <sentinel-safe:resource name="S6A_TEST_AUX_CONST__20151008T000000_99999999T999999_0001.XML" role="Aux Data" version="001"/>
+                  </sentinel-safe:processing></sentinel-safe:resource>
+            <sentinel-safe:resource name="S6A_AX____RESO_AX_20210408T000000_20210418T000000_20200505T121728__________________FDF__OPE_NR____.SEN6" role="Time initialisation file containing the TAI/UTC/UT1 time correlations">
+              <sentinel-safe:processing name="ADC_AUX_REFORMATTER">
+                     <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                        <sentinel-safe:hardware name="OPE"/>
+                        <sentinel-safe:software name="ADC" version="2.0"/>
+                     </sentinel-safe:facility>
+                     <sentinel-safe:resource name="S6A_xx_ORBITREST__20210408T000000_20210418T000000_20210411T000000_MOC__VAL.EOF" role="Unreformatted Data" version="0011"/>
+                  </sentinel-safe:processing></sentinel-safe:resource>
+            <sentinel-safe:resource name="S6A_P4_1__USO__AX_20160223T195017_20220331T022533_20190612T160225__________________EUM__VAL____TST.SEN6" role="USO Drift file containing the measured drift of the USO from its nominal clock (10 MHz)">
+              <sentinel-safe:processing name="AUX TDS RECONDITIONING">
+                     <sentinel-safe:facility country="Germany" name="MAR" organisation="European Organisation for the Exploitation of Meteorological Satellites" site="Darmstadt">
+                        <sentinel-safe:hardware name="VAL"/>
+                        <sentinel-safe:software name="reconditionAux.sh" version="1.0"/>
+                     </sentinel-safe:facility>
+                     <sentinel-safe:resource name="S6A_TEST_AUX_USODFT_20160223T195017_20220331T022533_0001.DBL" role="Aux Data" version="001"/>
+                  </sentinel-safe:processing></sentinel-safe:resource>
+            <sentinel-safe:resource name="S6A_P4_0__CAL_____NR_20210411T213405_20210411T232952_20210411T233024" role="timelinessKey"/>
+          </sentinel-safe:processing>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+  </metadataSection>
+
+  <dataObjectSection>
+    <dataObject ID="ADFData" repID="ADFData">
+      <byteStream mimeType="application/octetstream" size="31687827">
+        <fileLocation href="measurement.nc" locatorType="URL" textInfo="ADF Data"/>
+        <checksum checksumName="MD5">e870fb118b8796e200c6ef6f7e8e5cd7</checksum>
+      </byteStream>
+    </dataObject>
+  </dataObjectSection>
+
+</xfdu:XFDU>

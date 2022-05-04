@@ -1,0 +1,125 @@
+{
+  "eventSource": "sfn",
+  "resources": {
+    "stack": "podaac-cumulus",
+    "cmr": {
+      "username": "devseed",
+      "provider": "CUMULUS",
+      "clientId": "CUMULUS",
+      "password": "isynDMiby5cQBYMGbQqXwW0nmB1i4kcYMxMsiJv1ipuABeA2fKR4NmZFSyRrwtbWNAxzl44RGT9R0DYaUn+3dQpb5/61MzewiIRANUgzF19Wjd/+jRMekIzd4tohvnrsahpA9tD03cRUoAdkzB1vF33Yq6yshTZr0RJm1PD2d/aDeRJiU/FdZyIp+LHyayvqJrcggVqw+kD4Pt3cHps8WTVh0r2f+ATYOmr/JDXd8UzPkimffLa3bn9PGOrN+IQz8eoeCH1clNbraybcJbLw+Mifp7euzAlwmOUuWTjZu4cU0V6gQgsKcJ4C4jnXi0EGZOmTxKMrr2xvyRpBhvLXVg=="
+    },
+    "buckets": {
+      "internal": "podaac-dev-cumulus-internal",
+      "private": "podaac-dev-cumulus-private",
+      "protected": "podaac-dev-cumulus-protected",
+      "public": "podaac-dev-cumulus-public"
+    },
+    "queues": {
+      "startSF": "https://sqs.us-west-2.amazonaws.com/254524764682/podaac-cumulus-startSF"
+    },
+    "templates": {
+      "IngestGranule": "s3://podaac-dev-cumulus-internal/podaac-cumulus/workflows/IngestGranule.json",
+      "DiscoverGranules": "s3://podaac-dev-cumulus-internal/podaac-cumulus/workflows/DiscoverGranules.json",
+      "IngestGranule2": "s3://podaac-dev-cumulus-internal/podaac-cumulus/workflows/IngestGranule2.json",
+      "DiscoverGranules2": "s3://podaac-dev-cumulus-internal/podaac-cumulus/workflows/DiscoverGranules2.json"
+    }
+  },
+  "ingest_meta": {
+    "topic_arn": "arn:aws:sns:us-west-2:254524764682:podaac-cumulus-sftrackerSns-1HI1KLZWGYIAX",
+    "state_machine": "arn:aws:states:us-west-2:254524764682:stateMachine:PodaacCumulusIngestGranule2-lrFLBcMkD5Oa",
+    "workflow_name": "IngestGranule2",
+    "status": "running",
+    "execution_name": "MODIS_A-JPL-L2P__GRANULE__20170718114000-J__1513711220825",
+    "createdAt": 1513711266928
+  },
+  "provider": {
+    "id": "mur",
+    "createdAt": 1510783015614,
+    "updatedAt": 1510783015614,
+    "globalConnectionLimit": 10,
+    "protocol": "ftp",
+    "host": "podaac-ftp.jpl.nasa.gov"
+  },
+  "collection": {
+    "id": "MODIS_A-JPL-L2P-v2014.0",
+    "meta": {
+      "provider_path": "allData/ghrsst/data/GDS2/L2P/MODIS_A/JPL/v2014.0/2017/199/",
+      "granuleIdExtraction": "^(.*).nc$",
+      "version": "6",
+      "dataType": "MODIS_A-JPL-L2P-v2014.0",
+      "files": [
+        {
+          "bucket": "protected",
+          "sampleFileName": "20170112000500-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc",
+          "regex": ".*.nc$"
+        },
+        {
+          "bucket": "public",
+          "sampleFileName": "20170112000500-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc.md5",
+          "regex": ".*.nc.md5$"
+        },
+        {
+          "bucket": "public",
+          "sampleFileName": "20170112000500-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc.nc.xml",
+          "regex": ".*.nc.xml"
+        },
+        {
+          "bucket": "public",
+          "sampleFileName": "20170112000500-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc_analysed_sst.png",
+          "regex": "^.*.png$"
+        }
+      ],
+      "updatedAt": 1513708922748,
+      "createdAt": 1513640366496,
+      "granuleId": "^.*$",
+      "sampleFileName": "20170112000500-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc",
+      "name": "MODIS_A-JPL-L2P-v2014.0",
+      "url_path": ""
+    }
+  },
+  "meta": {
+    "granuleId": "20170718114000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0"
+  },
+  "payload": {
+    "granules": [
+      {
+        "granuleId": "20170718114000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0",
+        "files": [
+          {
+            "name": "20170718114000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc",
+            "type": 0,
+            "size": "21037733",
+            "owner": "ftp",
+            "group": "ftp",
+            "path": "allData/ghrsst/data/GDS2/L2P/MODIS_A/JPL/v2014.0/2017/199/",
+            "bucket": "podaac-dev-cumulus-protected",
+            "url_path": "",
+            "filename": "s3://podaac-dev-cumulus-protected/20170718114000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc"
+          },
+          {
+            "name": "20170718114000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc.mp",
+            "type": 0,
+            "size": "492",
+            "bucket": "podaac-dev-cumulus-public",
+            "filename": "s3://podaac-dev-cumulus-public/20170718114000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc.mp"
+          },
+	      {
+            "name": "20170718114000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0_analyzed_sst.png",
+            "type": 0,
+            "size": "492",
+            "bucket": "podaac-dev-cumulus-public",
+            "filename": "s3://podaac-dev-cumulus-public/20170718114000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0_analyzed_sst.png"
+          },
+          {
+            "name": "20170718114000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0_sses_bias.png",
+            "type": 0,
+            "size": "492",
+            "bucket": "podaac-dev-cumulus-public",
+            "filename": "s3://podaac-dev-cumulus-public/20170718114000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0_sses_bias.png"
+          }
+
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,49 @@
+<GranuleMetaDataFile>
+   <Project>SWOT</Project>
+   <FileIdentifier>SWOT_IVK_20210612T081400_20210612T072103_20210612T080137_O_APID1402.PTM_1.tar.gz</FileIdentifier>
+   <GranuleURMetaData>
+      <CollectionMetaData>
+         <ShortName>L0A_RAD_Packet</ShortName>
+         <Description>Level 0 Radiometer Packet</Description>
+         <VersionID>001</VersionID>
+      </CollectionMetaData>
+      <ECSDataGranule>
+         <LocalGranuleID>SWOT_IVK_20210612T081400_20210612T072103_20210612T080137_O_APID1402.PTM_1</LocalGranuleID>
+         <ProductionDateTime>2021-06-12T08:14:00.000000Z</ProductionDateTime>
+         <APID>1402</APID>
+         <CRID>unknown</CRID>
+         <ProductCounter>unknown</ProductCounter>
+         <Description>Size: 1024 SizeUnit: B</Description>
+         <CycleID>unknown</CycleID>
+         <PassID>unknown</PassID>
+         <TileID>unknown</TileID>
+         <SourceType>O</SourceType>
+      </ECSDataGranule>
+      <MemberOfECSDataGranule>
+         <LocalGranuleID>SWOT_IVK_20210612T081400_20210612T072103_20210612T080137_O_APID1402.PTM_1</LocalGranuleID>
+         <Description>Size: 5 SizeUnit: B</Description>
+      </MemberOfECSDataGranule>
+      <MemberOfECSDataGranule>
+         <LocalGranuleID>SWOT_IVK_20210612T081400_20210612T072103_20210612T080137_O_APID1402.PTM_1.context.json</LocalGranuleID>
+         <Description>Size: 3145 SizeUnit: B</Description>
+      </MemberOfECSDataGranule>
+      <MemberOfECSDataGranule>
+         <LocalGranuleID>SWOT_IVK_20210612T081400_20210612T072103_20210612T080137_O_APID1402.PTM_1.dataset.json</LocalGranuleID>
+         <Description>Size: 164 SizeUnit: B</Description>
+      </MemberOfECSDataGranule>
+      <MemberOfECSDataGranule>
+         <LocalGranuleID>SWOT_IVK_20210612T081400_20210612T072103_20210612T080137_O_APID1402.PTM_1.met.json</LocalGranuleID>
+         <Description>Size: 1141 SizeUnit: B</Description>
+      </MemberOfECSDataGranule>
+      <MemberOfECSDataGranule>
+         <LocalGranuleID>SWOT_IVK_20210612T081400_20210612T072103_20210612T080137_O_APID1402.PTM_1.md5</LocalGranuleID>
+         <Description>Size: 475 SizeUnit: B</Description>
+      </MemberOfECSDataGranule>
+      <RangeDateTime>
+         <RangeBeginningDateTime>2021-06-12T07:33:57.000000Z</RangeBeginningDateTime>
+         <RangeEndingDateTime>2021-06-12T07:47:28.000000Z</RangeEndingDateTime>
+      </RangeDateTime>
+      <Producer>CNES</Producer>
+      <AccessPermission>ArchiveOnly; Requires approval by SWOT Measurement System Engineer at JPL and/or CNES</AccessPermission>
+   </GranuleURMetaData>
+</GranuleMetaDataFile>
