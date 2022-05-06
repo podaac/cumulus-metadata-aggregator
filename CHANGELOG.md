@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Renamed 'EchoRestClient' to 'CMRRestClient' and related classes accordingly
     - Cleanup legacy distribute code, removed old echo-10 related methods from CMRRestClient
     - Renamed ECHOAuth to LaunchpadAuth to better identify the role of the class
+- **PODAAC-4328**
+  - make this module compliant with cumulus 11 input/output schema
 ### Deprecated
 ### Removed
 - **PODAAC-2667**
