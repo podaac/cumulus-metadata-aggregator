@@ -128,9 +128,15 @@ public class MetadataAggregatorLambda implements ITask{
         }
 
         MetadataFilesToEcho mtfe;
-		if (iso != null) {
-            mtfe = new MetadataFilesToEcho(true);
-            mtfe.setDatasetValues(collectionName, collectionVersion, rangeIs360, boundingBox);
+        boolean isIsoFile = (iso != null);
+
+        mtfe = new MetadataFilesToEcho(isIsoFile);
+        mtfe.setDatasetValues(collectionName, collectionVersion, rangeIs360, boundingBox);
+        if (granules != null && granules.size() > 0) {
+            mtfe.setGranuleFileSizeAndChecksum(granules);
+        }
+
+		if (isIsoFile) {
             try {
                 mtfe.readIsoMendsMetadataFile(iso, s3Location);
             } catch (IOException e) {
@@ -138,8 +144,6 @@ public class MetadataAggregatorLambda implements ITask{
                 e.printStackTrace();
             }
         } else {
-		    mtfe = new MetadataFilesToEcho(false);
-            mtfe.setDatasetValues(collectionName, collectionVersion, rangeIs360, boundingBox);
             try {
                 AdapterLogger.LogInfo(this.className + " Creating UMM-G data structure");
                 if (meta != null) mtfe.readCommonMetadataFile(meta, s3Location);

@@ -79,7 +79,7 @@ public class CMRRestClientProvider {
      * cloud environment setup.
      * @return
      */
-    public static CMRLambdaRestClient getECHOLambdaRestClient() {
+    public static CMRLambdaRestClient getLambdaRestClient() {
         return _elrc;
     }
 
