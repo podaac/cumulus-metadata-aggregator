@@ -60,7 +60,7 @@ public class ProcessorBase {
         for (JsonElement f : files) {
             if (StringUtils.endsWith(
                     StringUtils.trim(
-                            StringUtils.lowerCase(f.getAsJsonObject().get("filename").getAsString())
+                            StringUtils.lowerCase(f.getAsJsonObject().get("fileName").getAsString())
                     ) // ene of trim
                     , trail)) {
                 return f.getAsJsonObject();
@@ -76,18 +76,18 @@ public class ProcessorBase {
      * @return
      */
     protected String downloadFile(JsonObject jsonObject) {
-        AdapterLogger.LogInfo(this.className + " trying to download: " + jsonObject.get("filename").getAsString());
+        AdapterLogger.LogInfo(this.className + " trying to download: " + jsonObject.get("fileName").getAsString());
         return s3Utils.download(this.region, jsonObject.get("bucket").getAsString(),
-                jsonObject.get("filepath").getAsString(),
-                Paths.get(this.workingDir, jsonObject.get("name").getAsString()).toString());
+                jsonObject.get("key").getAsString(),
+                Paths.get(this.workingDir, jsonObject.get("fileName").getAsString()).toString());
     }
 
     protected long uploadCMRJson( String cmrBucket, String cmrBaseDir, String collectionName, String cmrFileName,
-                                   String newCMRStr)
+                                  String newCMRStr)
             throws IOException {
         // create a new working directory
         AdapterLogger.LogError(this.className + " bucket:" + cmrBucket + " dir:" + cmrBaseDir +
-            " collectionName:"+ collectionName + " cmrFileName:"+ cmrFileName);
+                " collectionName:"+ collectionName + " cmrFileName:"+ cmrFileName);
         String cmrFileWorkDir = this.createWorkDir();
         try {
             // The local file does not need executionId in the fileName
@@ -95,7 +95,7 @@ public class ProcessorBase {
             FileUtils.writeStringToFile(file, newCMRStr, Charset.defaultCharset());
             s3Utils.upload(this.region, cmrBucket,
                     Paths.get(cmrBaseDir, collectionName, cmrFileName).toString(),
-                   file);
+                    file);
             return file.length();
         } catch (IOException ioe) {
             AdapterLogger.LogError(this.className + " write CMR string error:" + ioe);
@@ -135,7 +135,7 @@ public class ProcessorBase {
         JsonObject granule = granules.get(0).getAsJsonObject();
 
         // Parse config values
-        JsonObject config = inputJsonObj.getAsJsonObject("src/main/resources/config");
+        JsonObject config = inputJsonObj.getAsJsonObject("config");
         collectionName = config.get("collection").getAsString();
         executionId = config.get("executionId").getAsString();
 
@@ -150,33 +150,35 @@ public class ProcessorBase {
     public String createOutputMessage(String input, long uploadedCMRFileSize, String eTag, BigInteger revisionId,
                                       String cmrFileName,
                                       String cmrBucket, String cmrDir, String collectionName) {
-        JsonObject inputJsonObj = new JsonParser().parse(input).getAsJsonObject();
+        JsonObject inputJsonObj = JsonParser.parseString(input).getAsJsonObject();
         JsonArray granules = inputJsonObj.getAsJsonArray("input");
         JsonObject granule = granules.get(0).getAsJsonObject();
         // change CMR.json file size
         JsonArray files = granule.get("files").getAsJsonArray();
-        JsonObject f = getFileJsonObjByFileTrailing(files, ".cmr.json");
         String filepath = Paths.get(cmrDir, collectionName, cmrFileName).toString();
+        JsonObject f = new JsonObject();
         f.addProperty("bucket", cmrBucket);
-        f.addProperty("filename", "s3://" + cmrBucket + "/" + filepath);
-        f.addProperty("name", cmrFileName);
-        f.addProperty("filepath", filepath);
+        if(StringUtils.startsWith(filepath, "/")) {
+            filepath = StringUtils.replaceOnce(filepath, "/", "");
+        }
+        f.addProperty("key",  filepath);
+        f.addProperty("fileName", cmrFileName);
         f.addProperty("size", uploadedCMRFileSize);
-        f.addProperty("etag", eTag);
         // get and remove .fp file item
         JsonObject fp = getFileJsonObjByFileTrailing(files, ".fp");
         if(fp != null) {
-            AdapterLogger.LogDebug(this.className + " removed fp file:" + fp);
             files.remove(fp);
         }
+        JsonObject old_cmr = getFileJsonObjByFileTrailing(files, ".cmr.json");
+        if(old_cmr != null) {
+            files.remove(old_cmr);
+        }
+        files.add(f);
 
         JsonObject outputJsonObj = new JsonObject();
         outputJsonObj.add("output", granules);
         outputJsonObj.addProperty("cmrRevisionId", revisionId);
         String outputSt = new Gson().toJson(outputJsonObj);
-        AdapterLogger.LogDebug(this.className + " output:" + outputSt);
         return outputSt;
     }
-
-
 }

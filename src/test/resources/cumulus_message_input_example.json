@@ -7,60 +7,46 @@
       "files": [
         {
           "bucket": "dyen-cumulus-protected",
-          "path": "MODIS_A-JPL-L2P-v2019.0/2020/001",
-          "filename": "s3://dyen-cumulus-protected/MODIS_A-JPL-L2P-v2019.0/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc",
+          "key": "MODIS_A-JPL-L2P-v2019.0/2020/001",
           "size": 18232098,
-          "name": "20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc",
+          "fileName": "20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc",
           "checksumType": "md5",
           "checksum": "aa5204f125ae83847b3b80fa2e571b00",
-          "type": "data",
-          "url_path": "{cmrMetadata.CollectionReference.ShortName}",
-          "filepath": "MODIS_A-JPL-L2P-v2019.0/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc",
-          "duplicate_found": true
+          "type": "data"
         },
         {
           "bucket": "dyen-cumulus-public",
-          "path": "MODIS_A-JPL-L2P-v2019.0/2020/001",
-          "filename": "s3://dyen-cumulus-public/MODIS_A-JPL-L2P-v2019.0/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc.md5",
+          "key": "MODIS_A-JPL-L2P-v2019.0/2020/001",
           "size": 98,
-          "name": "20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc.md5",
-          "type": "metadata",
-          "url_path": "{cmrMetadata.CollectionReference.ShortName}",
-          "filepath": "MODIS_A-JPL-L2P-v2019.0/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc.md5",
-          "duplicate_found": true
+          "fileName": "20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc.md5",
+          "type": "metadata"
         },
         {
           "bucket": "dyen-cumulus-public",
-          "filename": "s3://dyen-cumulus-public/MODIS_A-JPL-L2P-v2019.0/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.cmr.json",
+          "key": "MODIS_A-JPL-L2P-v2019.0/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.cmr.json",
           "size": 1617,
-          "name": "20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.cmr.json",
-          "type": "metadata",
-          "url_path": "{cmrMetadata.CollectionReference.ShortName}",
-          "filepath": "MODIS_A-JPL-L2P-v2019.0/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.cmr.json",
-          "etag": "\"9aed615d7ad4a265a25b6293daacb15b\""
+          "fileName": "20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.cmr.json",
+          "type": "metadata"
         },
         {
           "bucket": "dyen-cumulus-internal",
-          "filename": "s3://dyen-cumulus-internal/dataset-footprint/MODIS_A-JPL-L2P-v2019.0/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.fp/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.fp",
-          "filepath": "dataset-footprint/MODIS_A-JPL-L2P-v2019.0/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.fp",
+          "key": "dataset-footprint/MODIS_A-JPL-L2P-v2019.0/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.fp",
           "size": 452,
-          "name": "20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.fp",
+          "fileName": "20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.fp",
           "type": "metadata"
         },
         {
           "bucket": "dyen-cumulus-public",
-          "filename": "s3://dyen-cumulus-public/dataset-image/MODIS_A-JPL-L2P-v2019.0/sst.png",
-          "filepath": "dataset-image/MODIS_A-JPL-L2P-v2019.0/sst.png",
+          "key": "dataset-image/MODIS_A-JPL-L2P-v2019.0/sst.png",
           "size": 7152,
-          "name": "sst.png",
+          "fileName": "sst.png",
           "type": "metadata"
         },
         {
           "bucket": "dyen-cumulus-public",
-          "filename": "s3://dyen-cumulus-public/dataset-image/MODIS_A-JPL-L2P-v2019.0/standard-deviation.jpg",
-          "filepath": "dataset-image/MODIS_A-JPL-L2P-v2019.0/standard-deviation.jpg",
+          "key": "dataset-image/MODIS_A-JPL-L2P-v2019.0/standard-deviation.jpg",
           "size": 7552,
-          "name": "standard-deviation.jpg",
+          "fileName": "standard-deviation.jpg",
           "type": "metadata"
         }
       ],

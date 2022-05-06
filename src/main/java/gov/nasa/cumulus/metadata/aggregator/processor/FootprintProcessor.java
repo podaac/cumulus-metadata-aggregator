@@ -44,14 +44,14 @@ public class FootprintProcessor extends ProcessorBase{
     private final String className = this.getClass().getName();
 
     public static boolean isFootprintFileExisting(String input) {
-        JsonObject inputKey = new JsonParser().parse(input).getAsJsonObject();
+        JsonObject inputKey = JsonParser.parseString(input).getAsJsonObject();
         JsonArray granules = inputKey.getAsJsonArray("input");
         JsonObject granule = granules.get(0).getAsJsonObject();
         JsonArray files = granule.get("files").getAsJsonArray();
         for (JsonElement f : files) {
             if (StringUtils.endsWith(
                     StringUtils.trim(
-                            StringUtils.lowerCase(f.getAsJsonObject().get("filename").getAsString())
+                            StringUtils.lowerCase(f.getAsJsonObject().get("fileName").getAsString())
                     ) // end of StringUtils.trim
                     , ".fp")) {
                 AdapterLogger.LogInfo("Found footprint file in files array");
@@ -85,7 +85,7 @@ public class FootprintProcessor extends ProcessorBase{
                     cmrBucket, cmrDir, this.collectionName);
             // delete fp file from S3 and clean up local working directory
             s3Utils.delete(this.region, FPFileJsonObj.get("bucket").getAsString(),
-                    FPFileJsonObj.get("filepath").getAsString());
+                    FPFileJsonObj.get("key").getAsString());
             return output;
         } catch (IOException | ParseException e) {
             AdapterLogger.LogError("Footprint processor exception:" + e);
@@ -135,7 +135,7 @@ public class FootprintProcessor extends ProcessorBase{
      * @return A FOOTPRINT string or an EXTENT string
      */
     public String getStringByType(String fpFileContent, String type) {
-        JsonObject fpJsonObj = new JsonParser().parse(fpFileContent).getAsJsonObject();
+        JsonObject fpJsonObj = JsonParser.parseString(fpFileContent).getAsJsonObject();
         return fpJsonObj.get(type).getAsString();
     }
 

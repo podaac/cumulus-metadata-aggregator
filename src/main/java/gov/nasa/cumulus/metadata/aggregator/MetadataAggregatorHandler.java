@@ -30,7 +30,6 @@ public class MetadataAggregatorHandler implements RequestHandler<String, String>
         try
         {
         	return parser.RunCumulusTask(input, context, new MetadataAggregatorLambda());
-            //return parser.HandleMessage(input, context, new MetadataAggregatorLambda(), null);
         }
         catch(MessageAdapterException e)
         {
