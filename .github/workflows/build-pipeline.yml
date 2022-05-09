@@ -32,6 +32,9 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
+      - name: Install Python dependencies
+        run: |
+          pip3 install -r builder/requirements.txt
       - name: Extract Maven project version
         run: echo ::set-output name=current_version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
         id: get-version
