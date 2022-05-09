@@ -266,37 +266,48 @@ public class MetadataFilesToEcho {
      * @throws XPathExpressionException
      */
     public void readIsoMetadataFile(String file, String s3Location) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
-        Iso isoType = getIsoType(file);
         Document doc = makeDoc(file);
         XPath xpath = makeXpath(doc);
+        Iso isoType = getIsoType(doc, xpath);
         try {
             // parse the minimum required fields first
-            parseRequiredFields(doc,xpath,isoType);
+            parseRequiredFields(doc, xpath, isoType);
         } catch (XPathExpressionException e1) {
             // log a quick error message to help users narrow down the cause
             AdapterLogger.LogError("failed to parse required start, stop, and create times from: " + file);
             // now re-throw the error so we exit/stop the export
             throw e1;
         }
-        // if we get here, we have the bare minimum fields already populated...
+        // if we get here, we have the bare minimum fields already populated,
+        // so try and parse the rest of the granule metadata...
         try {
             if (isoType == Iso.MENDS) {
                 AdapterLogger.LogInfo("Found MENDS file");
-                readIsoMendsMetadataFile(file, s3Location, doc, xpath);
+                readIsoMendsMetadataFile(s3Location, doc, xpath);
             } else if (isoType == Iso.SMAP) {
                 AdapterLogger.LogInfo("Found SMAP file");
-                readIsoSmapMetadataFile(file, s3Location, doc, xpath);
+                readIsoSmapMetadataFile(s3Location, doc, xpath);
             } else {
                 throw new IOException(isoType.name() + " didn't match any expected ISO type.");
             }
         } catch (XPathExpressionException e2) {
+            // ...but if we run into an issue, don't break out of the entire export,
+            //  just log the warning, and continue
             AdapterLogger.LogWarning("Xpath error thrown when parsing optional metadata for: " + file);
         }
     }
 
-    private Iso getIsoType(String file) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
-        Document doc = makeDoc(file);
-        XPath xpath = makeXpath(doc);
+    /**
+     * Parses the ISO granule type from the file path
+     *
+     * @param doc       the Document object for the ISO File
+     * @param xpath     the xpath object, used to parse the ISO type
+     * @return           Iso.MENDS or Iso.SMAP based on xpath parsing
+     *
+     * @throws XPathExpressionException if there's an error while attempting to
+     *  parse the ISO file type from the xpath object
+     */
+    private Iso getIsoType(Document doc, XPath xpath) throws XPathExpressionException {
         String ds_series_val = xpath.evaluate("/gmd:DS_Series", doc);
         return (ds_series_val == "") ? Iso.MENDS : Iso.SMAP;
     }
@@ -309,6 +320,12 @@ public class MetadataFilesToEcho {
         return doc;
     }
 
+    /**
+     * Makes the xPath object for the provided Document object
+     *
+     * @param doc   the document object, from the ISO granule file
+     * @return      the new xPath object
+     */
     private XPath makeXpath(Document doc) {
         XPath xpath = XPathFactory.newInstance().newXPath();
         xpath.setNamespaceContext(new NamespaceResolver(doc));
@@ -349,7 +366,7 @@ public class MetadataFilesToEcho {
         }
     }
 
-    public void readIsoMendsMetadataFile(String file, String s3Location, Document doc, XPath xpath) throws XPathExpressionException {
+    public void readIsoMendsMetadataFile(String s3Location, Document doc, XPath xpath) throws XPathExpressionException {
 
         if (xpath.evaluate(IsoMendsXPath.NORTH_BOUNDING_COORDINATE, doc) != "") {
             setGranuleBoundingBox(
@@ -446,7 +463,7 @@ public class MetadataFilesToEcho {
         ((IsoGranule) granule).setPGEVersionClass(xpath.evaluate(IsoMendsXPath.PGE_VERSION_CLASS, doc));
     }
 
-    private void readIsoSmapMetadataFile(String file, String s3Location, Document doc, XPath xpath) throws XPathExpressionException {
+    private void readIsoSmapMetadataFile(String s3Location, Document doc, XPath xpath) throws XPathExpressionException {
 
         GranuleReference gr = new GranuleReference();
         gr.setDescription("S3 datafile.");
