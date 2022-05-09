@@ -138,7 +138,7 @@ public class MetadataAggregatorLambda implements ITask{
 
 		if (isIsoFile) {
             try {
-                mtfe.readIsoMendsMetadataFile(iso, s3Location);
+                mtfe.readIsoMetadataFile(iso, s3Location);
             } catch (IOException e) {
 				AdapterLogger.LogError(this.className + " MetadataFilesToEcho input TRUE read error:" + e.getMessage());
                 e.printStackTrace();
