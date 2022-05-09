@@ -48,13 +48,15 @@ public class MetadataFilesToEcho {
 	Dataset dataset = new Dataset();
 	boolean forceBB = false;
 	boolean rangeIs360 = false;
+    boolean isIsoFile = false;
 
 	public MetadataFilesToEcho() {
 		this(false);
 	}
 
 	public MetadataFilesToEcho(boolean isIso) {
-		if (isIso)
+        this.isIsoFile = isIso;
+		if (isIsoFile)
 			this.granule = new IsoGranule();
 		else
 			this.granule = new UMMGranule();
@@ -253,17 +255,42 @@ public class MetadataFilesToEcho {
 		AdapterLogger.LogInfo(this.className + " GranuleArchive HashSet:" + granule.getGranuleArchiveSet());
 	}
 
+    /**
+     * Entry point for translating ISO granule files to UMM-G
+     *
+     * @param file          the local path to the ISO file
+     * @param s3Location    the s3 location to the granule file
+     * @throws ParserConfigurationException
+     * @throws IOException
+     * @throws SAXException
+     * @throws XPathExpressionException
+     */
     public void readIsoMetadataFile(String file, String s3Location) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
         Iso isoType = getIsoType(file);
-        if (isoType == Iso.MENDS) {
-            AdapterLogger.LogInfo("Found MENDS file");
-            readIsoMendsMetadataFile(file, s3Location);
+        Document doc = makeDoc(file);
+        XPath xpath = makeXpath(doc);
+        try {
+            // parse the minimum required fields first
+            parseRequiredFields(doc,xpath,isoType);
+        } catch (XPathExpressionException e1) {
+            // log a quick error message to help users narrow down the cause
+            AdapterLogger.LogError("failed to parse required start, stop, and create times from: " + file);
+            // now re-throw the error so we exit/stop the export
+            throw e1;
         }
-        else if (isoType == Iso.SMAP) {
-            AdapterLogger.LogInfo("Found SMAP file");
-            readIsoSmapMetadataFile(file, s3Location);
-        } else {
-            throw new IOException(isoType.name() + " didn't match any expected ISO type.");
+        // if we get here, we have the bare minimum fields already populated...
+        try {
+            if (isoType == Iso.MENDS) {
+                AdapterLogger.LogInfo("Found MENDS file");
+                readIsoMendsMetadataFile(file, s3Location, doc, xpath);
+            } else if (isoType == Iso.SMAP) {
+                AdapterLogger.LogInfo("Found SMAP file");
+                readIsoSmapMetadataFile(file, s3Location, doc, xpath);
+            } else {
+                throw new IOException(isoType.name() + " didn't match any expected ISO type.");
+            }
+        } catch (XPathExpressionException e2) {
+            AdapterLogger.LogWarning("Xpath error thrown when parsing optional metadata for: " + file);
         }
     }
 
@@ -288,19 +315,41 @@ public class MetadataFilesToEcho {
         return xpath;
     }
 
-    public void readIsoMendsMetadataFile(String file, String s3Location) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
-        Document doc = makeDoc(file);
-        XPath xpath = makeXpath(doc);
+    /**
+     * Parses the minimal required field for an ISO to UMM-G translation:
+     *     i.e. start_time, stop_time and create_time
+     *
+     * @param doc   the document object of the iso file to parse
+     * @param xpath the xpath object for use when parsing the doc
+     * @param iso   flag to denote what type of ISO granule we have
+     */
+    private void parseRequiredFields(Document doc, XPath xpath, Iso iso) throws XPathExpressionException {
+        if (iso == Iso.SMAP) {
+            granule.setStartTime(DatatypeConverter.parseDateTime(xpath.evaluate(IsoSmapXPath.BEGINNING_DATE_TIME, doc)).getTime());
+            granule.setStopTime(DatatypeConverter.parseDateTime(xpath.evaluate(IsoSmapXPath.ENDING_DATE_TIME, doc)).getTime());
 
-        granule.setStartTime(DatatypeConverter.parseDateTime(xpath.evaluate(IsoMendsXPath.BEGINNING_DATE_TIME, doc)).getTime());
-        granule.setStopTime(DatatypeConverter.parseDateTime(xpath.evaluate(IsoMendsXPath.ENDING_DATE_TIME, doc)).getTime());
+            String productionDateTime = xpath.evaluate(IsoSmapXPath.PRODUCTION_DATE_TIME, doc);
+            if (productionDateTime != "") {
+                granule.setCreateTime(DatatypeConverter.parseDateTime(productionDateTime).getTime());
+            } else {
+                granule.setCreateTime(DatatypeConverter.parseDateTime(xpath.evaluate(IsoSmapXPath.CREATION_DATE_TIME, doc)).getTime());
+            }
+        } else if (iso == Iso.MENDS) {
+            granule.setStartTime(DatatypeConverter.parseDateTime(xpath.evaluate(IsoMendsXPath.BEGINNING_DATE_TIME, doc)).getTime());
+            granule.setStopTime(DatatypeConverter.parseDateTime(xpath.evaluate(IsoMendsXPath.ENDING_DATE_TIME, doc)).getTime());
 
-        String productionDateTime = xpath.evaluate(IsoMendsXPath.PRODUCTION_DATE_TIME, doc);
-        if (productionDateTime != "") {
-            granule.setCreateTime(DatatypeConverter.parseDateTime(productionDateTime).getTime());
+            String productionDateTime = xpath.evaluate(IsoMendsXPath.PRODUCTION_DATE_TIME, doc);
+            if (productionDateTime != "") {
+                granule.setCreateTime(DatatypeConverter.parseDateTime(productionDateTime).getTime());
+            } else {
+                granule.setCreateTime(DatatypeConverter.parseDateTime(xpath.evaluate(IsoMendsXPath.CREATION_DATE_TIME, doc)).getTime());
+            }
         } else {
-            granule.setCreateTime(DatatypeConverter.parseDateTime(xpath.evaluate(IsoMendsXPath.CREATION_DATE_TIME, doc)).getTime());
+            // throw an error, for now
         }
+    }
+
+    public void readIsoMendsMetadataFile(String file, String s3Location, Document doc, XPath xpath) throws XPathExpressionException {
 
         if (xpath.evaluate(IsoMendsXPath.NORTH_BOUNDING_COORDINATE, doc) != "") {
             setGranuleBoundingBox(
@@ -397,19 +446,8 @@ public class MetadataFilesToEcho {
         ((IsoGranule) granule).setPGEVersionClass(xpath.evaluate(IsoMendsXPath.PGE_VERSION_CLASS, doc));
     }
 
-    private void readIsoSmapMetadataFile(String file, String s3Location) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
-        Document doc = makeDoc(file);
-        XPath xpath = makeXpath(doc);
+    private void readIsoSmapMetadataFile(String file, String s3Location, Document doc, XPath xpath) throws XPathExpressionException {
 
-        granule.setStartTime(DatatypeConverter.parseDateTime(xpath.evaluate(IsoSmapXPath.BEGINNING_DATE_TIME, doc)).getTime());
-        granule.setStopTime(DatatypeConverter.parseDateTime(xpath.evaluate(IsoSmapXPath.ENDING_DATE_TIME, doc)).getTime());
-
-        String productionDateTime = xpath.evaluate(IsoSmapXPath.PRODUCTION_DATE_TIME, doc);
-        if (productionDateTime != "") {
-            granule.setCreateTime(DatatypeConverter.parseDateTime(productionDateTime).getTime());
-        } else {
-            granule.setCreateTime(DatatypeConverter.parseDateTime(xpath.evaluate(IsoSmapXPath.CREATION_DATE_TIME, doc)).getTime());
-        }
         GranuleReference gr = new GranuleReference();
         gr.setDescription("S3 datafile.");
         gr.setPath(s3Location);
