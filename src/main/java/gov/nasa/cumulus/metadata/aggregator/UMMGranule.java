@@ -3,6 +3,8 @@ package gov.nasa.cumulus.metadata.aggregator;
 
 import gov.nasa.podaac.inventory.model.Granule;
 
+import java.math.BigDecimal;
+
 public class UMMGranule extends Granule {
     private Integer cycle;
     private Integer pass;
@@ -14,6 +16,8 @@ public class UMMGranule extends Granule {
     private Double bbxSouthernLatitude;
     private Double bbxEasternLongitude;
     private Double bbxWesternLongitude;
+    private BigDecimal equatorCrossingLongitude;
+    private String equatorCrossingDateTime;
 
     public Integer getPass() {
         return pass;
@@ -85,5 +89,20 @@ public class UMMGranule extends Granule {
         this.bbxWesternLongitude = bbxWesternLongitude;
     }
 
+    public String getEquatorCrossingDateTime() {
+        return equatorCrossingDateTime;
+    }
+
+    public void setEquatorCrossingDateTime(String equatorCrossingDateTime) {
+        this.equatorCrossingDateTime = equatorCrossingDateTime;
+    }
+
+    public BigDecimal getEquatorCrossingLongitude() {
+        return equatorCrossingLongitude;
+    }
+
+    public void setEquatorCrossingLongitude(BigDecimal equatorCrossingLongitude) {
+        this.equatorCrossingLongitude = equatorCrossingLongitude;
+    }
 
 }

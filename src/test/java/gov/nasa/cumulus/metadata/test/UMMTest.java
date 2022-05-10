@@ -134,7 +134,17 @@ public class UMMTest {
         
         //SpatialExtent
         JSONObject hsd = (JSONObject)((JSONObject)umm.get("SpatialExtent")).get("HorizontalSpatialDomain");
-        
+        JSONObject orbit = (JSONObject) hsd.get("Orbit");
+        assertEquals(((Double)orbit.get("StartLatitude")), new Double(-76.34));
+        assertEquals(((Double)orbit.get("EndLatitude")), new Double(78.954));
+        assertEquals(((Double)orbit.get("AscendingCrossing")), new Double(88.92));
+        assertEquals(((String)orbit.get("StartDirection")), "D");
+        assertEquals(((String)orbit.get("EndDirection")), "D");
+
+/* UMM-G only accepts either bounding Geometry or Orbit, not both.  Since the input xml has "Orbit", that takes priority
+   so this part of the test was commented out and a new orbit check was added.
+   TODO - convert this into a split test, one for ISO with orbit, and one for ISO without
+
         JSONObject geom = (JSONObject) hsd.get("Geometry");
         
         //Geometry/GPolygons
@@ -160,7 +170,8 @@ public class UMMTest {
         assertEquals(br.get("WestBoundingCoordinate"), new Double(-180));
         assertEquals(br.get("SouthBoundingCoordinate"), new Double(-85.045));
         assertEquals(br.get("EastBoundingCoordinate"), new Double(179.999));
-        assertEquals(br.get("NorthBoundingCoordinate"), new Double(85.045));        
+        assertEquals(br.get("NorthBoundingCoordinate"), new Double(85.045));
+*/
         
         //Track
         JSONObject track = (JSONObject) hsd.get("Track");
@@ -670,7 +681,7 @@ public class UMMTest {
 				.isUMMGSpatialValid(any(), any(), any());
 
 		MockedStatic<CMRRestClientProvider> mockedECHORestClientProvider = mockStatic(CMRRestClientProvider.class);
-		when(CMRRestClientProvider.getECHOLambdaRestClient()).thenReturn(mockedEchoLambdaRestClient);
+		when(CMRRestClientProvider.getLambdaRestClient()).thenReturn(mockedEchoLambdaRestClient);
 
 		//write UMM-G to file
 		mtfe.writeJson(testDir + "/" + granuleId + ".cmr.json");
