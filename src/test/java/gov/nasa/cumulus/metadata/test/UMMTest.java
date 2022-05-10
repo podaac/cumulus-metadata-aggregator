@@ -56,7 +56,7 @@ public class UMMTest {
 		MetadataFilesToEcho mtfe = new MetadataFilesToEcho(true);
 		
 		mtfe.readConfiguration(testConfigFilePath);
-		mtfe.readIsoMendsMetadataFile(testFilePath, "s3://public/datafile.nc");
+		mtfe.readIsoMetadataFile(testFilePath, "s3://public/datafile.nc");
 		
 		mtfe.getGranule().setName(granuleId);
 
