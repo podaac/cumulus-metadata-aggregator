@@ -288,7 +288,8 @@ public class MetadataFilesToEcho {
                 AdapterLogger.LogInfo("Found SMAP file");
                 readIsoSmapMetadataFile(s3Location, doc, xpath);
             } else {
-                throw new IOException(isoType.name() + " didn't match any expected ISO type.");
+                AdapterLogger.LogWarning(isoType.name() + " didn't match any expected ISO type, skipping optional " +
+                        "fields.");
             }
         } catch (XPathExpressionException e2) {
             // ...but if we run into an issue, don't break out of the entire export,
