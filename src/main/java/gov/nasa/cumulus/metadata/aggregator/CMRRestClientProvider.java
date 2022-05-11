@@ -49,7 +49,7 @@ public class CMRRestClientProvider {
     throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException, IOException,
             CertificateException, UnrecoverableKeyException, URISyntaxException {
         JsonObject inputJsonObj = new JsonParser().parse(lambdaInputStr).getAsJsonObject();
-        JsonObject configJsonObj = inputJsonObj.getAsJsonObject("src/main/resources/config");
+        JsonObject configJsonObj = inputJsonObj.getAsJsonObject("config");
         JsonObject launchpadConfigJsonObj = configJsonObj.getAsJsonObject("launchpadConfig");
         String systemBucket = configJsonObj.get("systemBucket").getAsString();
         String provider = configJsonObj.get("provider").getAsString();

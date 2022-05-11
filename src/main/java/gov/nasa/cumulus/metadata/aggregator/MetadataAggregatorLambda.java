@@ -40,7 +40,7 @@ public class MetadataAggregatorLambda implements ITask{
 		JSONParser jp = new JSONParser();
 		JSONObject jo = (JSONObject) jp.parse(input);
 
-		JSONObject config = (JSONObject) jo.get("src/main/resources/config");
+		JSONObject config = (JSONObject) jo.get("config");
 
 		String collectionName = (String) config.get("collection");
 		String collectionVersion = (String) config.get("version");
@@ -270,7 +270,7 @@ public class MetadataAggregatorLambda implements ITask{
 		// cumulus CMR expected input : const revisionId = event.input.cmrRevisionId
 		JSONParser jp = new JSONParser();
 		JSONObject jo = (JSONObject) jp.parse(input);
-		JSONObject config = (JSONObject) jo.get("src/main/resources/config");
+		JSONObject config = (JSONObject) jo.get("config");
 		String collectionName = (String) config.get("collection");
 		String granuleId = (String)config.get("granuleId");
 		String provider = (String)config.get("provider");
@@ -311,7 +311,7 @@ public class MetadataAggregatorLambda implements ITask{
 	throws ParseException{
 		JSONParser jp = new JSONParser();
 		JSONObject jo = (JSONObject) jp.parse(input);
-		JSONObject config = (JSONObject) jo.get("src/main/resources/config");
+		JSONObject config = (JSONObject) jo.get("config");
 		String provider = (String)config.get("provider");
 		CMRRestClientProvider.setProvider(provider);
 	}
