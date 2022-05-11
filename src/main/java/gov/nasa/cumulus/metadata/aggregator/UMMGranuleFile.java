@@ -230,8 +230,23 @@ public class UMMGranuleFile {
         UMMGranule ummGranule = null;
         if(this.granule instanceof gov.nasa.cumulus.metadata.aggregator.UMMGranule) {
             ummGranule = (UMMGranule) granule;
-            if (ummGranule.getOrbitNumber() != null) {
-                orbitJsonObject.put("OrbitNumber", ummGranule.getOrbitNumber());
+            Integer orbitNumber = ummGranule.getOrbitNumber();
+
+            if (orbitNumber != null) {
+                orbitJsonObject.put("OrbitNumber", orbitNumber);
+            }
+
+            String equatorCrossingDateTime = ummGranule.getEquatorCrossingDateTime();
+            if (equatorCrossingDateTime != null) {
+                orbitJsonObject.put("EquatorCrossingDateTime", equatorCrossingDateTime);
+            }
+
+            BigDecimal equatorCrossingLongitude = ummGranule.getEquatorCrossingLongitude();
+            if (equatorCrossingLongitude != null) {
+                orbitJsonObject.put("EquatorCrossingLongitude", equatorCrossingLongitude);
+            }
+
+            if (!orbitJsonObject.isEmpty()) {
                 orbitDomains.add(orbitJsonObject);
             }
             if (ummGranule.getStartOrbit() != null && ummGranule.getEndOrbit() != null) {
@@ -334,155 +349,31 @@ public class UMMGranuleFile {
 
     private JSONObject exportSpatial() {
         JSONObject spatialExtent = new JSONObject();
-
+        JSONObject geometry = new JSONObject();
         JSONObject horizontalSpatialDomain = new JSONObject();
+        Boolean foundOrbitalData = false;
         spatialExtent.put("HorizontalSpatialDomain", horizontalSpatialDomain);
 
-        JSONObject geometry = new JSONObject();
-        horizontalSpatialDomain.put("Geometry", geometry);
-
-        JSONArray boundingRectangles = new JSONArray();
-        geometry.put("BoundingRectangles", boundingRectangles);
-
-        double north = 0, south = 0, east = 0, west = 0;
-        if(granule !=null && granule instanceof  gov.nasa.cumulus.metadata.aggregator.UMMGranule) {
-            east= ((UMMGranule) granule).getBbxEasternLongitude()!=null ?
-                    ((UMMGranule) granule).getBbxEasternLongitude().doubleValue():0;
-            west= ((UMMGranule) granule).getBbxWesternLongitude()!=null?
-                    ((UMMGranule) granule).getBbxWesternLongitude().doubleValue():0;
-            north = ((UMMGranule) granule).getBbxNorthernLatitude() !=null?
-                    ((UMMGranule) granule).getBbxNorthernLatitude().doubleValue():0;
-            south = ((UMMGranule) granule).getBbxSouthernLatitude()!=null?
-                    ((UMMGranule) granule).getBbxSouthernLatitude().doubleValue():0;
-        } else {
-            Set<GranuleReal> grs = granule.getGranuleRealSet();
-
-            for (GranuleReal gr : grs) {
-                switch (gr.getDatasetElement().getElementDD().getElementId()) {
-                    case 28:
-                        west = gr.getValue();
-                        break;
-                    case 15:
-                        north = gr.getValue();
-                        break;
-                    case 8:
-                        east = gr.getValue();
-                        break;
-                    case 23:
-                        south = gr.getValue();
-                        break;
-                }
-            }
-        }
-
-        // first, check to see if any of the spatial values are bad/invalid
-        if (BoundingTools.coordsInvalid(north, south, east, west)) {
-            AdapterLogger.LogWarning(this.className + "Bounding coordinates invalid: \'North: " + north +
-                    ", \'South: " + south +
-                    ", \'West: " + west +
-                    ", \'East: " + east +
-                    "\' using placeholder values for bounding box.");
-            // If so, use the placeholder values over the south pole
-            west = -180.0;
-            east = -179.0;
-            north = -89.0;
-            south = -90.0;
-            // and make sure we turn off the rangeIs360 flag
-            this.rangeIs360 = false;
-        }
-
-        BigDecimal nrth = new BigDecimal(north);
-        BigDecimal sth = new BigDecimal(south);
-        nrth = nrth.setScale(3, RoundingMode.HALF_UP);
-        sth = sth.setScale(3, RoundingMode.HALF_UP);
-
-        BigDecimal wst = BigDecimal.valueOf(west);
-        BigDecimal est = BigDecimal.valueOf(east);
-        wst = wst.setScale(3, RoundingMode.HALF_UP);
-        est = est.setScale(3, RoundingMode.HALF_UP);
-
-
-        // If we get here, it means we have valid values for spatial data, so continue
-        // with the spatial extent export.
-        AdapterLogger.LogDebug(this.className + " After BigDecimal conversion: rangeIs360:" + rangeIs360+
-                " west"+ wst + " east:" + est +
-                " north:"+nrth + " south:"+sth);
-        if (rangeIs360) {
-            BigDecimal bdeast = BoundingTools.convertBoundingVal(est, true);
-            BigDecimal bdwest = BoundingTools.convertBoundingVal(wst, true);
-
-            if (bdeast.compareTo(bdwest) == 1) {
-                boundingRectangles.add(createBoundingBoxJson(nrth, sth, BoundingTools.convertBoundingVal(est, true), BoundingTools.convertBoundingVal(wst, true)));
-            } else {
-                log.debug("East Longitude is less than West Longitude: separating bounding boxes.");
-
-                if (bdwest.compareTo(BigDecimal.valueOf(180)) != 0) {
-                    boundingRectangles.add(createBoundingBoxJson(nrth, sth, BigDecimal.valueOf(180), BoundingTools.convertBoundingVal(wst, true)));
-                }
-
-                boundingRectangles.add(createBoundingBoxJson(nrth, sth, BoundingTools.convertBoundingVal(est, true), BigDecimal.valueOf(-180)));
-            }
-        } else {
-            if (est.doubleValue() >= wst.doubleValue()) {
-                boundingRectangles.add(createBoundingBoxJson(nrth, sth, est, wst));
-            } else {
-                log.debug("East Longitude is less than West Longitude: separating bounding boxes.");
-                if (wst.doubleValue() != 180d) {
-                    boundingRectangles.add(createBoundingBoxJson(nrth, sth, BigDecimal.valueOf(180), wst));
-                }
-
-                if (est.doubleValue() != -180d) {
-                    boundingRectangles.add(createBoundingBoxJson(nrth, sth, est, BigDecimal.valueOf(-180)));
-                }
-            }
-        }
-
-        // Export track if cycle and pass exists
-        if (granule instanceof UMMGranule) {
-            UMMGranule ummGranule = (UMMGranule) granule;
-            if (ummGranule.getCycle() != null && ummGranule.getPass() != null) {
-                JSONObject track = new JSONObject();
-                horizontalSpatialDomain.put("Track", track);
-                track.put("Cycle", ummGranule.getCycle());
-                JSONArray passes = new JSONArray();
-                track.put("Passes", passes);
-                JSONObject pass = new JSONObject();
-                pass.put("Pass", ummGranule.getPass());
-                passes.add(pass);
-            }
-        }
-
-        // Export footprint if it exists
-        Set<GranuleCharacter> granuleCharacters = granule.getGranuleCharacterSet();
-
-        for (GranuleCharacter granuleCharacter : granuleCharacters) {
-            if (granuleCharacter.getDatasetElement().getElementDD().getShortName().equals("line")) {
-                this.isLineFormattedPolygon = true;
-                geometry = line2Polygons(geometry,granuleCharacter.getValue());
-                break;
-            }
-        }
-
         if (granule instanceof IsoGranule) {
-            if (((IsoGranule) granule).getPolygon() != "") {
+            String polygon = ((IsoGranule) granule).getPolygon();
+            if (polygon != "" && polygon != null) {
                 // Export Polygon
-                addPolygon(geometry, ((IsoGranule) granule).getPolygon());
+                addPolygon(geometry, polygon);
             }
             // Export Orbit
             // Commented out for now since UMM v1.5 only allows for either Geometry or Orbit not both
-            /*
             JSONObject orbit = new JSONObject();
             horizontalSpatialDomain.put("Orbit", orbit);
-            Pattern p = Pattern.compile("AscendingCrossing:\\s(.*)\\sStartLatitude:\\s(.*)\\sStartDirection:\\s(.*)\\sEndLatitude:\\s(.*)\\sEndDirection:\\s(.*)");
+            Pattern p = Pattern.compile("AscendingCrossing:\\s?(.*)\\s?StartLatitude:\\s?(.*)\\s?StartDirection:\\s?(.*)\\s?EndLatitude:\\s?(.*)\\s?EndDirection:\\s?(.*)");
             Matcher m = p.matcher(((IsoGranule) granule).getOrbit());
-            if (m.find()) {
+            foundOrbitalData = m.find();
+            if (foundOrbitalData) {
                 orbit.put("AscendingCrossing", Double.parseDouble(m.group(1)));
                 orbit.put("StartLatitude", Double.parseDouble(m.group(2)));
-                orbit.put("StartDirection", m.group(3));
+                orbit.put("StartDirection", m.group(3).trim());
                 orbit.put("EndLatitude", Double.parseDouble(m.group(4)));
-                orbit.put("EndDirection", m.group(5));
+                orbit.put("EndDirection", m.group(5).trim());
             }
-            */
 
             // Export track
             if (((IsoGranule) granule).getSwotTrack() != "") {
@@ -515,6 +406,132 @@ public class UMMGranuleFile {
                 }
             }
         }
+
+        // We can only include orbital or bounding-box data, not both
+        if (foundOrbitalData == false) {
+
+            horizontalSpatialDomain.put("Geometry", geometry);
+
+            JSONArray boundingRectangles = new JSONArray();
+            geometry.put("BoundingRectangles", boundingRectangles);
+
+            double north = 0, south = 0, east = 0, west = 0;
+            if(granule !=null && granule instanceof  gov.nasa.cumulus.metadata.aggregator.UMMGranule) {
+                east = ((UMMGranule) granule).getBbxEasternLongitude() != null ?
+                        ((UMMGranule) granule).getBbxEasternLongitude() : 0;
+                west = ((UMMGranule) granule).getBbxWesternLongitude() != null?
+                        ((UMMGranule) granule).getBbxWesternLongitude() : 0;
+                north = ((UMMGranule) granule).getBbxNorthernLatitude() != null?
+                        ((UMMGranule) granule).getBbxNorthernLatitude() : 0;
+                south = ((UMMGranule) granule).getBbxSouthernLatitude() != null?
+                        ((UMMGranule) granule).getBbxSouthernLatitude() : 0;
+            } else {
+                Set<GranuleReal> grs = granule.getGranuleRealSet();
+
+                for (GranuleReal gr : grs) {
+                    switch (gr.getDatasetElement().getElementDD().getElementId()) {
+                        case 28:
+                            west = gr.getValue();
+                            break;
+                        case 15:
+                            north = gr.getValue();
+                            break;
+                        case 8:
+                            east = gr.getValue();
+                            break;
+                        case 23:
+                            south = gr.getValue();
+                            break;
+                    }
+                }
+            }
+
+            // first, check to see if any of the spatial values are bad/invalid
+            if (BoundingTools.coordsInvalid(north, south, east, west)) {
+                log.warn("Bounding coordinates invalid: \'North: " + north +
+                        ", \'South: " + south +
+                        ", \'West: " + west +
+                        ", \'East: " + east +
+                        "\' using placeholder values for bounding box.");
+                // If so, use the placeholder values over the south pole
+                west = -180.0;
+                east = -179.0;
+                north = -89.0;
+                south = -90.0;
+                // and make sure we turn off the rangeIs360 flag
+                this.rangeIs360 = false;
+            }
+
+            BigDecimal nrth = new BigDecimal(north);
+            BigDecimal sth = new BigDecimal(south);
+            nrth = nrth.setScale(3, RoundingMode.HALF_UP);
+            sth = sth.setScale(3, RoundingMode.HALF_UP);
+
+            BigDecimal wst = BigDecimal.valueOf(west);
+            BigDecimal est = BigDecimal.valueOf(east);
+            wst = wst.setScale(3, RoundingMode.HALF_UP);
+            est = est.setScale(3, RoundingMode.HALF_UP);
+
+
+            // If we get here, it means we have valid values for spatial data, so continue
+            // with the spatial extent export.
+            if (rangeIs360) {
+                BigDecimal bdeast = BoundingTools.convertBoundingVal(est, true);
+                BigDecimal bdwest = BoundingTools.convertBoundingVal(wst, true);
+
+                if (bdeast.compareTo(bdwest) == 1) {
+                    boundingRectangles.add(createBoundingBoxJson(nrth, sth, BoundingTools.convertBoundingVal(est, true), BoundingTools.convertBoundingVal(wst, true)));
+                } else {
+                    log.debug("East Longitude is less than West Longitude: separating bounding boxes.");
+
+                    if (bdwest.compareTo(BigDecimal.valueOf(180)) != 0) {
+                        boundingRectangles.add(createBoundingBoxJson(nrth, sth, BigDecimal.valueOf(180), BoundingTools.convertBoundingVal(wst, true)));
+                    }
+
+                    boundingRectangles.add(createBoundingBoxJson(nrth, sth, BoundingTools.convertBoundingVal(est, true), BigDecimal.valueOf(-180)));
+                }
+            } else {
+                if (est.doubleValue() >= wst.doubleValue()) {
+                    boundingRectangles.add(createBoundingBoxJson(nrth, sth, est, wst));
+                } else {
+                    log.debug("East Longitude is less than West Longitude: separating bounding boxes.");
+
+                    if (wst.doubleValue() != 180d) {
+                        boundingRectangles.add(createBoundingBoxJson(nrth, sth, BigDecimal.valueOf(180), wst));
+                    }
+
+                    if (est.doubleValue() != -180d) {
+                        boundingRectangles.add(createBoundingBoxJson(nrth, sth, est, BigDecimal.valueOf(-180)));
+                    }
+                }
+            }
+        }
+
+        // Export track if cycle and pass exists
+        if (granule instanceof UMMGranule) {
+            UMMGranule ummGranule = (UMMGranule) granule;
+            if (ummGranule.getCycle() != null && ummGranule.getPass() != null) {
+                JSONObject track = new JSONObject();
+                horizontalSpatialDomain.put("Track", track);
+                track.put("Cycle", ummGranule.getCycle());
+                JSONArray passes = new JSONArray();
+                track.put("Passes", passes);
+                JSONObject pass = new JSONObject();
+                pass.put("Pass", ummGranule.getPass());
+                passes.add(pass);
+            }
+        }
+
+        // Export footprint if it exists
+
+        Set<GranuleCharacter> granuleCharacters = granule.getGranuleCharacterSet();
+        for (GranuleCharacter granuleCharacter : granuleCharacters) {
+            if (granuleCharacter.getDatasetElement().getElementDD().getShortName().equals("line")) {
+                geometry = line2Polygons(geometry,granuleCharacter.getValue());
+                break;
+            }
+        }
+
         return spatialExtent;
 
     }
@@ -658,7 +675,7 @@ public class UMMGranuleFile {
      */
     public boolean isSpatialValid(JSONObject geometry)
             throws URISyntaxException, IOException, ParseException {
-        boolean result =  CMRRestClientProvider.getECHOLambdaRestClient().isUMMGSpatialValid(CMRRestClientProvider.getProvider(),
+        boolean result =  CMRRestClientProvider.getLambdaRestClient().isUMMGSpatialValid(CMRRestClientProvider.getProvider(),
                 granule.getName(),
                 geometry.toJSONString());
         return result;

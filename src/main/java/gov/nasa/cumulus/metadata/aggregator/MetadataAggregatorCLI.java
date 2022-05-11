@@ -131,7 +131,7 @@ public class MetadataAggregatorCLI {
         MetadataFilesToEcho mtfe = new MetadataFilesToEcho(true);
         try {
             mtfe.readConfiguration(configFile);
-            mtfe.readIsoMendsMetadataFile(isoFile, s3Location);
+            mtfe.readIsoMetadataFile(isoFile, s3Location);
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
