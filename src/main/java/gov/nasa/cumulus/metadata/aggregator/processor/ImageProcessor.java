@@ -69,7 +69,7 @@ public class ImageProcessor extends ProcessorBase{
             JsonArray granules = inputJsonObj.getAsJsonArray("input");
             JsonObject granule = granules.get(0).getAsJsonObject();
             // Parse config values
-            JsonObject config = inputJsonObj.getAsJsonObject("src/main/resources/config");
+            JsonObject config = inputJsonObj.getAsJsonObject("config");
             String distribution_endpoint = config.get("distribution_endpoint").getAsString();
 
             files = granule.get("files").getAsJsonArray();

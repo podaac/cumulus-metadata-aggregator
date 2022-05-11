@@ -22,7 +22,7 @@ public class MetadataAggregatorCLI {
         Options options = new Options();
         options.addOption(OptionBuilder.withArgName("file")
                 .hasArg(true)
-                .withLongOpt("src/main/resources/config")
+                .withLongOpt("config")
                 .withDescription("Path to collection config file")
                 .create("c"));
         options.addOption(OptionBuilder.withArgName("file")
