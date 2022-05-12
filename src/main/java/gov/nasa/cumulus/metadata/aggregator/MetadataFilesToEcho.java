@@ -456,7 +456,7 @@ public class MetadataFilesToEcho {
 
         NodeList inputGranules = (NodeList) xpath.evaluate(IsoMendsXPath.GRANULE_INPUT, doc, XPathConstants.NODESET);
         for (int i = 0; i < inputGranules.getLength(); i++) {
-            ((IsoGranule) granule).addInputGranule(inputGranules.item(i).getTextContent());
+            ((IsoGranule) granule).addInputGranule(inputGranules.item(i).getTextContent().trim());
         }
 
         ((IsoGranule) granule).setPGEVersionClass(xpath.evaluate(IsoMendsXPath.PGE_VERSION_CLASS, doc));
