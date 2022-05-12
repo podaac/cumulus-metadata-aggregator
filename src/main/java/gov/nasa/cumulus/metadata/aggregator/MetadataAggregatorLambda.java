@@ -40,7 +40,7 @@ public class MetadataAggregatorLambda implements ITask{
 		JSONParser jp = new JSONParser();
 		JSONObject jo = (JSONObject) jp.parse(input);
 
-		JSONObject config = (JSONObject) jo.get("src/main/resources/config");
+		JSONObject config = (JSONObject) jo.get("config");
 
 		String collectionName = (String) config.get("collection");
 		String collectionVersion = (String) config.get("version");
@@ -224,7 +224,7 @@ public class MetadataAggregatorLambda implements ITask{
 		String output = "";
 		String privateBucket = "";
 		// Set CMR related metadata into ECHOResetClientProvider
-		CMRLambdaRestClient elrc = buildECHOLambdaRestClient(input);
+		CMRLambdaRestClient elrc = buildLambdaRestClient(input);
 		setCMRMetadataToProvider(input);
 		// From this point, determine if we are going to process Footprint (fp) only
 		if(FootprintProcessor.isFootprintFileExisting(input)) {
@@ -270,7 +270,7 @@ public class MetadataAggregatorLambda implements ITask{
 		// cumulus CMR expected input : const revisionId = event.input.cmrRevisionId
 		JSONParser jp = new JSONParser();
 		JSONObject jo = (JSONObject) jp.parse(input);
-		JSONObject config = (JSONObject) jo.get("src/main/resources/config");
+		JSONObject config = (JSONObject) jo.get("config");
 		String collectionName = (String) config.get("collection");
 		String granuleId = (String)config.get("granuleId");
 		String provider = (String)config.get("provider");
@@ -286,11 +286,11 @@ public class MetadataAggregatorLambda implements ITask{
 		return returnHash;
 	}
 
-	private CMRLambdaRestClient buildECHOLambdaRestClient(String input)
+	private CMRLambdaRestClient buildLambdaRestClient(String input)
 			throws  NoSuchAlgorithmException, KeyStoreException,
 			CertificateException, UnrecoverableKeyException, KeyManagementException, IOException,
 			URISyntaxException{
-		CMRLambdaRestClient elrc = (CMRLambdaRestClient) CMRRestClientProvider.getClient(
+		CMRLambdaRestClient elrc = CMRRestClientProvider.getClient(
 				input,  System.getenv().getOrDefault("LAUNCHPAD_CRYPTO_DIR", ""),
 				System.getenv().getOrDefault("CMR_URL", ""),
 				this.region,
@@ -311,7 +311,7 @@ public class MetadataAggregatorLambda implements ITask{
 	throws ParseException{
 		JSONParser jp = new JSONParser();
 		JSONObject jo = (JSONObject) jp.parse(input);
-		JSONObject config = (JSONObject) jo.get("src/main/resources/config");
+		JSONObject config = (JSONObject) jo.get("config");
 		String provider = (String)config.get("provider");
 		CMRRestClientProvider.setProvider(provider);
 	}

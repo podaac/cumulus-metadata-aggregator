@@ -10,7 +10,8 @@ Table of Content
 * MetadataAggregator is a lambda/ECS function which will aggregate information from different sources
 Ex. .xfdumanifest.xml, *.fp
 into UMM-G Json and upload UMM-G Json file up to CMR
-* This labmda has ability to obtain CMR token through launchpad (ECHOLambdaRestClient.java). The high level view of the process is
+* This labmda has ability to obtain CMR token through launchpad (CMRLambdaRestClient.java). The high level view of the 
+  process is
 copy the certificate key to lambda local directory, find certificate passcode through cloud system secret key
 and finally use the certificate to request CMR AUTHORIZATION token
 * If MetadataAggregator sees the input granule including the .fp (footprint) file. It will read the fp file, use

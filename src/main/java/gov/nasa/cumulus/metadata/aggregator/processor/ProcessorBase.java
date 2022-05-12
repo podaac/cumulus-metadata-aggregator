@@ -135,7 +135,7 @@ public class ProcessorBase {
         JsonObject granule = granules.get(0).getAsJsonObject();
 
         // Parse config values
-        JsonObject config = inputJsonObj.getAsJsonObject("src/main/resources/config");
+        JsonObject config = inputJsonObj.getAsJsonObject("config");
         collectionName = config.get("collection").getAsString();
         executionId = config.get("executionId").getAsString();
 

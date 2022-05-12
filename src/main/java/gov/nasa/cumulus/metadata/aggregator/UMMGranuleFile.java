@@ -367,7 +367,7 @@ public class UMMGranuleFile {
             Pattern p = Pattern.compile("AscendingCrossing:\\s?(.*)\\s?StartLatitude:\\s?(.*)\\s?StartDirection:\\s?(.*)\\s?EndLatitude:\\s?(.*)\\s?EndDirection:\\s?(.*)");
             Matcher m = p.matcher(((IsoGranule) granule).getOrbit());
             foundOrbitalData = m.find();
-            if (foundOrbitalData) {
+            if (foundOrbitalData && BoundingTools.allParsable(m.group(1), m.group(2), m.group(4))) {
                 orbit.put("AscendingCrossing", Double.parseDouble(m.group(1)));
                 orbit.put("StartLatitude", Double.parseDouble(m.group(2)));
                 orbit.put("StartDirection", m.group(3).trim());
@@ -795,9 +795,15 @@ public class UMMGranuleFile {
 
         for (int i = 0; i < polygonArray.length; i += 2) {
             JSONObject point = new JSONObject();
-            point.put("Longitude", Double.parseDouble(polygonArray[i + 1]));
-            point.put("Latitude", Double.parseDouble(polygonArray[i]));
-            points.add(point);
+            String lon = polygonArray[i + 1];
+            String lat = polygonArray[i];
+            if (BoundingTools.allParsable(lon, lat)) {
+                point.put("Longitude", Double.parseDouble(lon));
+                point.put("Latitude", Double.parseDouble(lat));
+                points.add(point);
+            } else {
+                AdapterLogger.LogWarning("Unable to parse polygon, lon: " + lon + ", lat: " + lat);
+            }
         }
         boundary.put("Points", points);
     }
