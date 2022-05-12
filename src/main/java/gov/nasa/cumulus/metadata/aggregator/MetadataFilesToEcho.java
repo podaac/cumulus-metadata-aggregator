@@ -19,6 +19,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
 
+import gov.nasa.cumulus.metadata.util.BoundingTools;
+import gov.nasa.cumulus.metadata.util.JSONUtils;
 import gov.nasa.podaac.inventory.model.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -428,11 +430,11 @@ public class MetadataFilesToEcho {
 
         ((IsoGranule) granule).setParameterName(xpath.evaluate(IsoMendsXPath.PARAMETER_NAME, doc));
         String qaPercentMissingData = xpath.evaluate(IsoMendsXPath.QA_PERCENT_MISSING_DATA, doc);
-        if (qaPercentMissingData != "") {
+        if (qaPercentMissingData != "" && BoundingTools.isParseable(qaPercentMissingData)) {
             ((IsoGranule) granule).setQAPercentMissingData(Double.parseDouble(qaPercentMissingData));
         }
         String qaPercentOutOfBoundsData = xpath.evaluate(IsoMendsXPath.QA_PERCENT_OUT_OF_BOUNDS_DATA, doc);
-        if (qaPercentOutOfBoundsData != "") {
+        if (qaPercentOutOfBoundsData != "" && BoundingTools.isParseable(qaPercentOutOfBoundsData)) {
             ((IsoGranule) granule).setQAPercentOutOfBoundsData(Double.parseDouble(qaPercentOutOfBoundsData));
         }
         ((IsoGranule) granule).setOrbit(xpath.evaluate(IsoMendsXPath.ORBIT, doc));
@@ -625,7 +627,8 @@ public class MetadataFilesToEcho {
 	public void writeJson(String outputLocation)
 			throws IOException, ParseException, URISyntaxException{
 		JSONObject granuleJson = createJson();
-		FileUtils.writeStringToFile(new File(outputLocation), granuleJson.toJSONString());
+        JSONUtils.cleanJSON(granuleJson);
+        FileUtils.writeStringToFile(new File(outputLocation), granuleJson.toJSONString());
 	}
 	
 	public Dataset getDataset(){

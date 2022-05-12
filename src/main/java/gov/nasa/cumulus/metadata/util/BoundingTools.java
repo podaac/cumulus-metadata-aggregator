@@ -19,6 +19,39 @@ public class BoundingTools {
     }
 
     /**
+     * Checks to see if a given string can be parsed into a double value.
+     * @param input The string to try and parse
+     * @return      True if the string can be parsed into a double without
+     *              throwing an exception, otherwise False,
+     */
+    public static boolean isParseable(String input) {
+        try {
+            Double.parseDouble(input);
+            return true;
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+    }
+
+    /**
+     * Checks to see if all provided string values can be parsed into
+     * double values.
+     *
+     * @param input The list of strings to try and parse
+     * @return      True if all provided strings can be parsed
+     *              into double values without an exception,
+     *              otherwise False.
+     */
+    public static boolean allParsable(String... input) {
+        for (String s : input) {
+            if (!isParseable(s)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Checks that all of the specified coordinates fall within at least one of the
      * two valid ranges for bounding rectangles; either 0 to 360, or -180 to 180.
      * <br>

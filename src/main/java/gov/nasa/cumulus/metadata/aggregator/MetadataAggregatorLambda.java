@@ -224,7 +224,7 @@ public class MetadataAggregatorLambda implements ITask{
 		String output = "";
 		String privateBucket = "";
 		// Set CMR related metadata into ECHOResetClientProvider
-		CMRLambdaRestClient elrc = buildECHOLambdaRestClient(input);
+		CMRLambdaRestClient elrc = buildLambdaRestClient(input);
 		setCMRMetadataToProvider(input);
 		// From this point, determine if we are going to process Footprint (fp) only
 		if(FootprintProcessor.isFootprintFileExisting(input)) {
@@ -286,11 +286,11 @@ public class MetadataAggregatorLambda implements ITask{
 		return returnHash;
 	}
 
-	private CMRLambdaRestClient buildECHOLambdaRestClient(String input)
+	private CMRLambdaRestClient buildLambdaRestClient(String input)
 			throws  NoSuchAlgorithmException, KeyStoreException,
 			CertificateException, UnrecoverableKeyException, KeyManagementException, IOException,
 			URISyntaxException{
-		CMRLambdaRestClient elrc = (CMRLambdaRestClient) CMRRestClientProvider.getClient(
+		CMRLambdaRestClient elrc = CMRRestClientProvider.getClient(
 				input,  System.getenv().getOrDefault("LAUNCHPAD_CRYPTO_DIR", ""),
 				System.getenv().getOrDefault("CMR_URL", ""),
 				this.region,
