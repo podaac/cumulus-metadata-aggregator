@@ -128,18 +128,22 @@ public class MetadataAggregatorLambda implements ITask {
 		}
 
 		MetadataFilesToEcho mtfe;
-		if (iso != null) {
-			mtfe = new MetadataFilesToEcho(true);
-			mtfe.setDatasetValues(collectionName, collectionVersion, rangeIs360, boundingBox);
+        boolean isIsoFile = (iso != null);
+
+        mtfe = new MetadataFilesToEcho(isIsoFile);
+        mtfe.setDatasetValues(collectionName, collectionVersion, rangeIs360, boundingBox);
+        if (granules != null && granules.size() > 0) {
+            mtfe.setGranuleFileSizeAndChecksum(granules);
+        }
+
+		if (isIsoFile) {
 			try {
-				mtfe.readIsoMendsMetadataFile(iso, s3Location);
+                mtfe.readIsoMetadataFile(iso, s3Location);
 			} catch (IOException e) {
 				AdapterLogger.LogError(this.className + " MetadataFilesToEcho input TRUE read error:" + e.getMessage());
 				e.printStackTrace();
 			}
 		} else {
-			mtfe = new MetadataFilesToEcho(false);
-			mtfe.setDatasetValues(collectionName, collectionVersion, rangeIs360, boundingBox);
 			try {
 				AdapterLogger.LogInfo(this.className + " Creating UMM-G data structure");
 				if (meta != null) mtfe.readCommonMetadataFile(meta, s3Location);
@@ -238,7 +242,7 @@ public class MetadataAggregatorLambda implements ITask {
 		String output = "";
 		String privateBucket = "";
 		// Set CMR related metadata into ECHOResetClientProvider
-		CMRLambdaRestClient elrc = buildECHOLambdaRestClient(input);
+		CMRLambdaRestClient elrc = buildLambdaRestClient(input);
 		setCMRMetadataToProvider(input);
 		// From this point, determine if we are going to process Footprint (fp) only
 		if (FootprintProcessor.isFootprintFileExisting(input)) {
@@ -300,11 +304,11 @@ public class MetadataAggregatorLambda implements ITask {
 		return returnHash;
 	}
 
-	private CMRLambdaRestClient buildECHOLambdaRestClient(String input)
+	private CMRLambdaRestClient buildLambdaRestClient(String input)
 			throws NoSuchAlgorithmException, KeyStoreException,
 			CertificateException, UnrecoverableKeyException, KeyManagementException, IOException,
 			URISyntaxException {
-		CMRLambdaRestClient elrc = (CMRLambdaRestClient) CMRRestClientProvider.getClient(
+		CMRLambdaRestClient elrc = CMRRestClientProvider.getClient(
 				input, System.getenv().getOrDefault("LAUNCHPAD_CRYPTO_DIR", ""),
 				System.getenv().getOrDefault("CMR_URL", ""),
 				this.region,

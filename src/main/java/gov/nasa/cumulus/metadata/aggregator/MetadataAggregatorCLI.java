@@ -22,7 +22,7 @@ public class MetadataAggregatorCLI {
         Options options = new Options();
         options.addOption(OptionBuilder.withArgName("file")
                 .hasArg(true)
-                .withLongOpt("src/main/resources/config")
+                .withLongOpt("config")
                 .withDescription("Path to collection config file")
                 .create("c"));
         options.addOption(OptionBuilder.withArgName("file")
@@ -131,7 +131,7 @@ public class MetadataAggregatorCLI {
         MetadataFilesToEcho mtfe = new MetadataFilesToEcho(true);
         try {
             mtfe.readConfiguration(configFile);
-            mtfe.readIsoMendsMetadataFile(isoFile, s3Location);
+            mtfe.readIsoMetadataFile(isoFile, s3Location);
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();

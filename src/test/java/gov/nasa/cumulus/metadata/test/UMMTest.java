@@ -31,6 +31,99 @@ import gov.nasa.cumulus.metadata.aggregator.MetadataFilesToEcho;
 
 public class UMMTest {
 
+    @Test
+    public void testIsoRequiredFields() throws IOException, ParseException, XPathExpressionException, ParserConfigurationException, SAXException, URISyntaxException {
+        /*
+         * These tests are based on a deliberately modified ISO file
+         * located in the src/test/resources directory:
+         *
+         * Granule_ISOMENDS_SWOT_Sample_L1_HR_TileBased_20181202_edit3.xml
+         *
+         * And validates the minimal required fields are present,
+         * and result in a successful UMM-G export.
+         */
+        String testDir = System.getProperty("test.dir");
+
+        String testFile = "Granule_ISOMENDS_SWOT_Sample_L1_HR_TileBased_20181202_edit3.xml";
+        String testFilePath = testDir + File.separator + testFile;
+
+        String testConfigFile = "testCollection.config";
+        String testConfigFilePath = testDir + File.separator + testConfigFile;
+
+        String granuleId = "PODAAC-4248_SWOT_L1B_HR_SLC_001_005_001L_20210612T072103_20210612T07215_PGA200_03";
+
+        MetadataFilesToEcho mtfe = new MetadataFilesToEcho(true);
+
+        mtfe.readConfiguration(testConfigFilePath);
+        mtfe.readIsoMetadataFile(testFilePath, "s3://public/datafile.nc");
+
+        mtfe.getGranule().setName(granuleId);
+        // debug breakpoint
+        System.out.println("Breakpoint!");
+        //write UMM-G to file
+        mtfe.writeJson( testDir + "/" + granuleId + ".cmr.json");
+
+        JSONParser parser = new JSONParser();
+        Object obj = parser.parse(new FileReader(testDir + "/" + granuleId + ".cmr.json"));
+        JSONObject umm = (JSONObject) obj;
+
+
+        System.out.println(String.format("GranuleUR is not provided by ISO XML, "
+                + "defined and supplied via datafile name - suffix: %s", granuleId));
+        assertEquals(granuleId,umm.get("GranuleUR"));
+        /*
+         * Check to make sure the required fields exist in the UMM-G
+         */
+        assertNotNull(umm.get("ProviderDates"));
+        // We should have two provider date entries, insert and update
+        assertEquals(2, ((JSONArray)umm.get("ProviderDates")).size());
+        assertNotNull(((JSONArray)umm.get("ProviderDates")).get(0));
+        assertNotNull(((JSONArray)umm.get("ProviderDates")).get(1));
+        JSONObject j1 = (JSONObject) ((JSONArray)umm.get("ProviderDates")).get(0);
+        JSONObject j2 = (JSONObject) ((JSONArray)umm.get("ProviderDates")).get(1);
+        assertNotNull(j1.get("Type"));
+        assertNotNull(j1.get("Date"));
+        assertNotNull(j2.get("Type"));
+        assertNotNull(j1.get("Date"));
+        boolean option1 = j1.get("Type").toString().equals("Insert") && j2.get("Type").toString().equals("Update");
+        boolean option2 = j2.get("Type").toString().equals("Insert") && j1.get("Type").toString().equals("Update");
+        // exactly one of the above should be 'true' but not both
+        if ((option1 || option2) && !(option1 && option2)) {
+            System.out.println("Found exactly one Insert and one Update field in ProviderDates.");
+        } else {
+            fail("Did not find exactly one Insert and one Update field in ProviderDates");
+        }
+        assertNotNull(umm.get("MetadataSpecification"));
+        testMetadataSpec(umm, "1.6.3");
+        // These tests are based on testCollection.config, and will need
+        // to be changed if the test resource changes.
+        JSONObject cr = (JSONObject)umm.get("CollectionReference");
+        assertEquals("1",cr.get("Version"));
+        assertEquals("L1B_HR_SLC",cr.get("ShortName"));
+        /*
+         * Now check to make sure various optional fields that have been
+         * intentionally removed or broken, don't exist in the final UMM-G.
+         */
+        assertNull(umm.get("InputGranules"));
+        assertNull(umm.get("Platforms"));
+        assertNull(umm.get("ArchiveAndDistributionInformation"));
+        assertNull(umm.get("MeasuredParameters"));
+    }
+
+    /**
+     * This is a simple test to validate the UMM-G metadata spec against
+     * a provided version string
+     * @param umm   the JSONObject to check/test
+     * @param ver   the expected UMM-G version, as decimal delimited string
+     */
+    private void testMetadataSpec(JSONObject umm, String ver) {
+        JSONObject ms = (JSONObject) umm.get("MetadataSpecification");
+        assertEquals(ms.get("Version"), ver);
+        assertEquals(ms.get("URL"),"https://cdn.earthdata.nasa.gov/umm/granule/v"+ver);
+        assertEquals(ms.get("Name"),"UMM-G");
+    }
+
+
 	@Test
 	public void testIso2UmmMappings()
 			throws XPathExpressionException, ParserConfigurationException, IOException,
@@ -56,7 +149,7 @@ public class UMMTest {
 		MetadataFilesToEcho mtfe = new MetadataFilesToEcho(true);
 		
 		mtfe.readConfiguration(testConfigFilePath);
-		mtfe.readIsoMendsMetadataFile(testFilePath, "s3://public/datafile.nc");
+		mtfe.readIsoMetadataFile(testFilePath, "s3://public/datafile.nc");
 		
 		mtfe.getGranule().setName(granuleId);
 
@@ -99,10 +192,7 @@ public class UMMTest {
         assertEquals((String)rdt.get("EndingDateTime"), "2018-07-17T23:59:59.999Z");
         
         //MetadataSpecification
-        JSONObject ms = (JSONObject) umm.get("MetadataSpecification");
-        assertEquals(ms.get("Version"),"1.6.3");
-        assertEquals(ms.get("URL"),"https://cdn.earthdata.nasa.gov/umm/granule/v1.6.3");
-        assertEquals(ms.get("Name"),"UMM-G");
+        testMetadataSpec(umm, "1.6.3");
         
         //Platforms
         JSONObject p = (JSONObject) ((JSONArray)umm.get("Platforms")).get(0);
@@ -134,7 +224,17 @@ public class UMMTest {
         
         //SpatialExtent
         JSONObject hsd = (JSONObject)((JSONObject)umm.get("SpatialExtent")).get("HorizontalSpatialDomain");
-        
+        JSONObject orbit = (JSONObject) hsd.get("Orbit");
+        assertEquals(((Double)orbit.get("StartLatitude")), new Double(-76.34));
+        assertEquals(((Double)orbit.get("EndLatitude")), new Double(78.954));
+        assertEquals(((Double)orbit.get("AscendingCrossing")), new Double(88.92));
+        assertEquals(((String)orbit.get("StartDirection")), "D");
+        assertEquals(((String)orbit.get("EndDirection")), "D");
+
+/* UMM-G only accepts either bounding Geometry or Orbit, not both.  Since the input xml has "Orbit", that takes priority
+   so this part of the test was commented out and a new orbit check was added.
+   TODO - convert this into a split test, one for ISO with orbit, and one for ISO without
+
         JSONObject geom = (JSONObject) hsd.get("Geometry");
         
         //Geometry/GPolygons
@@ -160,7 +260,8 @@ public class UMMTest {
         assertEquals(br.get("WestBoundingCoordinate"), new Double(-180));
         assertEquals(br.get("SouthBoundingCoordinate"), new Double(-85.045));
         assertEquals(br.get("EastBoundingCoordinate"), new Double(179.999));
-        assertEquals(br.get("NorthBoundingCoordinate"), new Double(85.045));        
+        assertEquals(br.get("NorthBoundingCoordinate"), new Double(85.045));
+*/
         
         //Track
         JSONObject track = (JSONObject) hsd.get("Track");
@@ -670,7 +771,7 @@ public class UMMTest {
 				.isUMMGSpatialValid(any(), any(), any());
 
 		MockedStatic<CMRRestClientProvider> mockedECHORestClientProvider = mockStatic(CMRRestClientProvider.class);
-		when(CMRRestClientProvider.getECHOLambdaRestClient()).thenReturn(mockedEchoLambdaRestClient);
+		when(CMRRestClientProvider.getLambdaRestClient()).thenReturn(mockedEchoLambdaRestClient);
 
 		//write UMM-G to file
 		mtfe.writeJson(testDir + "/" + granuleId + ".cmr.json");
