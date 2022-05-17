@@ -28,8 +28,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - When parsing ISO files, only start, stop, and creation time are required. All other fields are optional.
 - **PODAAC-4521**
   - Refactored project structure, package names, etc. to better match other cumulus lambdas.
-- **PODAAC-4328**
-  - Modify the code to be compliant with cumulus 11 input/output new schema
 ### Deprecated
 ### Removed
 - **PODAAC-2667**
