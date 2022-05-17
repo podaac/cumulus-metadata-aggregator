@@ -35,7 +35,7 @@ import com.amazonaws.services.secretsmanager.model.*;
 import gov.nasa.cumulus.metadata.util.S3Utils;
 
 public class CMRRestClientProvider {
-    private static String className = "gov.nasa.podaac.distribute.echo.CMRRestClientProvider";
+    private static String className = "gov.nasa.cumulus.metadata.aggregator.CMRRestClientProvider";
     private static CMRRestClient erc = null;
     private static CMRLambdaRestClient _elrc = null;
     /*
@@ -48,7 +48,7 @@ public class CMRRestClientProvider {
                                                 String tokenBucket, String tokenFile)
     throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException, IOException,
             CertificateException, UnrecoverableKeyException, URISyntaxException {
-        JsonObject inputJsonObj = new JsonParser().parse(lambdaInputStr).getAsJsonObject();
+        JsonObject inputJsonObj = JsonParser.parseString(lambdaInputStr).getAsJsonObject();
         JsonObject configJsonObj = inputJsonObj.getAsJsonObject("config");
         JsonObject launchpadConfigJsonObj = configJsonObj.getAsJsonObject("launchpadConfig");
         String systemBucket = configJsonObj.get("systemBucket").getAsString();

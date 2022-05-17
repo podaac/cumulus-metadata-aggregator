@@ -4,10 +4,7 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.*;
 import cumulus_message_adapter.message_parser.AdapterLogger;
 import org.apache.commons.lang3.StringUtils;
 
@@ -78,12 +75,13 @@ public class S3Utils {
      * @return The S3 URI of the uploaded file
      */
     public void upload(String region, String bucket, String key, File file) {
-        AdapterLogger.LogDebug("Uploading to bucket: " + bucket + " key: " + key + " file: " + file);
         AmazonS3 s3Client = getS3Client(region);
         try {
-            AdapterLogger.LogInfo(this.className + " Uploading to bucket: " + bucket + " key:" + key);
-            s3Client.putObject(new PutObjectRequest(bucket, key, file));
-            AdapterLogger.LogInfo(this.className + " Finished uploading an object: ");
+            AdapterLogger.LogInfo(this.className + " Uploading to bucket: " + bucket + " key:" + key +
+                    " file:"+ file.getAbsolutePath() + " fileSize:" + file.length());
+            PutObjectResult result = s3Client.putObject(new PutObjectRequest(bucket, key, file));
+            AdapterLogger.LogInfo(this.className + " Finished uploading file : " +
+                    file.getAbsolutePath());
         } catch (AmazonServiceException ase) {
             AdapterLogger.LogError(this.className + " Caught an AmazonServiceException, which " +
                     "means your request made it " +

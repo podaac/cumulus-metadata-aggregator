@@ -97,8 +97,8 @@ public class MetadataFilesToEcho {
 					(Double) boundingBox.get("lonMin"));
 		}
 	}
-	
-	//this method reads the output of a footprint command(.fp.xml)	
+
+	//this method reads the output of a footprint command(.fp.xml)
 	/*
 	 * {"EXTENT":"POLYGON ((97.20775 41.55055, 97.20775 63.62065, 139.74098 63.62065, 139.74098 41.55055, 97.20775 41.55055))",
 	 * "FOOTPRINT":"POLYGON ((97.80899 63.62065, 120.18871 62.26886, 130.46156 60.30856, 139.74098 57.55454, 132.02788 50.46657, 125.67086 41.55055, 111.70353 44.57289, 97.20775 45.66548, 97.80899 63.62065))"}
@@ -106,55 +106,55 @@ public class MetadataFilesToEcho {
 	public void readFootprintFile(String file) throws FileNotFoundException, IOException, ParseException{
 		JSONParser parser = new JSONParser();
 		JSONObject metadata = (JSONObject) parser.parse(new FileReader(file));
-	
+
 		String extent = (String)metadata.get("EXTENT");
 		String footprint = (String)metadata.get("FOOTPRINT");
-		
+
 		granule.getGranuleCharacterSet().add(createGranuleCharacter(footprint,"WKT_POLYGON"));
 		granule.getGranuleCharacterSet().add(createGranuleCharacter(extent,"EXTENT"));
-		
+
 	}
-	
+
 	private GranuleCharacter createGranuleCharacter(String value, String name){
-		
+
 		GranuleCharacter gc = new GranuleCharacter();
 		DatasetElement de = new DatasetElement();
 		ElementDD edd = new ElementDD();
-		
+
 		gc.setValue(value);
-		
+
 		edd.setShortName(name);
 		edd.setLongName(name);
-		
+
 		de.setElementDD(edd);
 		gc.setDatasetElement(de);
-		
+
 		return gc;
 	}
-	
-	
+
+
 	//This method reads the output of the common metadata handler (.mp)
-	
+
 	/*
 	 * {"granuleUR":"20170408033000-JPL-L2P_GHRSST-SSTskin-MODIS_T-N-v02.0-fv01.0.nc","localVersion":1,
 	 * "boundingBox":{"SouthernLatitude":-84.1072,"NorthernLatitude":-59.4533,"EasternLongitude":-2.1755,"WesternLongitude":-99.8315},
 	 * "productionDateTime":1496701426000,"dataFormat":"NetCDF","checksum":"300d760d9b362cf8b2f869c754ddf192","endingTime":1491622509000,"dataSize":24008128,
 	 * "collection":{"name":"MODIS_T-JPL-L2P-v2014.0","version":1},"beginningTime":1491622211000,"dayNightFlag":"UNSPECIFIED"}
 	 */
-	public void readCommonMetadataFile(String file, String s3Location) throws FileNotFoundException, IOException, ParseException{
+	public void readCommonMetadataFile(String file, String s3Location) throws IOException, ParseException{
 		//read JSON file
 		JSONParser parser = new JSONParser();
 		JSONObject metadata = (JSONObject) parser.parse(new FileReader(file));
-		
+
 		granule.setStartTimeLong((Long)metadata.get("beginningTime"));
 		granule.setStopTimeLong((Long)metadata.get("endingTime"));
 		granule.setCreateTimeLong((Long)metadata.get("productionDateTime"));
-		
+
 		//IS THIS THE NAME???
 		//granule.setName((String)metadata.get("granuleUR"));
 		granule.setVersion(((Long)metadata.get("localVersion")).intValue());
 		granule.setDataFormat((String)metadata.get("dataFormat"));
-		
+
 		GranuleReference gr = new GranuleReference();
 		gr.setDescription("S3 datafile.");
 		gr.setPath(s3Location);
@@ -228,13 +228,13 @@ public class MetadataFilesToEcho {
 
 		for(Object f: files){
 			JSONObject file = (JSONObject)f;
-			AdapterLogger.LogDebug(this.className + " UMM-G GranuleArchive filename:" + (String)file.get("name"));
+			AdapterLogger.LogDebug(this.className + " UMM-G GranuleArchive filename:" + (String)file.get("fileName"));
 			AdapterLogger.LogDebug(this.className + " UMM-G GranuleArchive filesize:" + ((Double) file.get("size")).longValue());
 			AdapterLogger.LogDebug(this.className + " UMM-G GranuleArchive checksum:" + (String)file.get("checksum"));
 			AdapterLogger.LogDebug(this.className + " UMM-G GranuleArchive checksumType:" + (String)file.get("checksumType"));
 			AdapterLogger.LogDebug(this.className + " UMM-G GranuleArchive type:" + (String)file.get("type"));
 			UMMGranuleArchive uga = new UMMGranuleArchive();
-			uga.setName((String)file.get("name"));
+			uga.setName((String)file.get("fileName"));
 			uga.setFileSize(((Double) file.get("size")).longValue());
 			uga.setChecksum((String)file.get("checksum"));
 			uga.setChecksumAlgorithm(StringUtils.upperCase((String)file.get("checksumType")));
@@ -596,7 +596,7 @@ public class MetadataFilesToEcho {
 
 		String productName = null;
 		try {
-		productName = xpath.evaluate(ManifestXPath.PRODUCT_NAME, doc);
+			productName = xpath.evaluate(ManifestXPath.PRODUCT_NAME, doc);
 		} catch (XPathExpressionException e1) {
 			try {
 				productName = xpath.evaluate(ManifestXPath.AUX_FILE_NAME, doc);
@@ -608,7 +608,7 @@ public class MetadataFilesToEcho {
 			granule.getGranuleCharacterSet().add(createGranuleCharacter(productName, UMMGranuleFile.PROVIDER_DATA_SOURCE));
 	}
 
-    private void setGranuleBoundingBox(double north, double south, double east, double west) {
+	private void setGranuleBoundingBox(double north, double south, double east, double west) {
 		AdapterLogger.LogInfo("set bounding box 4 coordinates for UMMGranule object");
 		granule.setBbxNorthernLatitude(north);
 		granule.setBbxSouthernLatitude(south);
@@ -617,7 +617,7 @@ public class MetadataFilesToEcho {
 	}
 
 	public JSONObject createJson()
-	throws ParseException, IOException, URISyntaxException {
+			throws ParseException, IOException, URISyntaxException {
 		granule.setIngestTime(new Date());
 		UMMGranuleFile granuleFile = new UMMGranuleFile(granule, dataset, rangeIs360);
 		JSONObject granuleJson = granuleFile.defineGranule();
@@ -630,11 +630,11 @@ public class MetadataFilesToEcho {
         JSONUtils.cleanJSON(granuleJson);
         FileUtils.writeStringToFile(new File(outputLocation), granuleJson.toJSONString());
 	}
-	
+
 	public Dataset getDataset(){
 		return this.dataset;
 	}
-	
+
 	public Granule getGranule(){
 		return this.granule;
 	}
