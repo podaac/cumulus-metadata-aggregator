@@ -52,6 +52,19 @@ public class JSONUtils {
             }
             for (String field : fields) {
                 Object value = obj.get(field);
+                // handle edge case for the DataGranule > Identifiers section
+                if (field.equalsIgnoreCase("Identifiers")) {
+                    JSONArray arr = (JSONArray) value;
+                    for (int i=0; i < arr.size(); i++) {
+                        if (identifierOk((JSONObject) arr.get(i))){
+                            valueExist = true;
+                        } else {
+                            arr.remove(i);
+                            i--;
+                        }
+                    }
+                }
+                // now handle non DG/Identifier values
                 if (cleanJSON(value)) {
                     valueExist = true;
                 } else {
@@ -71,5 +84,11 @@ public class JSONUtils {
             }
         }
         return valueExist;
+    }
+
+    public static boolean identifierOk(JSONObject json) {
+        boolean keyOk = UMMUtils.notNullOrEmpty((String) json.get("IdentifierType"));
+        boolean valOk = UMMUtils.notNullOrEmpty((String) json.get("Identifier"));
+        return keyOk && valOk;
     }
 }
