@@ -487,7 +487,7 @@ public class MetadataFilesToEcho {
         }
 
         ((IsoGranule) granule).setProducerGranuleId(xpath.evaluate(IsoSmapXPath.PRODUCER_GRANULE_ID, doc));
-        ((IsoGranule) granule).setCrid(xpath.evaluate(IsoXPath.CRID, doc));
+        ((IsoGranule) granule).setCrid(xpath.evaluate(IsoSmapXPath.CRID, doc));
         ((IsoGranule) granule).setParameterName("Parameter name placeholder");
         ((IsoGranule) granule).setReprocessingPlanned("No");
 
@@ -496,9 +496,9 @@ public class MetadataFilesToEcho {
         ((IsoGranule) granule).setSwotTrack(xpath.evaluate(IsoSmapXPath.SWOT_TRACK, doc));
 
         Source source = new Source();
-        source.setSourceShortName(xpath.evaluate(IsoXPath.PLATFORM, doc));
+        source.setSourceShortName(xpath.evaluate(IsoSmapXPath.PLATFORM, doc));
         Sensor sensor = new Sensor();
-        sensor.setSensorShortName(xpath.evaluate(IsoXPath.INSTRUMENT, doc));
+        sensor.setSensorShortName(xpath.evaluate(IsoSmapXPath.INSTRUMENT, doc));
 
         DatasetSource datasetSource = new DatasetSource();
         DatasetSource.DatasetSourcePK datasetSourcePK = new DatasetSource.DatasetSourcePK();
