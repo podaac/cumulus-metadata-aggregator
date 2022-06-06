@@ -14,6 +14,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 ### Security
 
+## [7.0.1] - 2022-05-27
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+- **PODAAC-4248**
+  - Fixed handling of empty DataGranule.Identifiers values in ISO to UMM-G translation
+### Security
+
 ## [7.0.0] - 2022-05-16
 ### Added
 - **PODAAC-4521**
