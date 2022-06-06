@@ -311,10 +311,13 @@ public class UMMGranuleFile {
             producerGranuleId.put("IdentifierType", "ProducerGranuleId");
             identifiers.add(producerGranuleId);
 
-            JSONObject crid = new JSONObject();
-            crid.put("Identifier", ((IsoGranule) granule).getCrid());
-            crid.put("IdentifierType", "CRID");
-            identifiers.add(crid);
+            String cridVal = ((IsoGranule) granule).getCrid();
+            if (cridVal != "") {
+                JSONObject crid = new JSONObject();
+                crid.put("Identifier", cridVal);
+                crid.put("IdentifierType", "CRID");
+                identifiers.add(crid);
+            }
 
             HashMap<String, String> identifiersMap = ((IsoGranule) granule).getIdentifiers();
             for (String key : identifiersMap.keySet()) {
