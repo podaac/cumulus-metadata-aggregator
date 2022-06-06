@@ -15,7 +15,7 @@ public class ImageProcessor extends ProcessorBase{
     private final String className = this.getClass().getName();
 
     public static boolean isImageFileExisting(String input) {
-        JsonObject inputKey = new JsonParser().parse(input).getAsJsonObject();
+        JsonObject inputKey = JsonParser.parseString(input).getAsJsonObject();
         JsonArray granules = inputKey.getAsJsonArray("input");
         JsonObject granule = granules.get(0).getAsJsonObject();
         JsonArray fileArray = granule.get("files").getAsJsonArray();
@@ -36,15 +36,15 @@ public class ImageProcessor extends ProcessorBase{
             String newCMRStr = appendImageUrl(input, ummgStr);
             String cmrFileName = buildCMRFileName(this.granuleId, this.executionId);
             long cmrFileSize = uploadCMRJson(cmrBucket, cmrDir, this.collectionName, cmrFileName,
-                     newCMRStr);
+                    newCMRStr);
             // Create the MD5 hash for CMR file.
             String cmrETag = s3Utils.getS3ObjectETag(this.region, cmrBucket,
                     Paths.get(cmrDir, this.collectionName,
                             cmrFileName).toString());
-           String output = createOutputMessage(input, cmrFileSize, cmrETag, new BigInteger(revisionId),
+            String output = createOutputMessage(input, cmrFileSize, cmrETag, new BigInteger(revisionId),
                     cmrFileName,
                     cmrBucket, cmrDir, this.collectionName);
-           return output;
+            return output;
         } catch (IOException | URISyntaxException e) {
             AdapterLogger.LogError("Image processor exception:" + e);
             throw e;
@@ -57,7 +57,7 @@ public class ImageProcessor extends ProcessorBase{
             throws IOException, URISyntaxException {
         try {
             Gson gsonBuilder = getGsonBuilder();
-            JsonObject cmrJsonObj = new JsonParser().parse(cmrString).getAsJsonObject();
+            JsonObject cmrJsonObj = JsonParser.parseString(cmrString).getAsJsonObject();
             JsonArray relatedUrls = cmrJsonObj.getAsJsonArray("RelatedUrls");
             // If cmrJson does not included relatedURLs jsonArray, then create one and then attached to cmrJsonObj
             if (relatedUrls == null) {
@@ -65,7 +65,7 @@ public class ImageProcessor extends ProcessorBase{
                 cmrJsonObj.add("RelatedUrls", relatedUrls);
             }
 
-            JsonObject inputJsonObj = new JsonParser().parse(input).getAsJsonObject();
+            JsonObject inputJsonObj = JsonParser.parseString(input).getAsJsonObject();
             JsonArray granules = inputJsonObj.getAsJsonArray("input");
             JsonObject granule = granules.get(0).getAsJsonObject();
             // Parse config values
@@ -76,9 +76,11 @@ public class ImageProcessor extends ProcessorBase{
             JsonArray files = granule.get("files").getAsJsonArray();
 
             for (JsonElement f : files) {
-                String filename = StringUtils.trim(f.getAsJsonObject().get("filename").getAsString());
+                JsonObject fileObj = f.getAsJsonObject();
+                String filename = StringUtils.trim(f.getAsJsonObject().get("fileName").getAsString());
                 if(isImageFile(filename)) {
-                    String downloadUrl = getImageDownloadUrl(distribution_endpoint, filename);
+                    String downloadUrl = getImageDownloadUrl(distribution_endpoint, fileObj.get("bucket").getAsString(),
+                            fileObj.get("key").getAsString());
                     if(!isDownloadUrlAlreadyExist(relatedUrls, downloadUrl)) {
                         RelatedUrlType relatedUrlType = new RelatedUrlType();
                         relatedUrlType.setUrl(downloadUrl);
@@ -87,12 +89,11 @@ public class ImageProcessor extends ProcessorBase{
                         relatedUrlType.setMimeType(getImageMimeType(filename));
 
                         String relatedUrlTypeStr = gsonBuilder.toJson(relatedUrlType);
-                        relatedUrls.add(new JsonParser().parse(relatedUrlTypeStr));
+                        relatedUrls.add(JsonParser.parseString(relatedUrlTypeStr));
                     }
                 }
             }
             String newCMRStr = gsonBuilder.toJson(cmrJsonObj);
-            AdapterLogger.LogDebug(this.className + " new UMM-G after appending image download url: " + newCMRStr);
             return newCMRStr;
         } catch (URISyntaxException ipe) {
             AdapterLogger.LogFatal(this.className + " constructing relatedURLs error:" + ipe);
@@ -134,12 +135,11 @@ public class ImageProcessor extends ProcessorBase{
         return determinedMimeType;
     }
 
-    public String getImageDownloadUrl(String distribution_url, String filename)
+    public String getImageDownloadUrl(String distribution_url, String bucket, String key)
             throws URISyntaxException{
-        filename = filename.replace("s3://", "/");
         try {
             URIBuilder uriBuilder = new URIBuilder(distribution_url);
-            return uriBuilder.setPath(uriBuilder.getPath() + filename).build().normalize().toString();
+            return uriBuilder.setPath(uriBuilder.getPath() + "/" + Paths.get(bucket, key).toString()).build().normalize().toString();
         } catch (URISyntaxException uriSyntaxException) {
             throw uriSyntaxException;
         }

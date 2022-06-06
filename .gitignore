@@ -4,3 +4,5 @@ target
 *.class
 .idea
 *.iml
+.gradle
+build

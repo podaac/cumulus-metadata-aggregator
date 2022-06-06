@@ -1,9 +1,8 @@
-## [7.0.1] - 2022-05-27
+## [8.0.0] - 2022-06-06
 ### Added
-### Changed
+- **PODAAC-4328**
+  - Modify the code to be compliant with cumulus 11 input/output new schema
 ### Deprecated
 ### Removed
 ### Fixed
-- **PODAAC-4248**
-    - Fixed handling of empty DataGranule.Identifiers values in ISO to UMM-G translation
 ### Security
