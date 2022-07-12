@@ -159,7 +159,7 @@ public class FootprintProcessor extends ProcessorBase{
                 .registerTypeHierarchyAdapter(List.class, new UMMGListAdapter())
                 .registerTypeHierarchyAdapter(Map.class, new UMMGMapAdapter())
                 .create();
-        JsonObject cmrJsonObj = new JsonParser().parse(cmrStr).getAsJsonObject();
+        JsonObject cmrJsonObj = JsonParser.parseString(cmrStr).getAsJsonObject();
         JsonObject spatialExtentJsonObj = cmrJsonObj.getAsJsonObject("SpatialExtent");
         SpatialExtentType spatialExtentType = null;
         if (spatialExtentJsonObj != null) {

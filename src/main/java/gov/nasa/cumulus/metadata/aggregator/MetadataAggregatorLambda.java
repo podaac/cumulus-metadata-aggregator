@@ -14,8 +14,10 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import gov.nasa.cumulus.metadata.aggregator.processor.DMRPPProcessor;
 import gov.nasa.cumulus.metadata.aggregator.processor.FootprintProcessor;
 import gov.nasa.cumulus.metadata.aggregator.processor.ImageProcessor;
+import gov.nasa.cumulus.metadata.state.WorkflowTypeEnum;
 import gov.nasa.cumulus.metadata.util.S3Utils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +34,7 @@ import cumulus_message_adapter.message_parser.AdapterLogger;
 public class MetadataAggregatorLambda implements ITask {
 	String className = this.getClass().getName();
 	private final String region = System.getenv("region");
+	private WorkflowTypeEnum workflowType;
 
 	@Override
 	public String PerformFunction(String input, Context context) throws Exception {
@@ -47,6 +50,11 @@ public class MetadataAggregatorLambda implements ITask {
 		String collectionVersion = (String) config.get("version");
 		Boolean rangeIs360 = (Boolean) config.get("rangeIs360");
 		JSONObject boundingBox = (JSONObject) config.get("boundingBox");
+		/** call the setWorkFlowType by passing in the stateMachine name to set a WorkflowTypeEnum
+		 * this will help the logic in postIngestProcess function.
+		 */
+		this.setWorkFlowType((String) config.get("stateMachine"));
+
 
 		String isoRegex = (String) config.get("isoRegex");
 		String archiveXmlRegex = (String) config.get("archiveXmlRegex");
@@ -240,11 +248,17 @@ public class MetadataAggregatorLambda implements ITask {
 			CertificateException, UnrecoverableKeyException, KeyManagementException, IOException,
 			URISyntaxException {
 		String output = "";
-		String privateBucket = "";
 		// Set CMR related metadata into ECHOResetClientProvider
 		CMRLambdaRestClient elrc = buildLambdaRestClient(input);
 		setCMRMetadataToProvider(input);
-		// From this point, determine if we are going to process Footprint (fp) only
+		// From this point, determine if we are going to process dmrpp, footprint or thumbnail image
+		if(workflowType == WorkflowTypeEnum.DMRPPWorkflow) {
+			Hashtable<String, String> returnVars = getMetaDataHash(elrc, input);
+			DMRPPProcessor processor = new DMRPPProcessor();
+			output = processor.process(input, returnVars.get("ummgStr"), region,
+					(new BigInteger(returnVars.get("revisionId"))).add(new BigInteger("1")).toString());
+			return output;
+		}
 		if (FootprintProcessor.isFootprintFileExisting(input)) {
 			Hashtable<String, String> returnVars = getMetaDataHash(elrc, input);
 			FootprintProcessor processor = new FootprintProcessor();
@@ -264,7 +278,7 @@ public class MetadataAggregatorLambda implements ITask {
 
 	/**
 	 * This function initialize the CMRLambdaRestClient to get ready for token production
-	 * as well as produce the usful cmr UMMG str, revision-id
+	 * as well as obtain the useful cmr UMMG str, revision-id
 	 *
 	 * @param input
 	 * @return hashtable : key/value pair of ummG, revision-id and concept-id
@@ -292,8 +306,7 @@ public class MetadataAggregatorLambda implements ITask {
 		String collectionName = (String) config.get("collection");
 		String granuleId = (String) config.get("granuleId");
 		String provider = (String) config.get("provider");
-		JSONArray granules = (JSONArray) jo.get("input"); //payload object
-		String cmrConceptId = ((JSONObject) granules.get(0)).get("cmrConceptId").toString();
+		String cmrConceptId = this.getConceptId(input);
 		String ummgStr = elrc.getGranuleByNativeConceptId(cmrConceptId);
 		BigInteger revisionId = elrc.getGranuleRevisionId(provider, collectionName, granuleId);
 		returnHash.put("cmrConceptId", cmrConceptId);
@@ -302,6 +315,46 @@ public class MetadataAggregatorLambda implements ITask {
 		returnHash.put("ummgStr", ummgStr);
 		returnHash.put("revisionId", revisionId.toString());
 		return returnHash;
+	}
+
+	/**
+	 * To get the cmr concept ID from the input message to subworkflows (ex. forge, tig, dmrpp)
+	 * the input could be
+	 * 1. coming from main IngestWorkflow, where a field call cmrConceptId will be presented : ex : "cmrConceptId": "G1239806838-POCUMULUS",
+	 * 2. coming from bulk ingest, the conceptId will be embedded in cmrLink field within payload.  example below
+	 * "payload": {
+	 *     "granules": [
+	 *       {
+	 *         "beginningDateTime": "2021-05-01T06:50:01.000Z",
+	 *         "cmrLink": "https://cmr.uat.earthdata.nasa.gov/search/concepts/G1243703485-POCUMULUS.umm_json",
+	 *         "collectionId": "MODIS_A-JPL-L2P-v2019.0___2019.0",
+	 *         "createdAt": 1656570595208,
+	 *         "duration": 36267.1,
+	 *         "endingDateTime": "2021-05-01T06:55:00.000Z",
+	 *         "error": {
+	 *           "Cause": "None",
+	 *           "Error": "Unknown Error"
+	 *         },
+	 * @param input
+	 * @return
+	 * @throws ParseException
+	 */
+	public String getConceptId(String input) throws ParseException{
+		String conceptId="";
+		JSONParser jp = new JSONParser();
+		JSONObject jo = (JSONObject) jp.parse(input);
+		JSONArray granules = (JSONArray) jo.get("input"); //payload object
+		JSONObject granule = (JSONObject) granules.get(0);
+		if(granule.containsKey("cmrConceptId")){
+			conceptId = granule.get("cmrConceptId").toString();
+		} else if (granule.containsKey("cmrLink")){
+			String cmrLink = granule.get("cmrLink").toString();
+			String[] tokens = StringUtils.split(cmrLink, '/');
+			String lastToken = tokens[tokens.length -1]; //last token ex. G1243703485-POCUMULUS.umm_json
+			String[] conceptIdTokens= StringUtils.split(StringUtils.trim(lastToken), '.');
+			conceptId = conceptIdTokens[0];
+		}
+		return conceptId;
 	}
 
 	private CMRLambdaRestClient buildLambdaRestClient(String input)
@@ -326,13 +379,29 @@ public class MetadataAggregatorLambda implements ITask {
 	 * @param input Message adapter input string.  Mapped through step function workflow
 	 * @throws ParseException
 	 */
-	private void setCMRMetadataToProvider(String input)
+	public void setCMRMetadataToProvider(String input)
 			throws ParseException {
 		JSONParser jp = new JSONParser();
 		JSONObject jo = (JSONObject) jp.parse(input);
 		JSONObject config = (JSONObject) jo.get("config");
 		String provider = (String) config.get("provider");
 		CMRRestClientProvider.setProvider(provider);
+	}
+
+	public void setWorkFlowType(String stateMachine) throws ParseException {
+		AdapterLogger.LogInfo("current state machine:" + stateMachine);
+		if(StringUtils.endsWithIgnoreCase(stateMachine, "IngestWorkflow")) {
+			workflowType = WorkflowTypeEnum.IngestWorkflow;
+		} else if(StringUtils.endsWithIgnoreCase(stateMachine, "DMRPPWorkflow")) {
+			workflowType = WorkflowTypeEnum.DMRPPWorkflow;
+		} else if (StringUtils.endsWithIgnoreCase(stateMachine, "ThumbnailImageWorkflow")) {
+			workflowType = WorkflowTypeEnum.ThumbnailImageWorkflow;
+		} else if (StringUtils.endsWithIgnoreCase(stateMachine, "ForgeWorkflow")) {
+			workflowType = WorkflowTypeEnum.ForgeWorkflow;
+		} else  {
+			workflowType = WorkflowTypeEnum.NONE;
+		}
+		AdapterLogger.LogInfo("Current workflow type: " + workflowType);
 	}
 
 }
