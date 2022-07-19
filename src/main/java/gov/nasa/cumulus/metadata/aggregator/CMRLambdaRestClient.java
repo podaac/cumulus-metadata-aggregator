@@ -218,7 +218,7 @@ public class CMRLambdaRestClient extends CMRRestClient {
      * @return revison-id in BigInteger
      */
     public BigInteger decodeRevisionString(String responseJson) {
-        JsonObject inputKey = new JsonParser().parse(responseJson).getAsJsonObject();
+        JsonObject inputKey =JsonParser.parseString(responseJson).getAsJsonObject();
         JsonArray granules = inputKey.getAsJsonArray("items");
         /**
          * If not items array has size not equal to 1 then either this granule has not
