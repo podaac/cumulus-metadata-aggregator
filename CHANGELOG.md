@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - **PODAAC-4721**
-  - Enhanced MetataAggregator by adding DMRPP Processor which supports bulk operation
+  - Enhanced MetataAggregator by adding DMRPP Processor which supports DMRPP bulk operation
 ### Deprecated
 ### Removed
 ### Fixed
