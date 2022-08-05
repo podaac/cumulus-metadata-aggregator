@@ -494,6 +494,7 @@ public class MetadataFilesToEcho {
         ((IsoGranule) granule).setOrbit(xpath.evaluate(IsoSmapXPath.ORBIT, doc));
 
         ((IsoGranule) granule).setSwotTrack(xpath.evaluate(IsoSmapXPath.SWOT_TRACK, doc));
+		((IsoGranule) granule).setPolygon(xpath.evaluate(IsoSmapXPath.POLYGON, doc));
 
         Source source = new Source();
         source.setSourceShortName(xpath.evaluate(IsoSmapXPath.PLATFORM, doc));
