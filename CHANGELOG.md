@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Enhanced MetataAggregator by adding DMRPP Processor which supports bulk operation
 - **PODAAC-4713**
   - fixed metadataAggregator can not extract posList to construct GPolygon issue
+  - added logic to exclude bounding box if SMAP GPolygon is added
 
 ### Deprecated
 ### Removed
