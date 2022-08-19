@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **PODAAC-4713**
   - fixed metadataAggregator can not extract posList to construct GPolygon issue
   - added logic to exclude bounding box if SMAP GPolygon is added
+  - Upgrade amazon libraries
 
 ### Deprecated
 ### Removed
