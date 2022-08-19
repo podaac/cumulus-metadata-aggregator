@@ -20,6 +20,8 @@ public class IsoGranule extends UMMGranule {
     private List<String> inputGranules;
     private String PGEVersionClass;
 
+    private IsoType isoType;
+
     public IsoGranule() {
         this.identifiers = new HashMap<>();
         this.inputGranules = new ArrayList<>();
@@ -127,5 +129,13 @@ public class IsoGranule extends UMMGranule {
 
     public void setPGEVersionClass(String PGEVersionClass) {
         this.PGEVersionClass = PGEVersionClass;
+    }
+
+    public IsoType getIsoType() {
+        return isoType;
+    }
+
+    public void setIsoType(IsoType isoType) {
+        this.isoType = isoType;
     }
 }
