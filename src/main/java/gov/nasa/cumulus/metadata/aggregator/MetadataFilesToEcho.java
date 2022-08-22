@@ -283,6 +283,7 @@ public class MetadataFilesToEcho {
                 readIsoMendsMetadataFile(s3Location, doc, xpath);
             } else if (isoType == IsoType.SMAP) {
                 AdapterLogger.LogInfo("Found SMAP file");
+				((IsoGranule) this.granule).setIsoType(isoType);
                 readIsoSmapMetadataFile(s3Location, doc, xpath);
             } else {
                 AdapterLogger.LogWarning(isoType.name() + " didn't match any expected ISO type, skipping optional " +

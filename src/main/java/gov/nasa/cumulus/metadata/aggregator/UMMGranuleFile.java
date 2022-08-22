@@ -10,6 +10,7 @@ import gov.nasa.cumulus.metadata.umm.model.UMMGranuleArchive;
 import gov.nasa.podaac.inventory.api.Constant;
 
 import gov.nasa.podaac.inventory.model.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.simple.JSONArray;
@@ -350,6 +351,21 @@ public class UMMGranuleFile {
         return temporal;
     }
 
+    private boolean shouldAddBBx(Granule granule) {
+        boolean shouldAddBBx = false;
+        if(granule !=null && granule instanceof  gov.nasa.cumulus.metadata.aggregator.UMMGranule) {
+            shouldAddBBx = true;
+        }
+        // if the granule object is IsoGranule type and it is SMAP mission, then we check if polygon was added.
+        // if polygon was part of geometry (added to SpatialExtent), then bounding box should not be included in
+        // SpacialExtend
+        if(granule instanceof  gov.nasa.cumulus.metadata.aggregator.IsoGranule && ((IsoGranule)granule).getIsoType() == IsoType.SMAP
+        &&  StringUtils.isNotEmpty(((IsoGranule) granule).getPolygon())) {
+                shouldAddBBx = false;
+        }
+        return shouldAddBBx;
+    }
+
     private JSONObject exportSpatial() {
         JSONObject spatialExtent = new JSONObject();
         JSONObject geometry = new JSONObject();
@@ -478,7 +494,7 @@ public class UMMGranuleFile {
 
             // If we get here, it means we have valid values for spatial data, so continue
             // with the spatial extent export.
-            if (rangeIs360) {
+            if (rangeIs360 && shouldAddBBx(granule)) {
                 BigDecimal bdeast = BoundingTools.convertBoundingVal(est, true);
                 BigDecimal bdwest = BoundingTools.convertBoundingVal(wst, true);
 
@@ -493,7 +509,7 @@ public class UMMGranuleFile {
 
                     boundingRectangles.add(createBoundingBoxJson(nrth, sth, BoundingTools.convertBoundingVal(est, true), BigDecimal.valueOf(-180)));
                 }
-            } else {
+            } else if (shouldAddBBx(granule)){
                 if (est.doubleValue() >= wst.doubleValue()) {
                     boundingRectangles.add(createBoundingBoxJson(nrth, sth, est, wst));
                 } else {
@@ -536,7 +552,6 @@ public class UMMGranuleFile {
         }
 
         return spatialExtent;
-
     }
 
     /**
