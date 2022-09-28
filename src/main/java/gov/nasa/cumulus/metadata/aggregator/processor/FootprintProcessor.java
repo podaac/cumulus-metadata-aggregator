@@ -205,10 +205,9 @@ public class FootprintProcessor extends ProcessorBase{
         }
         if (lineTypes.size() > 0) geometryType.setLines(lineTypes);
         if (gPolygonTypes.size() > 0) geometryType.setGPolygons(gPolygonTypes);
-
+        // Remove the BoundingRectangles if Footprint appeared
         spatialExtentType = removeBBX(spatialExtentType);
         String spatialExtentStr = gsonBuilder.toJson(spatialExtentType);
-        //TODO : This area actually output both footprint/GPolygon and BoundingRectangle
         AdapterLogger.LogInfo(this.className + " SpatialExtent:" + spatialExtentStr);
         cmrJsonObj.add("SpatialExtent", gsonBuilder.toJsonTree(spatialExtentType).getAsJsonObject());
         String outputCMRStr = gsonBuilder.toJson(cmrJsonObj);
