@@ -20,7 +20,13 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Collection;
+import java.util.ArrayList;
+
 
 /**
  * Example footprint file content (downloaded from bucket where footprint is written by forge)
