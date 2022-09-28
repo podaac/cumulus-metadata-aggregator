@@ -20,11 +20,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Collection;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Example footprint file content (downloaded from bucket where footprint is written by forge)
@@ -210,12 +206,62 @@ public class FootprintProcessor extends ProcessorBase{
         if (lineTypes.size() > 0) geometryType.setLines(lineTypes);
         if (gPolygonTypes.size() > 0) geometryType.setGPolygons(gPolygonTypes);
 
+        spatialExtentType = removeBBX(spatialExtentType);
         String spatialExtentStr = gsonBuilder.toJson(spatialExtentType);
+        //TODO : This area actually output both footprint/GPolygon and BoundingRectangle
         AdapterLogger.LogInfo(this.className + " SpatialExtent:" + spatialExtentStr);
         cmrJsonObj.add("SpatialExtent", gsonBuilder.toJsonTree(spatialExtentType).getAsJsonObject());
         String outputCMRStr = gsonBuilder.toJson(cmrJsonObj);
         AdapterLogger.LogInfo(this.className + " CMR String after appending Footprint:" + spatialExtentStr);
         return outputCMRStr;
+    }
+
+    private SpatialExtentType removeBBX(SpatialExtentType spatialExtentType) {
+        // SpqtialExtent requires (could be none of the following):
+        //     "anyOf": [{
+        //        "required": ["GranuleLocalities"]
+        //      }, {
+        //        "required": ["HorizontalSpatialDomain"]
+        //      }, {
+        //        "required": ["VerticalSpatialDomains"]GranuleLocalities
+        //////   and
+        // HorizontalSpatialDomain requires
+        // "oneOf": [{
+        //        "required": ["Geometry"]
+        //      }, {
+        //        "required": ["Orbit"]
+        //      }]
+        /// and
+        // Geometry requires
+        // "anyOf": [{
+        //        "required": ["Points"]
+        //      }, {
+        //        "required": ["BoundingRectangles"]
+        //      }, {
+        //        "required": ["GPolygons"]
+        //      }, {
+        //        "required": ["Lines"]
+        //      }]
+        HorizontalSpatialDomainType horizontalSpatialDomainType = spatialExtentType.getHorizontalSpatialDomain();
+        if(horizontalSpatialDomainType != null) {
+            GeometryType geometryType = horizontalSpatialDomainType.getGeometry();
+            if (geometryType !=null) {
+                // Either GPolygon has greater than 0 appearance or Lines has greater than 0 appearance
+                // then remove the BoundRectangles.
+                Set<GPolygonType> gPolygonTypeSet = geometryType.getGPolygons();
+                Set<LineType> lineTypeSet = geometryType.getLines();
+                if((gPolygonTypeSet!=null && !gPolygonTypeSet.isEmpty())
+                    ||
+                    (lineTypeSet!=null && !lineTypeSet.isEmpty())) {
+                    //since gPolygon is not null or an empty set them remove bounding rectangle here
+                    Set<BoundingRectangleType> boundingRectangleTypeSet = geometryType.getBoundingRectangles();
+                    if (boundingRectangleTypeSet!=null && !boundingRectangleTypeSet.isEmpty()) {
+                        boundingRectangleTypeSet.clear();
+                    }
+                }
+            }
+        }
+        return spatialExtentType;
     }
 
     /**
