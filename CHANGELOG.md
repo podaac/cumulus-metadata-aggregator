@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - **PODAAC-2796**
   - remove all OPeNDAP URL object from RelatedUrls before doing dmrpp file generator processing
+- **PODAAC-4832**
+  - remove BoundingRectangles structure from SpatialExtent if GPolygon appears
 ### Security
 
 ## [8.0.0] - 2022-06-06

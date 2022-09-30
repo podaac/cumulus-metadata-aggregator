@@ -87,7 +87,7 @@ public class ProcessorBase {
                                   String newCMRStr)
             throws IOException {
         // create a new working directory
-        AdapterLogger.LogError(this.className + " bucket:" + cmrBucket + " dir:" + cmrBaseDir +
+        AdapterLogger.LogInfo(this.className + " bucket:" + cmrBucket + " dir:" + cmrBaseDir +
                 " collectionName:"+ collectionName + " cmrFileName:"+ cmrFileName);
         String cmrFileWorkDir = this.createWorkDir();
         try {
