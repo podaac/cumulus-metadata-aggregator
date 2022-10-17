@@ -1,16 +1,30 @@
 package gov.nasa.cumulus.metadata.aggregator;
 
 
+import gov.nasa.cumulus.metadata.umm.generated.AdditionalAttributeType;
+import gov.nasa.cumulus.metadata.umm.generated.TrackPassTileType;
+import gov.nasa.cumulus.metadata.umm.generated.TrackType;
 import gov.nasa.podaac.inventory.model.Granule;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class UMMGranule extends Granule {
-    private Integer cycle;
-    private Integer pass;
+    //private Integer cycle;
+//    private Integer pass;
+    /**
+     * A generated type which represents the cycle and pass
+     */
+    private TrackType trackType;
+    /**
+     * A generated type which represents the pass and associate Tiles under Track
+     */
+    private TrackPassTileType trackPassTileType;
+    private List<AdditionalAttributeType> additionalAttributeTypes;
     private Integer orbitNumber;
     private Integer startOrbit;
     private Integer endOrbit;
+    private String tile;
     /* Bounding Box 4 points */
     private Double bbxNorthernLatitude;
     private Double bbxSouthernLatitude;
@@ -19,21 +33,21 @@ public class UMMGranule extends Granule {
     private BigDecimal equatorCrossingLongitude;
     private String equatorCrossingDateTime;
 
-    public Integer getPass() {
-        return pass;
-    }
+//    public Integer getPass() {
+//        return pass;
+//    }
+//
+//    public void setPass(Integer pass) {
+//        this.pass = pass;
+//    }
 
-    public void setPass(Integer pass) {
-        this.pass = pass;
-    }
-
-    public Integer getCycle() {
-        return cycle;
-    }
-
-    public void setCycle(Integer cycle) {
-        this.cycle = cycle;
-    }
+//    public Integer getCycle() {
+//        return cycle;
+//    }
+//
+//    public void setCycle(Integer cycle) {
+//        this.cycle = cycle;
+//    }
 
     public Integer getOrbitNumber() {
         return orbitNumber;
@@ -57,6 +71,31 @@ public class UMMGranule extends Granule {
     public void setEndOrbit(Integer endOrbit) {
         this.endOrbit = endOrbit;
     }
+
+    public String getTile() {
+        return tile;
+    }
+
+    public void setTile(String tile) {
+        this.tile = tile;
+    }
+
+    public TrackType getTrackType() {
+        return trackType;
+    }
+
+    public void setTrackType(TrackType trackType) {
+        this.trackType = trackType;
+    }
+
+    public List<AdditionalAttributeType> getAdditionalAttributeTypes() {
+        return additionalAttributeTypes;
+    }
+
+    public void setAdditionalAttributeTypes(List<AdditionalAttributeType> additionalAttributeTypes) {
+        this.additionalAttributeTypes = additionalAttributeTypes;
+    }
+
     public Double getBbxNorthernLatitude() {
         return bbxNorthernLatitude;
     }

@@ -1,10 +1,13 @@
 package gov.nasa.cumulus.metadata.util;
 
+import com.google.gson.JsonObject;
 import gov.nasa.cumulus.metadata.aggregator.UMMUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import java.util.ArrayList;
-import java.util.Iterator;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.util.*;
 
 public class JSONUtils {
 
@@ -91,4 +94,18 @@ public class JSONUtils {
         boolean valOk = UMMUtils.notNullOrEmpty((String) json.get("Identifier"));
         return keyOk && valOk;
     }
+
+    /**
+     * Translate from google gson JsonObject to org.json.simple.JSONObject
+     * @param input
+     * @return
+     * @throws ParseException
+     */
+    public static JSONObject GsonToJSONObj(JsonObject input) throws ParseException {
+        JSONParser parser = new JSONParser();
+        JSONObject jo = (JSONObject) parser.parse(input.toString());;
+        return jo;
+    }
+
+
 }

@@ -14,9 +14,9 @@
          <CRID>unknown</CRID>
          <ProductCounter>unknown</ProductCounter>
          <Description>Size: 1024 SizeUnit: B</Description>
-         <CycleID>unknown</CycleID>
-         <PassID>unknown</PassID>
-         <TileID>unknown</TileID>
+         <CycleID>22</CycleID>
+         <PassID>33</PassID>
+         <TileID>jasper 33</TileID>
          <SourceType>O</SourceType>
       </ECSDataGranule>
       <MemberOfECSDataGranule>

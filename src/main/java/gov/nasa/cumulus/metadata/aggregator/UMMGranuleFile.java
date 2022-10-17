@@ -1,9 +1,16 @@
 package gov.nasa.cumulus.metadata.aggregator;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.algorithm.CGAlgorithms;
 import cumulus_message_adapter.message_parser.AdapterLogger;
+import gov.nasa.cumulus.metadata.umm.adapter.UMMGCollectionAdapter;
+import gov.nasa.cumulus.metadata.umm.adapter.UMMGListAdapter;
+import gov.nasa.cumulus.metadata.umm.adapter.UMMGMapAdapter;
 import gov.nasa.cumulus.metadata.util.BoundingTools;
+import gov.nasa.cumulus.metadata.util.JSONUtils;
 import gov.nasa.cumulus.metadata.util.TimeConversion;
 import gov.nasa.cumulus.metadata.exception.GEOProcessException;
 import gov.nasa.cumulus.metadata.umm.model.UMMGranuleArchive;
@@ -22,6 +29,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -92,6 +100,9 @@ public class UMMGranuleFile {
 
         // Populate the Spatial metadata
         granuleJson.put("SpatialExtent", exportSpatial());
+
+        // Populate the tile into AdditionalAttributes
+//        granule.put
 
 
         /**
@@ -366,7 +377,7 @@ public class UMMGranuleFile {
         return shouldAddBBx;
     }
 
-    private JSONObject exportSpatial() {
+    private JSONObject exportSpatial() throws ParseException{
         JSONObject spatialExtent = new JSONObject();
         JSONObject geometry = new JSONObject();
         JSONObject horizontalSpatialDomain = new JSONObject();
@@ -528,17 +539,29 @@ public class UMMGranuleFile {
 
         // Export track if cycle and pass exists
         if (granule instanceof UMMGranule) {
-            UMMGranule ummGranule = (UMMGranule) granule;
-            if (ummGranule.getCycle() != null && ummGranule.getPass() != null) {
-                JSONObject track = new JSONObject();
-                horizontalSpatialDomain.put("Track", track);
-                track.put("Cycle", ummGranule.getCycle());
-                JSONArray passes = new JSONArray();
-                track.put("Passes", passes);
-                JSONObject pass = new JSONObject();
-                pass.put("Pass", ummGranule.getPass());
-                passes.add(pass);
+//            Gson gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
+//                    .registerTypeHierarchyAdapter(Collection.class, new UMMGCollectionAdapter())
+//                    .registerTypeHierarchyAdapter(List.class, new UMMGListAdapter())
+//                    .registerTypeHierarchyAdapter(Map.class, new UMMGMapAdapter())
+//                    .create();
+//            JsonObject trackJsonObj = gsonBuilder.toJsonTree(((UMMGranule) granule).getTrackType()).getAsJsonObject();
+//            JSONObject track = JSONUtils.GsonToJSONObj(trackJsonObj);
+            /**
+             * Track include cycle and passes(array).
+             */
+            if(((UMMGranule) granule).getTrackType() != null ) {
+                horizontalSpatialDomain.put("Track", createUMMGTrack((UMMGranule) granule));
             }
+//            if (ummGranule.getCycle() != null && ummGranule.getPass() != null) {
+//                JSONObject track = new JSONObject();
+//                horizontalSpatialDomain.put("Track", track);
+//                track.put("Cycle", ummGranule.getCycle());
+//                JSONArray passes = new JSONArray();
+//                track.put("Passes", passes);
+//                JSONObject pass = new JSONObject();
+//                pass.put("Pass", ummGranule.getPass());
+//                passes.add(pass);
+//            }
         }
 
         // Export footprint if it exists
@@ -550,8 +573,19 @@ public class UMMGranuleFile {
                 break;
             }
         }
-
         return spatialExtent;
+    }
+
+    public JSONObject createUMMGTrack(UMMGranule ummGranule) throws ParseException {
+        Gson gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
+                .registerTypeHierarchyAdapter(Collection.class, new UMMGCollectionAdapter())
+                .registerTypeHierarchyAdapter(List.class, new UMMGListAdapter())
+                .registerTypeHierarchyAdapter(Map.class, new UMMGMapAdapter())
+                .create();
+        JsonObject trackJsonObj = gsonBuilder.toJsonTree(ummGranule.getTrackType()).getAsJsonObject();
+        JSONObject track = JSONUtils.GsonToJSONObj(trackJsonObj);
+        AdapterLogger.LogInfo("TrackType:" + track.toString());
+        return track;
     }
 
     /**
