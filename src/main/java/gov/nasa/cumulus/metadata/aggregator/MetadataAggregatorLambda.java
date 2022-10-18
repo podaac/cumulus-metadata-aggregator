@@ -48,6 +48,10 @@ public class MetadataAggregatorLambda implements ITask{
 		String collectionVersion = (String) config.get("version");
 		Boolean rangeIs360 = (Boolean) config.get("rangeIs360");
 		JSONObject boundingBox = (JSONObject) config.get("boundingBox");
+		/** call the setWorkFlowType by passing in the stateMachine name to set a WorkflowTypeEnum
+		 * this will help the logic in postIngestProcess function.
+		 */
+		this.setWorkFlowType((String) config.get("stateMachine"));
 
 		String isoRegex = (String)config.get("isoRegex");
 		String archiveXmlRegex = (String)config.get("archiveXmlRegex");
@@ -318,7 +322,7 @@ public class MetadataAggregatorLambda implements ITask{
 		String provider = (String)config.get("provider");
 		CMRRestClientProvider.setProvider(provider);
 	}
-	
+
 	public void setWorkFlowType(String stateMachine) throws ParseException {
 		AdapterLogger.LogInfo("current state machine:" + stateMachine);
 		if(StringUtils.endsWithIgnoreCase(stateMachine, "IngestWorkflow")) {
