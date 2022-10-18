@@ -318,9 +318,7 @@ public class MetadataAggregatorLambda implements ITask{
 		String provider = (String)config.get("provider");
 		CMRRestClientProvider.setProvider(provider);
 	}
-
-
-	// for PR add in Mike, Simon Liu, and normal ppl
+	
 	public void setWorkFlowType(String stateMachine) throws ParseException {
 		AdapterLogger.LogInfo("current state machine:" + stateMachine);
 		if(StringUtils.endsWithIgnoreCase(stateMachine, "IngestWorkflow")) {
