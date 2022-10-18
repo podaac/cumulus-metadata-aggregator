@@ -228,7 +228,7 @@ public class MetadataAggregatorLambda implements ITask{
 		// Set CMR related metadata into ECHOResetClientProvider
 		CMRLambdaRestClient elrc = buildLambdaRestClient(input);
 		setCMRMetadataToProvider(input);
-		// From this point, determine if we are going to process Footprint (fp) only
+		// From this point, determine if we are going to process Forge workflow
 		if(workflowType == WorkflowTypeEnum.ForgeWorkflow) {
 			Hashtable<String, String> returnVars = getMetaDataHash(elrc,input);
 			FootprintProcessor processor = new FootprintProcessor();
@@ -236,6 +236,7 @@ public class MetadataAggregatorLambda implements ITask{
 					(new BigInteger(returnVars.get("revisionId"))).add(new BigInteger("1")).toString());
 			return output;
 		}
+		// From this point, determine if we are going to process TIG workflow
 		if(workflowType == WorkflowTypeEnum.ThumbnailImageWorkflow) {
 			Hashtable<String, String> returnVars = getMetaDataHash(elrc,input);
 			ImageProcessor processor = new ImageProcessor();
