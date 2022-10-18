@@ -16,6 +16,7 @@ import java.util.List;
 
 import gov.nasa.cumulus.metadata.aggregator.processor.FootprintProcessor;
 import gov.nasa.cumulus.metadata.aggregator.processor.ImageProcessor;
+import gov.nasa.cumulus.metadata.state.WorkflowTypeEnum;
 import gov.nasa.cumulus.metadata.util.S3Utils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +33,7 @@ import cumulus_message_adapter.message_parser.AdapterLogger;
 public class MetadataAggregatorLambda implements ITask{
 	String className = this.getClass().getName();
 	private final String region = System.getenv("region");
+	private WorkflowTypeEnum workflowType;
 	@Override
 	public String PerformFunction(String input, Context context) throws Exception {
 		S3Utils s3Utils = new S3Utils();
@@ -227,14 +229,14 @@ public class MetadataAggregatorLambda implements ITask{
 		CMRLambdaRestClient elrc = buildLambdaRestClient(input);
 		setCMRMetadataToProvider(input);
 		// From this point, determine if we are going to process Footprint (fp) only
-		if(FootprintProcessor.isFootprintFileExisting(input)) {
+		if(workflowType == WorkflowTypeEnum.ForgeWorkflow) {
 			Hashtable<String, String> returnVars = getMetaDataHash(elrc,input);
 			FootprintProcessor processor = new FootprintProcessor();
 			output = processor.process(input, returnVars.get("ummgStr"), region,
 					(new BigInteger(returnVars.get("revisionId"))).add(new BigInteger("1")).toString());
 			return output;
 		}
-		if(ImageProcessor.isImageFileExisting(input)) {
+		if(workflowType == WorkflowTypeEnum.ThumbnailImageWorkflow) {
 			Hashtable<String, String> returnVars = getMetaDataHash(elrc,input);
 			ImageProcessor processor = new ImageProcessor();
 			output = processor.process(input,returnVars.get("ummgStr"), region,
@@ -314,6 +316,24 @@ public class MetadataAggregatorLambda implements ITask{
 		JSONObject config = (JSONObject) jo.get("config");
 		String provider = (String)config.get("provider");
 		CMRRestClientProvider.setProvider(provider);
+	}
+
+
+	// for PR add in Mike, Simon Liu, and normal ppl
+	public void setWorkFlowType(String stateMachine) throws ParseException {
+		AdapterLogger.LogInfo("current state machine:" + stateMachine);
+		if(StringUtils.endsWithIgnoreCase(stateMachine, "IngestWorkflow")) {
+			workflowType = WorkflowTypeEnum.IngestWorkflow;
+		} else if(StringUtils.endsWithIgnoreCase(stateMachine, "DMRPPWorkflow")) {
+			workflowType = WorkflowTypeEnum.DMRPPWorkflow;
+		} else if (StringUtils.endsWithIgnoreCase(stateMachine, "ThumbnailImageWorkflow")) {
+			workflowType = WorkflowTypeEnum.ThumbnailImageWorkflow;
+		} else if (StringUtils.endsWithIgnoreCase(stateMachine, "ForgeWorkflow")) {
+			workflowType = WorkflowTypeEnum.ForgeWorkflow;
+		} else  {
+			workflowType = WorkflowTypeEnum.NONE;
+		}
+		AdapterLogger.LogInfo("Current workflow type: " + workflowType);
 	}
 
 }
