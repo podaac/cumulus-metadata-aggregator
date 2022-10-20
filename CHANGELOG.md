@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.0.2] - 2022-10-18
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+- **PODAAC-5012**
+  - Fixed issue where SWOT provides a PNG and triggers the `postIngestProcess`
+### Security
+
 ## [7.0.1] - 2022-05-27
 ### Added
 ### Changed
