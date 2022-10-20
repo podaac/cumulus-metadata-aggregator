@@ -1,6 +1,7 @@
 package gov.nasa.cumulus.metadata.util;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
 import gov.nasa.cumulus.metadata.aggregator.UMMUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -107,5 +108,16 @@ public class JSONUtils {
         return jo;
     }
 
+    /**
+     * Translate from google gson JsonObject to org.json.simple.JSONObject
+     * @param input
+     * @return
+     * @throws ParseException
+     */
+    public static JSONArray GsonArrayToJSONArray(JsonArray input) throws ParseException {
+        JSONParser parser = new JSONParser();
+        JSONArray jarray = (JSONArray) parser.parse(input.toString());;
+        return jarray;
+    }
 
 }

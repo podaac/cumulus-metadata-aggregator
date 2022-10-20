@@ -33,22 +33,6 @@ public class UMMGranule extends Granule {
     private BigDecimal equatorCrossingLongitude;
     private String equatorCrossingDateTime;
 
-//    public Integer getPass() {
-//        return pass;
-//    }
-//
-//    public void setPass(Integer pass) {
-//        this.pass = pass;
-//    }
-
-//    public Integer getCycle() {
-//        return cycle;
-//    }
-//
-//    public void setCycle(Integer cycle) {
-//        this.cycle = cycle;
-//    }
-
     public Integer getOrbitNumber() {
         return orbitNumber;
     }

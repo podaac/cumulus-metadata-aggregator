@@ -46,7 +46,7 @@ public class UmmgPojoFactory {
         return trackType;
     }
 
-    public List<AdditionalAttributeType> trackTypeToAdditionalAttributeType(TrackType trackType) {
+    public List<AdditionalAttributeType> trackTypeToAdditionalAttributeTypes(TrackType trackType) {
         List<TrackPassTileType> trackPassTileTypes = trackType.getPasses();
         ArrayList<AdditionalAttributeType> additionalAttributeTypes = new ArrayList<>();
         trackPassTileTypes.stream().forEach(trackPassTileType ->  {

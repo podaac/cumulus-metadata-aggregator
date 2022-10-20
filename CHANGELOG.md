@@ -13,7 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - fixed metadataAggregator can not extract posList to construct GPolygon issue
   - added logic to exclude bounding box if SMAP GPolygon is appearing under SpatialExtent
   - Upgrade amazon libraries
-
+- **PODAAC-4831**
+  - Enhanced metadataAggregator so the swot iso.xml cycle, pass information can be
+    marshaled into UMMG's Track object and AdditionalAttributes object
+  
 ### Deprecated
 ### Removed
 ### Fixed

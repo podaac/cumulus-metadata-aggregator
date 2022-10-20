@@ -297,5 +297,12 @@ public class UMMUtils {
     public static boolean notNullOrEmpty(String str) {
         return !isNullOrEmpty(str);
     }
+
+    public static Double longitudeTypeNormalizer(Double value) {
+        value = value < -180 ? -180 : value;
+        value = value > 180 ? value - 360 : value;
+        return value;
+    }
+
 }
 

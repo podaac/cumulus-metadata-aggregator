@@ -191,7 +191,10 @@ public class MetadataFilesToEcho {
 			}
 			trackType = createTrackType(new Integer(cycleInt), iPass);
 		}
+		//  common metadata file does not include tiles info yet, so there is no need to convert TrackType
+		// to AdditionalAttributeType Array
 		granule.setTrackType(trackType);
+
 
 		if (metadata.get(Constants.Metadata.ORBIT) != null) {
 			granule.setOrbitNumber(((Long) metadata.get(Constants.Metadata.ORBIT)).intValue());
@@ -481,7 +484,7 @@ public class MetadataFilesToEcho {
 
         ((IsoGranule) granule).setPGEVersionClass(xpath.evaluate(IsoMendsXPath.PGE_VERSION_CLASS, doc));
 		// Process ISO cycle, pass and tile
-		String  cyclePassTileSceneStr =StringUtils.trim(xpath.evaluate(IsoSwotXPath.CYCLE_PASS_TILE_SCENE, doc));
+		String  cyclePassTileSceneStr =StringUtils.trim(xpath.evaluate(IsoMendsXPath.CYCLE_PASS_TILE_SCENE, doc));
 		createIsoCyclePassTile(cyclePassTileSceneStr);
 	}
 
@@ -530,7 +533,7 @@ public class MetadataFilesToEcho {
 			trackType = createTrackType(cps, p_cycle);
 			UmmgPojoFactory ummgPojoFactory = UmmgPojoFactory.getInstance();
 			additionalAttributeTypes=
-					ummgPojoFactory.trackTypeToAdditionalAttributeType(trackType);
+					ummgPojoFactory.trackTypeToAdditionalAttributeTypes(trackType);
 		}
 		((IsoGranule)granule).setTrackType(trackType);
 		((IsoGranule)granule).setAdditionalAttributeTypes(additionalAttributeTypes);
@@ -711,71 +714,10 @@ public class MetadataFilesToEcho {
 			trackType = ummgPojoFactory.createTrackType(NumberUtils.createInteger(cycleStr), trackPassTileTypes);
 		}
 		granule.setTrackType(trackType);
+		granule.setAdditionalAttributeTypes(UmmgPojoFactory.getInstance().trackTypeToAdditionalAttributeTypes(trackType));
 		return granule;
 	}
 
-	/**
-	 * SWOT ISO.xml comes to this function where swot archive.xml goes to readSwotAchiveXmlFile
-	 * @param file
-	 * @throws ParserConfigurationException
-	 * @throws IOException
-	 * @throws SAXException
-	 * @throws XPathExpressionException
-	 */
-	public void readSwotIsoXmlFile(String file) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
-		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-		docBuilderFactory.setNamespaceAware(true);
-		DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-		Document doc = docBuilder.parse(new File(file));
-
-		XPath xpath = XPathFactory.newInstance().newXPath();
-		xpath.setNamespaceContext(new NamespaceResolver(doc));
-
-		granule = createSwotIsoGranule(doc, xpath);
-		// No spatial extent exists for SWOT L0 data so set as global
-		setGranuleBoundingBox(90.0, -90.0, 180.0, -180.0);
-	}
-
-	private UMMGranule createSwotIsoGranule(Document doc, XPath xpath)
-			throws XPathExpressionException{
-		granule.setStartTime(DatatypeConverter.parseDateTime(xpath.evaluate(IsoSwotXPath.BEGINNING_DATE_TIME, doc)).getTime());
-		granule.setStopTime(DatatypeConverter.parseDateTime(xpath.evaluate(IsoSwotXPath.ENDING_DATE_TIME, doc)).getTime());
-		granule.setCreateTime(DatatypeConverter.parseDateTime(xpath.evaluate(IsoSwotXPath.CREATION_DATE_TIME, doc)).getTime());
-		String  cyclePassTileSceneStr =StringUtils.trim(xpath.evaluate(IsoSwotXPath.CYCLE_PASS_TILE_SCENE, doc));
-
-		TrackType trackType = marshellCyclePassTileSceneStrToAchiveType(cyclePassTileSceneStr);
-
-//		ArrayList<TrackPassTileType>trackPassTileTypes = new ArrayList<>();
-//		TrackType trackType = null;
-//		if (StringUtils.isNotEmpty(""passStr"")) {
-//			ArrayList<String>tiles = null;
-//			if(StringUtils.isNotEmpty(tileStr)) {
-//				tiles = new ArrayList<>();
-//				tiles.add(tileStr);
-//			}
-//			TrackPassTileType trackPassTileType =
-//					ummgPojoFactory.createTrackPassTileType(NumberUtils.createInteger(passStr), tiles);
-//			trackPassTileTypes.add(trackPassTileType);
-//		}
-//		if (StringUtils.isNotEmpty(cycleStr)) {
-//			trackType = ummgPojoFactory.createTrackType(NumberUtils.createInteger(cycleStr), trackPassTileTypes);
-//		}
-		granule.setTrackType(trackType);
-		return granule;
-	}
-
-	/**
-	 * Marshall : Cycle: 5 Pass: [40, Tiles: 4-5L 4-5R] [41, Tiles: 6R 6L] [42, Tiles: 7F]
-	 * to TrackType
-	 * @param input
-	 * @return
-	 */
-	public TrackType marshellCyclePassTileSceneStrToAchiveType(String input) {
-		input =StringUtils.upperCase(StringUtils.trim(input));
-		input = input.replaceAll("\\s+", " ");
-
-		return null;
-	}
 	/**
 	 * Parses Sentinel-6 XFDU manifest for metadata.
 	 *
@@ -827,7 +769,7 @@ public class MetadataFilesToEcho {
 		String pass = StringUtils.trim(xpath.evaluate(ManifestXPath.PASS, doc));
 
 		TrackType trackType = createTrackType(NumberUtils.createInteger(cycle), NumberUtils.createInteger(pass));
-		granule.setTrackType(trackType);
+		granule.setTrackType(trackType); // No tile so we don't need to convert trackType to AdditionalAttributeType array
 
 		String productName = null;
 		try {

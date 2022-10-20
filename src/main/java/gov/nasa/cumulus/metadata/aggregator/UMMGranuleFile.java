@@ -1,8 +1,6 @@
 package gov.nasa.cumulus.metadata.aggregator;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.algorithm.CGAlgorithms;
 import cumulus_message_adapter.message_parser.AdapterLogger;
@@ -101,9 +99,15 @@ public class UMMGranuleFile {
         // Populate the Spatial metadata
         granuleJson.put("SpatialExtent", exportSpatial());
 
-        // Populate the tile into AdditionalAttributes
-//        granule.put
-
+        /**
+         * AddtionalAttributes
+         */
+        if(((UMMGranule) granule).getAdditionalAttributeTypes() != null &&
+                ((UMMGranule) granule).getAdditionalAttributeTypes().size() >0
+        ) {
+            granuleJson.put("AdditionalAttributes",
+                    createAdditionalAttributes((UMMGranule) granule));
+        }
 
         /**
          * Populate the Orbital Metadata
@@ -398,7 +402,7 @@ public class UMMGranuleFile {
             Matcher m = p.matcher(((IsoGranule) granule).getOrbit());
             foundOrbitalData = m.find();
             if (foundOrbitalData && BoundingTools.allParsable(m.group(1), m.group(2), m.group(4))) {
-                orbit.put("AscendingCrossing", Double.parseDouble(m.group(1)));
+                orbit.put("AscendingCrossing", UMMUtils.longitudeTypeNormalizer(Double.parseDouble(m.group(1))));
                 orbit.put("StartLatitude", Double.parseDouble(m.group(2)));
                 orbit.put("StartDirection", m.group(3).trim());
                 orbit.put("EndLatitude", Double.parseDouble(m.group(4)));
@@ -539,29 +543,12 @@ public class UMMGranuleFile {
 
         // Export track if cycle and pass exists
         if (granule instanceof UMMGranule) {
-//            Gson gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
-//                    .registerTypeHierarchyAdapter(Collection.class, new UMMGCollectionAdapter())
-//                    .registerTypeHierarchyAdapter(List.class, new UMMGListAdapter())
-//                    .registerTypeHierarchyAdapter(Map.class, new UMMGMapAdapter())
-//                    .create();
-//            JsonObject trackJsonObj = gsonBuilder.toJsonTree(((UMMGranule) granule).getTrackType()).getAsJsonObject();
-//            JSONObject track = JSONUtils.GsonToJSONObj(trackJsonObj);
             /**
              * Track include cycle and passes(array).
              */
             if(((UMMGranule) granule).getTrackType() != null ) {
                 horizontalSpatialDomain.put("Track", createUMMGTrack((UMMGranule) granule));
             }
-//            if (ummGranule.getCycle() != null && ummGranule.getPass() != null) {
-//                JSONObject track = new JSONObject();
-//                horizontalSpatialDomain.put("Track", track);
-//                track.put("Cycle", ummGranule.getCycle());
-//                JSONArray passes = new JSONArray();
-//                track.put("Passes", passes);
-//                JSONObject pass = new JSONObject();
-//                pass.put("Pass", ummGranule.getPass());
-//                passes.add(pass);
-//            }
         }
 
         // Export footprint if it exists
@@ -586,6 +573,18 @@ public class UMMGranuleFile {
         JSONObject track = JSONUtils.GsonToJSONObj(trackJsonObj);
         AdapterLogger.LogInfo("TrackType:" + track.toString());
         return track;
+    }
+
+    public JSONArray createAdditionalAttributes(UMMGranule ummGranule) throws ParseException {
+        Gson gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
+                .registerTypeHierarchyAdapter(Collection.class, new UMMGCollectionAdapter())
+                .registerTypeHierarchyAdapter(List.class, new UMMGListAdapter())
+                .registerTypeHierarchyAdapter(Map.class, new UMMGMapAdapter())
+                .create();
+        JsonArray additionalAttributes = gsonBuilder.toJsonTree(ummGranule.getAdditionalAttributeTypes()).getAsJsonArray();
+        JSONArray jarray = JSONUtils.GsonArrayToJSONArray(additionalAttributes);
+        AdapterLogger.LogInfo("AdditionalAttributes: " + jarray.toString());
+        return jarray;
     }
 
     /**
