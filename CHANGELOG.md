@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - remove all OPeNDAP URL object from RelatedUrls before doing dmrpp file generator processing
 - **PODAAC-4832**
   - remove BoundingRectangles structure from SpatialExtent if GPolygon appears
+- **PODAAC-5012**
+  - Fixed issue where SWOT provides a PNG and triggers the `postIngestProcess`
 ### Security
 
 ## [8.0.0] - 2022-06-06
