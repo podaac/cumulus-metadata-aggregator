@@ -6,32 +6,28 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import gov.nasa.cumulus.metadata.aggregator.*;
 
-import gov.nasa.cumulus.metadata.aggregator.factory.UmmgPojoFactory;
 import gov.nasa.cumulus.metadata.umm.adapter.UMMGCollectionAdapter;
 import gov.nasa.cumulus.metadata.umm.adapter.UMMGListAdapter;
 import gov.nasa.cumulus.metadata.umm.adapter.UMMGMapAdapter;
 import gov.nasa.cumulus.metadata.umm.generated.AdditionalAttributeType;
 import gov.nasa.cumulus.metadata.umm.generated.TrackPassTileType;
 import gov.nasa.cumulus.metadata.umm.generated.TrackType;
-import org.apache.commons.collections.iterators.ObjectArrayIterator;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.junit.Test;
-import sun.java2d.jules.JulesRenderingEngine;
 
-import javax.sound.midi.Track;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 
 public class MetadataFilesToEchoTest {
 
@@ -275,7 +271,7 @@ public class MetadataFilesToEchoTest {
         assertEquals(trackType.getCycle(), new Integer(5));
         List<TrackPassTileType> trackPassTileTypes = trackType.getPasses();
         assertEquals(trackPassTileTypes.size(), 3);
-        TrackPassTileType trackPassTileType=trackPassTileTypes.get(0);
+        TrackPassTileType trackPassTileType = trackPassTileTypes.get(0);
         assertEquals(trackPassTileType.getPass(), new Integer(40));
         List<String> tiles = trackPassTileType.getTiles();
         assertEquals(tiles.size(), 7);

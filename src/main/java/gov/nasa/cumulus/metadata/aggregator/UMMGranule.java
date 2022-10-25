@@ -10,8 +10,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class UMMGranule extends Granule {
-    //private Integer cycle;
-//    private Integer pass;
     /**
      * A generated type which represents the cycle and pass
      */

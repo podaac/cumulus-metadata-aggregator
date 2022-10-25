@@ -7,9 +7,13 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.TimeZone;
 
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.DocumentBuilder;
@@ -23,7 +27,16 @@ import gov.nasa.cumulus.metadata.umm.generated.TrackPassTileType;
 import gov.nasa.cumulus.metadata.umm.generated.TrackType;
 import gov.nasa.cumulus.metadata.util.BoundingTools;
 import gov.nasa.cumulus.metadata.util.JSONUtils;
-import gov.nasa.podaac.inventory.model.*;
+import gov.nasa.podaac.inventory.model.Granule;
+import gov.nasa.podaac.inventory.model.GranuleCharacter;
+import gov.nasa.podaac.inventory.model.DatasetElement;
+import gov.nasa.podaac.inventory.model.DatasetCitation;
+import gov.nasa.podaac.inventory.model.DatasetSource;
+import gov.nasa.podaac.inventory.model.GranuleReference;
+import gov.nasa.podaac.inventory.model.Source;
+import gov.nasa.podaac.inventory.model.Sensor;
+import gov.nasa.podaac.inventory.model.ElementDD;
+import gov.nasa.podaac.inventory.model.Dataset;
 import org.apache.commons.collections.iterators.ObjectArrayIterator;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -269,10 +282,6 @@ public class MetadataFilesToEcho {
 		AdapterLogger.LogInfo(this.className + " GranuleArchive HashSet Size:" + granule.getGranuleArchiveSet().size());
 		AdapterLogger.LogInfo(this.className + " GranuleArchive HashSet:" + granule.getGranuleArchiveSet());
 	}
-	public void readIsoMetadataFile(String file, String s3Location, String collection_short_name)
-			throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
-		Document doc = makeDoc(file);
-	}
 
     /**
      * Entry point for translating ISO granule files to UMM-G
@@ -291,9 +300,9 @@ public class MetadataFilesToEcho {
         try {
             // parse the minimum required fields first
             parseRequiredFields(doc, xpath, isoType);
-        } catch (XPathExpressionException e1) {
+        } catch (Exception e1) {
             // log a quick error message to help users narrow down the cause
-            AdapterLogger.LogError("failed to parse required start, stop, and create times from: " + file);
+            AdapterLogger.LogError("failed to parse required start, stop, and create times from: " + file + " " + e1);
             // now re-throw the error so we exit/stop the export
             throw e1;
         }
@@ -311,10 +320,9 @@ public class MetadataFilesToEcho {
                 AdapterLogger.LogWarning(isoType.name() + " didn't match any expected ISO type, skipping optional " +
                         "fields.");
             }
-        } catch (XPathExpressionException e2) {
-            // ...but if we run into an issue, don't break out of the entire export,
-            //  just log the warning, and continue
-            AdapterLogger.LogWarning("Xpath error thrown when parsing optional metadata for: " + file);
+        } catch (Exception e2) {
+            AdapterLogger.LogWarning("Xpath error thrown when parsing optional metadata for: " + file + " " + e2);
+			throw e2;
         }
     }
 
