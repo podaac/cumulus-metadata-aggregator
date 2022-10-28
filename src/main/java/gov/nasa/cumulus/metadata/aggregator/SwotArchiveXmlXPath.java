@@ -10,5 +10,9 @@ public final class SwotArchiveXmlXPath {
 
     public static final String DATA_FILE_FILE_NAME = "/GranuleMetaDataFile/GranuleURMetaData/ECSDataGranule/LocalGranuleID";
     public static final String DATA_FILE_FILE_DESCRIPTION = "/GranuleMetaDataFile/GranuleURMetaData/ECSDataGranule/Description";
+    public static final String ARCHIVE_CYCLE="/GranuleMetaDataFile/GranuleURMetaData/ECSDataGranule/CycleID";
+    public static final String ARCHIVE_PASS="/GranuleMetaDataFile/GranuleURMetaData/ECSDataGranule/PassID";
+    public static final String ARCHIVE_TILE="/GranuleMetaDataFile/GranuleURMetaData/ECSDataGranule/TileID";
+    public static final String archiveScene="/GranuleMetaDataFile/GranuleURMetaData/ECSDataGranule/SceneID";
 }
 

@@ -10,13 +10,15 @@ import java.net.URISyntaxException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
-import gov.nasa.cumulus.metadata.aggregator.CMRLambdaRestClient;
-import gov.nasa.cumulus.metadata.aggregator.CMRRestClientProvider;
-import gov.nasa.cumulus.metadata.aggregator.UMMGranuleFile;
+import gov.nasa.cumulus.metadata.aggregator.*;
+import gov.nasa.cumulus.metadata.umm.generated.TrackPassTileType;
+import gov.nasa.cumulus.metadata.umm.generated.TrackType;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -25,9 +27,6 @@ import org.junit.Test;
 import org.mockito.MockedStatic;
 import org.xml.sax.SAXException;
 import org.mockito.Mockito;
-
-
-import gov.nasa.cumulus.metadata.aggregator.MetadataFilesToEcho;
 
 public class UMMTest {
 
@@ -802,5 +801,47 @@ public class UMMTest {
 		assertEquals(-64.9117, ((JSONObject) points.get(0)).get("Latitude"));
 		assertEquals(63.6579, ((JSONObject) points.get(1)).get("Longitude"));
 		assertEquals(-64.9117, ((JSONObject) points.get(1)).get("Latitude"));
+	}
+	/**
+	 * Test the creation of Track JSONObject through POJO
+	 * the POJO is TrackType which is a member of UMMGranule
+	 */
+
+	@Test
+	public void testCreateTrack()  throws ParseException{
+		TrackType trackType = new TrackType();
+		trackType.setCycle(new Integer(22));
+		TrackPassTileType trackPassTileType1 = new TrackPassTileType();
+		trackPassTileType1.setPass(11);
+		List<String> tiles1 = new ArrayList<>();
+		tiles1.add("tile1-1");
+		tiles1.add("tile1-2");
+		trackPassTileType1.setTiles(tiles1);
+		TrackPassTileType trackPassTileType2 = new TrackPassTileType();
+		trackPassTileType2.setPass(22);
+		List<String> tiles2 = new ArrayList<>();
+		tiles2.add("tile2-1");
+		tiles2.add("tile2-2");
+		trackPassTileType2.setTiles(tiles2);
+		ArrayList<TrackPassTileType> trackPassTileTypeArrayList = new ArrayList<>();
+		trackPassTileTypeArrayList.add(trackPassTileType1);
+		trackPassTileTypeArrayList.add(trackPassTileType2);
+		trackType.setPasses(trackPassTileTypeArrayList);
+		UMMGranule ummGranule = new UMMGranule();
+		ummGranule.setTrackType(trackType);
+		UMMGranuleFile ummGranuleFile = new UMMGranuleFile(ummGranule, null, true);
+
+		JSONObject trackJsonObj = ummGranuleFile.createUMMGTrack(ummGranule);
+		assertEquals(trackJsonObj.containsKey("Cycle"), true);
+		assertEquals(trackJsonObj.containsKey("Passes"), true);
+		JSONArray passes = (JSONArray) trackJsonObj.get("Passes");
+		assertEquals(passes.size(), 2);
+		JSONObject pass0 = (JSONObject)passes.get(0);
+		JSONObject pass1 = (JSONObject)passes.get(1);
+		assertTrue(((Long)pass1.get("Pass")).longValue()==(new Long(22)).longValue());
+		JSONArray tiles = (JSONArray)pass1.get("Tiles");
+		assertEquals(tiles.size(), 2);
+		String tile = (String)tiles.get(1);
+		assertTrue(StringUtils.equals(tile, "tile2-2"));
 	}
 }
