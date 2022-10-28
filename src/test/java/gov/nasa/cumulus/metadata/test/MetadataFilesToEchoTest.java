@@ -23,7 +23,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.junit.Test;
+import org.w3c.dom.Document;
 
+import javax.xml.xpath.XPath;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -280,4 +282,40 @@ public class MetadataFilesToEchoTest {
         List<AdditionalAttributeType> additionalAttributeTypes = isoGranule.getAdditionalAttributeTypes();
         assertEquals(additionalAttributeTypes.size(), 3);
     }
+
+    @Test
+    public void testReadIsoMendsMetadataFile() {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("SWOT_L2_HR_PIXCVec_001_113_164R_20160905T002836_20160905T002846_TI0000_01.nc.iso.xml").getFile());
+        File cfgFile = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
+        MetadataFilesToEcho mfte = new MetadataFilesToEcho(true);
+
+        Document doc = null;
+        XPath xpath = null;
+        try {
+            mfte.readConfiguration(cfgFile.getAbsolutePath());
+            doc = mfte.makeDoc(file.getAbsolutePath());
+            xpath = mfte.makeXpath(doc);
+            IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
+            // Verify the values here:
+            TrackType trackType = isoGranule.getTrackType();
+            assertEquals(trackType.getCycle(), new Integer(5));
+            List<TrackPassTileType> trackPassTileTypes = trackType.getPasses();
+            assertEquals(trackPassTileTypes.size(), 3);
+            TrackPassTileType trackPassTileType = trackPassTileTypes.get(0);
+            assertEquals(trackPassTileType.getPass(), new Integer(40));
+            List<String> tiles = trackPassTileType.getTiles();
+            assertEquals(tiles.size(), 7);
+            assertEquals(tiles.get(0), "4L");
+            assertEquals(tiles.get(6), "8R");
+            List<AdditionalAttributeType> additionalAttributeTypes = isoGranule.getAdditionalAttributeTypes();
+            assertEquals(additionalAttributeTypes.size(), 3);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+
+
+    }
+
 }

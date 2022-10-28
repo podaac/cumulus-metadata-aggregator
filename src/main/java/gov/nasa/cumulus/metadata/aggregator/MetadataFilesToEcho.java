@@ -294,13 +294,16 @@ public class MetadataFilesToEcho {
      * @throws XPathExpressionException
      */
     public void readIsoMetadataFile(String file, String s3Location) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
-        Document doc = makeDoc(file);
-        XPath xpath = makeXpath(doc);
-        IsoType isoType = getIsoType(doc, xpath);
+        Document doc = null;
+        XPath xpath = null;
+        IsoType isoType = null;
         try {
+			doc = makeDoc(file);
+			xpath = makeXpath(doc);
+			isoType = getIsoType(doc, xpath);
             // parse the minimum required fields first
             parseRequiredFields(doc, xpath, isoType);
-        } catch (Exception e1) {
+        } catch (ParserConfigurationException | IOException | SAXException | XPathExpressionException e1) {
             // log a quick error message to help users narrow down the cause
             AdapterLogger.LogError("failed to parse required start, stop, and create times from: " + file + " " + e1);
             // now re-throw the error so we exit/stop the export
@@ -320,7 +323,8 @@ public class MetadataFilesToEcho {
                 AdapterLogger.LogWarning(isoType.name() + " didn't match any expected ISO type, skipping optional " +
                         "fields.");
             }
-        } catch (Exception e2) {
+        }
+		catch (XPathExpressionException e2) {
             AdapterLogger.LogWarning("Xpath error thrown when parsing optional metadata for: " + file + " " + e2);
 			throw e2;
         }
@@ -336,12 +340,12 @@ public class MetadataFilesToEcho {
      * @throws XPathExpressionException if there's an error while attempting to
      *  parse the ISO file type from the xpath object
      */
-    private IsoType getIsoType(Document doc, XPath xpath) throws XPathExpressionException {
+    public IsoType getIsoType(Document doc, XPath xpath) throws XPathExpressionException {
         String ds_series_val = xpath.evaluate("/gmd:DS_Series", doc);
         return (ds_series_val == "") ? IsoType.MENDS : IsoType.SMAP;
     }
 
-    private Document makeDoc(String file) throws ParserConfigurationException, SAXException, IOException {
+    public Document makeDoc(String file) throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
         docBuilderFactory.setNamespaceAware(true);
         DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
@@ -355,7 +359,7 @@ public class MetadataFilesToEcho {
      * @param doc   the document object, from the ISO granule file
      * @return      the new xPath object
      */
-    private XPath makeXpath(Document doc) {
+    public XPath makeXpath(Document doc) {
         XPath xpath = XPathFactory.newInstance().newXPath();
         xpath.setNamespaceContext(new NamespaceResolver(doc));
         return xpath;
@@ -396,7 +400,7 @@ public class MetadataFilesToEcho {
         }
     }
 
-    public void readIsoMendsMetadataFile(String s3Location, Document doc, XPath xpath) throws XPathExpressionException {
+    public IsoGranule readIsoMendsMetadataFile(String s3Location, Document doc, XPath xpath) throws XPathExpressionException {
 
         if (xpath.evaluate(IsoMendsXPath.NORTH_BOUNDING_COORDINATE, doc) != "") {
             setGranuleBoundingBox(
@@ -494,6 +498,7 @@ public class MetadataFilesToEcho {
 		// Process ISO cycle, pass and tile
 		String  cyclePassTileSceneStr =StringUtils.trim(xpath.evaluate(IsoMendsXPath.CYCLE_PASS_TILE_SCENE, doc));
 		createIsoCyclePassTile(cyclePassTileSceneStr);
+		return  ((IsoGranule) granule);
 	}
 
 	/**

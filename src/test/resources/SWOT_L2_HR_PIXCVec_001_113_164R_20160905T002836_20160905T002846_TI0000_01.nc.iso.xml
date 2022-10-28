@@ -563,7 +563,7 @@
                                  E.g of the value: Cycle: 5 Pass: [40, Tiles: 4-5L 4-5R] [41, Tiles: 6R 6L] [42, Tiles: 7F]
                               -->
 <!--                              <gco:CharacterString>Cycle: 001, Pass: [011, Tiles: 011L]</gco:CharacterString>-->
-                              <gco:CharacterString>Cycle: 5 Pass: [40, Tiles: 4-5L 4-5R] [41, Tiles: 6R 6L] [42, Tiles: 7F] Cycle: 6 Pass: [50, Tiles: 4-5L 4-5R] [51, Tiles: 6R 6L] [52, Tiles: 7F]</gco:CharacterString>
+                              <gco:CharacterString>Cycle: 5 Pass: [40, Tiles: 4-5L 4-8R] [41, Tiles: 6R 6L] [42, Tiles: 7F]</gco:CharacterString>
                            </gmd:code>
                            <gmd:codeSpace>
                               <gco:CharacterString>gov.nasa.esdis.umm.swottrack</gco:CharacterString>
