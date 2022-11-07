@@ -51,7 +51,7 @@
         }
       ],
       "version": "2019.0",
-      "cmrLink": "https://cmr.uat.earthdata.nasa.gov/search/granules.json?concept_id=G1238611022-POCUMULUS",
+      "cmrLink": "https://cmr.uat.earthdata.nasa.gov/search/concepts/G1238611022-POCUMULUS.umm_json",
       "cmrConceptId": "G1238611022-POCUMULUS",
       "published": true,
       "cmrMetadataFormat": "umm_json_v1_6",

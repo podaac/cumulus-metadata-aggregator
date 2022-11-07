@@ -7,11 +7,13 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.TimeZone;
 
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.DocumentBuilder;
@@ -19,11 +21,26 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
 
+import gov.nasa.cumulus.metadata.aggregator.factory.UmmgPojoFactory;
+import gov.nasa.cumulus.metadata.umm.generated.AdditionalAttributeType;
+import gov.nasa.cumulus.metadata.umm.generated.TrackPassTileType;
+import gov.nasa.cumulus.metadata.umm.generated.TrackType;
 import gov.nasa.cumulus.metadata.util.BoundingTools;
 import gov.nasa.cumulus.metadata.util.JSONUtils;
-import gov.nasa.podaac.inventory.model.*;
+import gov.nasa.podaac.inventory.model.Granule;
+import gov.nasa.podaac.inventory.model.GranuleCharacter;
+import gov.nasa.podaac.inventory.model.DatasetElement;
+import gov.nasa.podaac.inventory.model.DatasetCitation;
+import gov.nasa.podaac.inventory.model.DatasetSource;
+import gov.nasa.podaac.inventory.model.GranuleReference;
+import gov.nasa.podaac.inventory.model.Source;
+import gov.nasa.podaac.inventory.model.Sensor;
+import gov.nasa.podaac.inventory.model.ElementDD;
+import gov.nasa.podaac.inventory.model.Dataset;
+import org.apache.commons.collections.iterators.ObjectArrayIterator;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -46,6 +63,7 @@ public class MetadataFilesToEcho {
 	boolean forceBB = false;
 	boolean rangeIs360 = false;
     boolean isIsoFile = false;
+	UmmgPojoFactory ummgPojoFactory = UmmgPojoFactory.getInstance();
 
 	public MetadataFilesToEcho() {
 		this(false);
@@ -171,13 +189,25 @@ public class MetadataFilesToEcho {
 				(Double)((JSONObject)metadata.get("boundingBox")).get("EasternLongitude"),
 				(Double)((JSONObject)metadata.get("boundingBox")).get("WesternLongitude"));
 
+		/**
+		 * so far, universal-data-handler is not generating .mp file with tiles yet
+		 * just cycle and passes.
+		 * Passes are under cycle. If there is no cycle then there is no pass
+		 */
+		TrackType trackType = null;
 		if (metadata.get("cycle") != null) {
-			granule.setCycle(((Long) metadata.get("cycle")).intValue());
+			int cycleInt = ((Long)metadata.get("cycle")).intValue();
+			Integer iPass = null;
+			if (metadata.get("pass") != null) {
+				int passInt = ((Long)metadata.get("pass")).intValue();
+				iPass = new Integer(passInt);
+			}
+			trackType = createTrackType(new Integer(cycleInt), iPass);
 		}
+		//  common metadata file does not include tiles info yet, so there is no need to convert TrackType
+		// to AdditionalAttributeType Array
+		granule.setTrackType(trackType);
 
-		if (metadata.get("pass") != null) {
-			granule.setPass(((Long) metadata.get("pass")).intValue());
-		}
 
 		if (metadata.get(Constants.Metadata.ORBIT) != null) {
 			granule.setOrbitNumber(((Long) metadata.get(Constants.Metadata.ORBIT)).intValue());
@@ -191,6 +221,7 @@ public class MetadataFilesToEcho {
 			granule.setEndOrbit(((Long) metadata.get(Constants.Metadata.END_ORBIT)).intValue());
 		}
 	}
+
 
 	/**
 	 * For a certain mission/collections, the workflow might not go through data handler step.
@@ -263,15 +294,18 @@ public class MetadataFilesToEcho {
      * @throws XPathExpressionException
      */
     public void readIsoMetadataFile(String file, String s3Location) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
-        Document doc = makeDoc(file);
-        XPath xpath = makeXpath(doc);
-        IsoType isoType = getIsoType(doc, xpath);
+        Document doc = null;
+        XPath xpath = null;
+        IsoType isoType = null;
         try {
+			doc = makeDoc(file);
+			xpath = makeXpath(doc);
+			isoType = getIsoType(doc, xpath);
             // parse the minimum required fields first
             parseRequiredFields(doc, xpath, isoType);
-        } catch (XPathExpressionException e1) {
+        } catch (ParserConfigurationException | IOException | SAXException | XPathExpressionException e1) {
             // log a quick error message to help users narrow down the cause
-            AdapterLogger.LogError("failed to parse required start, stop, and create times from: " + file);
+            AdapterLogger.LogError("failed to parse required start, stop, and create times from: " + file + " " + e1);
             // now re-throw the error so we exit/stop the export
             throw e1;
         }
@@ -283,15 +317,16 @@ public class MetadataFilesToEcho {
                 readIsoMendsMetadataFile(s3Location, doc, xpath);
             } else if (isoType == IsoType.SMAP) {
                 AdapterLogger.LogInfo("Found SMAP file");
+				((IsoGranule) this.granule).setIsoType(isoType);
                 readIsoSmapMetadataFile(s3Location, doc, xpath);
             } else {
                 AdapterLogger.LogWarning(isoType.name() + " didn't match any expected ISO type, skipping optional " +
                         "fields.");
             }
-        } catch (XPathExpressionException e2) {
-            // ...but if we run into an issue, don't break out of the entire export,
-            //  just log the warning, and continue
-            AdapterLogger.LogWarning("Xpath error thrown when parsing optional metadata for: " + file);
+        }
+		catch (XPathExpressionException e2) {
+            AdapterLogger.LogWarning("Xpath error thrown when parsing optional metadata for: " + file + " " + e2);
+			throw e2;
         }
     }
 
@@ -305,12 +340,12 @@ public class MetadataFilesToEcho {
      * @throws XPathExpressionException if there's an error while attempting to
      *  parse the ISO file type from the xpath object
      */
-    private IsoType getIsoType(Document doc, XPath xpath) throws XPathExpressionException {
+    public IsoType getIsoType(Document doc, XPath xpath) throws XPathExpressionException {
         String ds_series_val = xpath.evaluate("/gmd:DS_Series", doc);
         return (ds_series_val == "") ? IsoType.MENDS : IsoType.SMAP;
     }
 
-    private Document makeDoc(String file) throws ParserConfigurationException, SAXException, IOException {
+    public Document makeDoc(String file) throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
         docBuilderFactory.setNamespaceAware(true);
         DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
@@ -324,7 +359,7 @@ public class MetadataFilesToEcho {
      * @param doc   the document object, from the ISO granule file
      * @return      the new xPath object
      */
-    private XPath makeXpath(Document doc) {
+    public XPath makeXpath(Document doc) {
         XPath xpath = XPathFactory.newInstance().newXPath();
         xpath.setNamespaceContext(new NamespaceResolver(doc));
         return xpath;
@@ -365,7 +400,7 @@ public class MetadataFilesToEcho {
         }
     }
 
-    public void readIsoMendsMetadataFile(String s3Location, Document doc, XPath xpath) throws XPathExpressionException {
+    public IsoGranule readIsoMendsMetadataFile(String s3Location, Document doc, XPath xpath) throws XPathExpressionException {
 
         if (xpath.evaluate(IsoMendsXPath.NORTH_BOUNDING_COORDINATE, doc) != "") {
             setGranuleBoundingBox(
@@ -460,10 +495,140 @@ public class MetadataFilesToEcho {
         }
 
         ((IsoGranule) granule).setPGEVersionClass(xpath.evaluate(IsoMendsXPath.PGE_VERSION_CLASS, doc));
-    }
+		// Process ISO cycle, pass and tile
+		String  cyclePassTileSceneStr =StringUtils.trim(xpath.evaluate(IsoMendsXPath.CYCLE_PASS_TILE_SCENE, doc));
+		createIsoCyclePassTile(cyclePassTileSceneStr);
+		return  ((IsoGranule) granule);
+	}
+
+	/**
+	 * Marshell the cycle pass tile string from ISO xml into UMMG POJO.
+	 * Example input :"Cycle: 5 Pass: [40, Tiles: 4-5L 4-8R] [41, Tiles: 6R 6L] [42, Tiles: 7F]"
+	 *"Cycle: 5 Pass: [40, Tiles: 4-5L 4-5R] [41, Tiles: 6R 6L] [42, Tiles: 7F] Cycle: 6 Pass: [50, Tiles: 4-5L 4-5R] [51, Tiles: 6R 6L] [52, Tiles: 7F]";
+	 * @param cyclePassTileStr
+	 * @return
+	 */
+	public IsoGranule createIsoCyclePassTile(String cyclePassTileStr) {
+		AdapterLogger.LogInfo(this.className + " iso cycle pass tile string:" + cyclePassTileStr);
+		String toBeProcessedStr = StringUtils.upperCase(StringUtils.trim(cyclePassTileStr));
+		Pattern p_cycle = Pattern.compile("CYCLE\\s*:\\s*\\d+\\s*?");
+		Matcher m_cycle = p_cycle.matcher(toBeProcessedStr);
+		String cycleStr = "";
+		ArrayList<String> cycleStrs = new ArrayList<>();
+		while(m_cycle.find()) {
+			cycleStr = m_cycle.group();
+			AdapterLogger.LogInfo("Cycle:" + cycleStr);
+			cycleStrs.add(cycleStr.trim());
+		}
+		int numberOfCycles = cycleStrs.size();
+		int i = 0;
+		// Current UMMG schema 1.6.3 supports only one cycle. Although it is possible that
+		//  one granule contains 2 cycles as the edge case.
+		ArrayList<String> cyclePassStrs = new ArrayList<>();
+		while(i +1 < numberOfCycles) {
+			String cyclePassStr = StringUtils.substring(toBeProcessedStr,
+					StringUtils.indexOf(toBeProcessedStr, cycleStrs.get(i)),
+					StringUtils.indexOf(toBeProcessedStr, cycleStrs.get(i+1)));
+			AdapterLogger.LogInfo("cyclePass processing candidate:" + cyclePassStr);
+			cyclePassStrs.add(cyclePassStr);
+			toBeProcessedStr = StringUtils.replace(toBeProcessedStr, cyclePassStr, "");
+			i++;
+		}
+		toBeProcessedStr = StringUtils.trim(toBeProcessedStr);
+		// Processed the last Cycle OR if there is only one cycle, we are processing the first==last cycle here
+		if(StringUtils.isNotEmpty(toBeProcessedStr) && StringUtils.startsWithIgnoreCase(toBeProcessedStr, "CYCLE")) {
+			AdapterLogger.LogInfo("Processing the last or first cycle" + toBeProcessedStr);
+			cyclePassStrs.add(toBeProcessedStr);
+		}
+		TrackType trackType = null;
+		List<AdditionalAttributeType> additionalAttributeTypes = new ArrayList<>();
+		for(String cps : cyclePassStrs) {
+			trackType = createTrackType(cps, p_cycle);
+			UmmgPojoFactory ummgPojoFactory = UmmgPojoFactory.getInstance();
+			additionalAttributeTypes=
+					ummgPojoFactory.trackTypeToAdditionalAttributeTypes(trackType);
+		}
+		((IsoGranule)granule).setTrackType(trackType);
+		((IsoGranule)granule).setAdditionalAttributeTypes(additionalAttributeTypes);
+		return (IsoGranule)granule;
+	}
+
+	public TrackType createTrackType(String cyclePassTileStr, Pattern p_cycle) {
+		Matcher m_cycle = p_cycle.matcher(cyclePassTileStr);
+		String cycleStr=null;
+		while(m_cycle.find()) {
+			cycleStr = m_cycle.group();
+		}
+		String cycleNoStr = StringUtils.trim(
+				StringUtils.replace(
+						StringUtils.replaceIgnoreCase(cycleStr, "CYCLE","")
+						,":",""));
+		AdapterLogger.LogInfo("Cycle:" + cycleNoStr);
+		TrackType trackType  = new TrackType();
+		trackType.setCycle(NumberUtils.createInteger(cycleNoStr));
+
+		Pattern p_pass = Pattern.compile("\\[.*?\\]");
+		Matcher m_pass = p_pass.matcher(cyclePassTileStr);
+		/**
+		 * The matcher will resolve to the following tokens:
+		 * [40, TILES: 4-5L 4-5R]
+		 * [41, TILES: 6R 6L]
+		 * [42, TILES: 7F]
+		 * The following loop process each token by extracting the passes and tilles
+		 */
+		ArrayList<TrackPassTileType> trackPassTileTypes = new ArrayList<>();
+		while(m_pass.find()) {
+			TrackPassTileType trackPassTileType = new TrackPassTileType();
+			String passTilesStr = m_pass.group();
+			passTilesStr =StringUtils.replace(
+					StringUtils.replace(passTilesStr,"[",""),"]","");
+			passTilesStr = passTilesStr.replaceAll("TILES\\s*:\\s*?", "");
+			String[] passTiles = StringUtils.split(passTilesStr, ",");
+			String passStr = StringUtils.trim(passTiles[0]);
+			trackPassTileType.setPass(NumberUtils.createInteger(passStr));
+			List<String> tiles = getTiles(StringUtils.trim(passTiles[1]));
+			trackPassTileType.setTiles(tiles);
+			trackPassTileTypes.add(trackPassTileType);
+		}
+		trackType.setPasses(trackPassTileTypes);
+		return trackType;
+	}
+
+	/**
+	 *  5-8L 4K means, tile 5L, 6L, 7L, 8L and 4K.  because dash means a range separator
+	 *
+	 * @param tilesStr  ex 5-6L 4K
+	 * @return
+	 */
+	public List<String> getTiles(String tilesStr) {
+		AdapterLogger.LogInfo(this.className + " decoding tiles string:" + tilesStr);
+		ArrayList<String> tiles = new ArrayList<>();
+		String[] tileRanges = StringUtils.split(tilesStr, " ");
+		// Using Apache Commons Collections
+		ObjectArrayIterator iterator = new ObjectArrayIterator(tileRanges);
+
+		while (iterator.hasNext()) {
+			String tileRangStr=(String) iterator.next();
+			if(StringUtils.containsIgnoreCase(tileRangStr,"-")){
+				String[] tileRangeTokens = StringUtils.split(tileRangStr, "-");
+				String endTileStr = tileRangeTokens[tileRangeTokens.length -1];
+				// find the letter for the last token
+				String tileMarkChar = endTileStr.substring(endTileStr.length() - 1);
+				Integer startTileNum = NumberUtils.createInteger(StringUtils.trim(tileRangeTokens[0]));
+				Integer endTileNumStr = NumberUtils.createInteger(
+						StringUtils.trim(
+								StringUtils.substring(endTileStr, 0, endTileStr.length()-1)));
+				for(Integer i = startTileNum; i<=endTileNumStr; i++ ) {
+					tiles.add(i + tileMarkChar);
+				}
+			} else { // if it is not a range of tiles like : 5-8L
+				tiles.add(tileRangStr);
+			}
+		}
+		return tiles;
+	}
 
     private void readIsoSmapMetadataFile(String s3Location, Document doc, XPath xpath) throws XPathExpressionException {
-
         GranuleReference gr = new GranuleReference();
         gr.setDescription("S3 datafile.");
         gr.setPath(s3Location);
@@ -494,6 +659,7 @@ public class MetadataFilesToEcho {
         ((IsoGranule) granule).setOrbit(xpath.evaluate(IsoSmapXPath.ORBIT, doc));
 
         ((IsoGranule) granule).setSwotTrack(xpath.evaluate(IsoSmapXPath.SWOT_TRACK, doc));
+		((IsoGranule) granule).setPolygon(xpath.evaluate(IsoSmapXPath.POLYGON, doc));
 
         Source source = new Source();
         source.setSourceShortName(xpath.evaluate(IsoSmapXPath.PLATFORM, doc));
@@ -531,12 +697,38 @@ public class MetadataFilesToEcho {
 		XPath xpath = XPathFactory.newInstance().newXPath();
 		xpath.setNamespaceContext(new NamespaceResolver(doc));
 
+		granule = createSwotArchiveGranule(doc, xpath);
+		// No spatial extent exists for SWOT L0 data so set as global
+		setGranuleBoundingBox(90.0, -90.0, 180.0, -180.0);
+	}
+
+	UMMGranule createSwotArchiveGranule(Document doc, XPath xpath)
+	throws XPathExpressionException{
 		granule.setStartTime(DatatypeConverter.parseDateTime(xpath.evaluate(SwotArchiveXmlXPath.BEGINNING_DATE_TIME, doc)).getTime());
 		granule.setStopTime(DatatypeConverter.parseDateTime(xpath.evaluate(SwotArchiveXmlXPath.ENDING_DATE_TIME, doc)).getTime());
 		granule.setCreateTime(DatatypeConverter.parseDateTime(xpath.evaluate(SwotArchiveXmlXPath.CREATION_DATE_TIME, doc)).getTime());
+		String  cycleStr =StringUtils.trim(xpath.evaluate(SwotArchiveXmlXPath.ARCHIVE_CYCLE, doc));
+		String  passStr  =StringUtils.trim(xpath.evaluate(SwotArchiveXmlXPath.ARCHIVE_PASS, doc));
+		String  tileStr  =StringUtils.trim(xpath.evaluate(SwotArchiveXmlXPath.ARCHIVE_TILE, doc));
 
-		// No spatial extent exists for SWOT L0 data so set as global
-		setGranuleBoundingBox(90.0, -90.0, 180.0, -180.0);
+		ArrayList<TrackPassTileType>trackPassTileTypes = new ArrayList<>();
+		TrackType trackType = null;
+		if (StringUtils.isNotEmpty(passStr)) {
+			ArrayList<String>tiles = null;
+			if(StringUtils.isNotEmpty(tileStr)) {
+				tiles = new ArrayList<>();
+				tiles.add(tileStr);
+			}
+			TrackPassTileType trackPassTileType =
+					ummgPojoFactory.createTrackPassTileType(NumberUtils.createInteger(passStr), tiles);
+			trackPassTileTypes.add(trackPassTileType);
+		}
+		if (StringUtils.isNotEmpty(cycleStr)) {
+			trackType = ummgPojoFactory.createTrackType(NumberUtils.createInteger(cycleStr), trackPassTileTypes);
+		}
+		granule.setTrackType(trackType);
+		granule.setAdditionalAttributeTypes(UmmgPojoFactory.getInstance().trackTypeToAdditionalAttributeTypes(trackType));
+		return granule;
 	}
 
 	/**
@@ -586,13 +778,11 @@ public class MetadataFilesToEcho {
 			// Ignore if unable to parse for footprint since it isn't required for ingest
 		}
 
-		String cycle = xpath.evaluate(ManifestXPath.CYCLE, doc);
-		if (!cycle.isEmpty())
-			granule.setCycle(Integer.parseInt(cycle));
+		String cycle = StringUtils.trim(xpath.evaluate(ManifestXPath.CYCLE, doc));
+		String pass = StringUtils.trim(xpath.evaluate(ManifestXPath.PASS, doc));
 
-		String pass = xpath.evaluate(ManifestXPath.PASS, doc);
-		if (!pass.isEmpty())
-			granule.setPass(Integer.parseInt(pass));
+		TrackType trackType = createTrackType(NumberUtils.createInteger(cycle), NumberUtils.createInteger(pass));
+		granule.setTrackType(trackType); // No tile so we don't need to convert trackType to AdditionalAttributeType array
 
 		String productName = null;
 		try {
@@ -606,6 +796,22 @@ public class MetadataFilesToEcho {
 		}
 		if (productName != null && !productName.isEmpty())
 			granule.getGranuleCharacterSet().add(createGranuleCharacter(productName, UMMGranuleFile.PROVIDER_DATA_SOURCE));
+	}
+
+	/**
+	 * create a TrackType when there is only one cycle and one pass.
+	 * no representation of tiles.
+	 * @param iCycle
+	 * @param iPass
+	 */
+	private TrackType createTrackType(Integer iCycle, Integer iPass) {
+		ArrayList<TrackPassTileType> trackPassTileTypes = new ArrayList<>();
+		TrackPassTileType trackPassTileType =
+				ummgPojoFactory.createTrackPassTileType(iPass, null);
+		trackPassTileTypes.add(trackPassTileType);
+		TrackType trackType = ummgPojoFactory.createTrackType(iCycle, trackPassTileTypes);
+		AdapterLogger.LogDebug("When only one cycle/pass, created TrackType: " + trackType);
+		return trackType;
 	}
 
 	private void setGranuleBoundingBox(double north, double south, double east, double west) {

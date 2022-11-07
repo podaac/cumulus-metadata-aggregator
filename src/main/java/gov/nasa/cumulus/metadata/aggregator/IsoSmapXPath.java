@@ -22,4 +22,5 @@ public final class IsoSmapXPath extends IsoXPath {
     public static final String OrbitCalculatedSpatialDomains = BASE + "/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent[@id=\"boundingExtent\"]/gmd:geographicElement/gmd:EX_GeographicDescription[@id=\"OrbitCalculatedSpatialDomains0\"]/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString";
 
     public static final String GRANULE_INPUT = BASE + CI_CITATION + "/gmd:title/gmx:FileName";
+    public static final String POLYGON = "/gmd:DS_Series/gmd:composedOf/gmd:DS_DataSet/gmd:has/gmi:MI_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_BoundingPolygon/gmd:polygon/gml:Polygon/gml:exterior/gml:LinearRing/gml:posList";
 }

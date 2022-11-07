@@ -1,15 +1,21 @@
 package gov.nasa.cumulus.metadata.aggregator;
 
+import com.google.gson.*;
 import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.algorithm.CGAlgorithms;
 import cumulus_message_adapter.message_parser.AdapterLogger;
+import gov.nasa.cumulus.metadata.umm.adapter.UMMGCollectionAdapter;
+import gov.nasa.cumulus.metadata.umm.adapter.UMMGListAdapter;
+import gov.nasa.cumulus.metadata.umm.adapter.UMMGMapAdapter;
 import gov.nasa.cumulus.metadata.util.BoundingTools;
+import gov.nasa.cumulus.metadata.util.JSONUtils;
 import gov.nasa.cumulus.metadata.util.TimeConversion;
 import gov.nasa.cumulus.metadata.exception.GEOProcessException;
 import gov.nasa.cumulus.metadata.umm.model.UMMGranuleArchive;
 import gov.nasa.podaac.inventory.api.Constant;
 
 import gov.nasa.podaac.inventory.model.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.simple.JSONArray;
@@ -21,6 +27,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -92,6 +99,15 @@ public class UMMGranuleFile {
         // Populate the Spatial metadata
         granuleJson.put("SpatialExtent", exportSpatial());
 
+        /**
+         * AddtionalAttributes
+         */
+        if(((UMMGranule) granule).getAdditionalAttributeTypes() != null &&
+                ((UMMGranule) granule).getAdditionalAttributeTypes().size() >0
+        ) {
+            granuleJson.put("AdditionalAttributes",
+                    createAdditionalAttributes((UMMGranule) granule));
+        }
 
         /**
          * Populate the Orbital Metadata
@@ -350,7 +366,22 @@ public class UMMGranuleFile {
         return temporal;
     }
 
-    private JSONObject exportSpatial() {
+    private boolean shouldAddBBx(Granule granule) {
+        boolean shouldAddBBx = false;
+        if(granule !=null && granule instanceof  gov.nasa.cumulus.metadata.aggregator.UMMGranule) {
+            shouldAddBBx = true;
+        }
+        // if the granule object is IsoGranule type and it is SMAP mission, then we check if polygon was added.
+        // if polygon was part of geometry (added to SpatialExtent), then bounding box should not be included in
+        // SpacialExtend
+        if(granule instanceof  gov.nasa.cumulus.metadata.aggregator.IsoGranule && ((IsoGranule)granule).getIsoType() == IsoType.SMAP
+        &&  StringUtils.isNotEmpty(((IsoGranule) granule).getPolygon())) {
+                shouldAddBBx = false;
+        }
+        return shouldAddBBx;
+    }
+
+    private JSONObject exportSpatial() throws ParseException{
         JSONObject spatialExtent = new JSONObject();
         JSONObject geometry = new JSONObject();
         JSONObject horizontalSpatialDomain = new JSONObject();
@@ -371,7 +402,7 @@ public class UMMGranuleFile {
             Matcher m = p.matcher(((IsoGranule) granule).getOrbit());
             foundOrbitalData = m.find();
             if (foundOrbitalData && BoundingTools.allParsable(m.group(1), m.group(2), m.group(4))) {
-                orbit.put("AscendingCrossing", Double.parseDouble(m.group(1)));
+                orbit.put("AscendingCrossing", UMMUtils.longitudeTypeNormalizer(Double.parseDouble(m.group(1))));
                 orbit.put("StartLatitude", Double.parseDouble(m.group(2)));
                 orbit.put("StartDirection", m.group(3).trim());
                 orbit.put("EndLatitude", Double.parseDouble(m.group(4)));
@@ -478,7 +509,7 @@ public class UMMGranuleFile {
 
             // If we get here, it means we have valid values for spatial data, so continue
             // with the spatial extent export.
-            if (rangeIs360) {
+            if (rangeIs360 && shouldAddBBx(granule)) {
                 BigDecimal bdeast = BoundingTools.convertBoundingVal(est, true);
                 BigDecimal bdwest = BoundingTools.convertBoundingVal(wst, true);
 
@@ -493,7 +524,7 @@ public class UMMGranuleFile {
 
                     boundingRectangles.add(createBoundingBoxJson(nrth, sth, BoundingTools.convertBoundingVal(est, true), BigDecimal.valueOf(-180)));
                 }
-            } else {
+            } else if (shouldAddBBx(granule)){
                 if (est.doubleValue() >= wst.doubleValue()) {
                     boundingRectangles.add(createBoundingBoxJson(nrth, sth, est, wst));
                 } else {
@@ -512,16 +543,11 @@ public class UMMGranuleFile {
 
         // Export track if cycle and pass exists
         if (granule instanceof UMMGranule) {
-            UMMGranule ummGranule = (UMMGranule) granule;
-            if (ummGranule.getCycle() != null && ummGranule.getPass() != null) {
-                JSONObject track = new JSONObject();
-                horizontalSpatialDomain.put("Track", track);
-                track.put("Cycle", ummGranule.getCycle());
-                JSONArray passes = new JSONArray();
-                track.put("Passes", passes);
-                JSONObject pass = new JSONObject();
-                pass.put("Pass", ummGranule.getPass());
-                passes.add(pass);
+            /**
+             * Track include cycle and passes(array).
+             */
+            if(((UMMGranule) granule).getTrackType() != null ) {
+                horizontalSpatialDomain.put("Track", createUMMGTrack((UMMGranule) granule));
             }
         }
 
@@ -534,9 +560,31 @@ public class UMMGranuleFile {
                 break;
             }
         }
-
         return spatialExtent;
+    }
 
+    public JSONObject createUMMGTrack(UMMGranule ummGranule) throws ParseException {
+        Gson gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
+                .registerTypeHierarchyAdapter(Collection.class, new UMMGCollectionAdapter())
+                .registerTypeHierarchyAdapter(List.class, new UMMGListAdapter())
+                .registerTypeHierarchyAdapter(Map.class, new UMMGMapAdapter())
+                .create();
+        JsonObject trackJsonObj = gsonBuilder.toJsonTree(ummGranule.getTrackType()).getAsJsonObject();
+        JSONObject track = JSONUtils.GsonToJSONObj(trackJsonObj);
+        AdapterLogger.LogInfo("TrackType:" + track.toString());
+        return track;
+    }
+
+    public JSONArray createAdditionalAttributes(UMMGranule ummGranule) throws ParseException {
+        Gson gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
+                .registerTypeHierarchyAdapter(Collection.class, new UMMGCollectionAdapter())
+                .registerTypeHierarchyAdapter(List.class, new UMMGListAdapter())
+                .registerTypeHierarchyAdapter(Map.class, new UMMGMapAdapter())
+                .create();
+        JsonArray additionalAttributes = gsonBuilder.toJsonTree(ummGranule.getAdditionalAttributeTypes()).getAsJsonArray();
+        JSONArray jarray = JSONUtils.GsonArrayToJSONArray(additionalAttributes);
+        AdapterLogger.LogInfo("AdditionalAttributes: " + jarray.toString());
+        return jarray;
     }
 
     /**

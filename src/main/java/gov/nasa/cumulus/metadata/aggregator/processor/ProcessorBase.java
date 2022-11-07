@@ -19,6 +19,7 @@ import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class ProcessorBase {
     private final String className = this.getClass().getName();
@@ -86,7 +87,7 @@ public class ProcessorBase {
                                   String newCMRStr)
             throws IOException {
         // create a new working directory
-        AdapterLogger.LogError(this.className + " bucket:" + cmrBucket + " dir:" + cmrBaseDir +
+        AdapterLogger.LogInfo(this.className + " bucket:" + cmrBucket + " dir:" + cmrBaseDir +
                 " collectionName:"+ collectionName + " cmrFileName:"+ cmrFileName);
         String cmrFileWorkDir = this.createWorkDir();
         try {
@@ -130,14 +131,17 @@ public class ProcessorBase {
     }
 
     public void decodeVariables(String input) {
-        JsonObject inputJsonObj = new JsonParser().parse(input).getAsJsonObject();
+        JsonObject inputJsonObj = JsonParser.parseString(input).getAsJsonObject();
         JsonArray granules = inputJsonObj.getAsJsonArray("input");
         JsonObject granule = granules.get(0).getAsJsonObject();
 
         // Parse config values
         JsonObject config = inputJsonObj.getAsJsonObject("config");
         collectionName = config.get("collection").getAsString();
-        executionId = config.get("executionId").getAsString();
+        /** if subworkflow is triggered by bulk operation.  there will be no executionId */
+
+        executionId = config.get("executionId") != null? config.get("executionId").getAsString():
+                UUID.randomUUID().toString();
 
         granuleId = granule.get("granuleId").getAsString();
         files = granule.get("files").getAsJsonArray();
