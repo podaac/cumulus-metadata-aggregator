@@ -28,7 +28,7 @@ public class DMRPPProcessor extends ProcessorBase{
                     Paths.get(cmrDir, this.collectionName,
                             cmrFileName).toString());
             AdapterLogger.LogDebug(this.className + " cmr.json file size: " + cmrFileSize);
-            String output = createOutputMessage(input, cmrFileSize, cmrETag, new BigInteger(revisionId),
+            String output = createOutputMessage(input, cmrFileSize, new BigInteger(revisionId),
                     cmrFileName,
                     cmrBucket, cmrDir, this.collectionName);
             return output;

@@ -32,13 +32,13 @@ public class FootprintProcessorTest {
     public void initialize() {
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            File inputCMRJsonFile = new File(classLoader.getResource("src/test/resources/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.cmr.json").getFile());
+            File inputCMRJsonFile = new File(classLoader.getResource("20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.cmr.json").getFile());
             cmrString = new String(Files.readAllBytes(inputCMRJsonFile.toPath()));
 
-            File inputCMAJsonFile = new File(classLoader.getResource("src/test/resources/cumulus_message_input_example.json").getFile());
+            File inputCMAJsonFile = new File(classLoader.getResource("cumulus_message_input_example.json").getFile());
             cmaString = new String(Files.readAllBytes(inputCMAJsonFile.toPath()));
 
-            File inputFPFile = new File(classLoader.getResource("src/test/resources/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.fp").getFile());
+            File inputFPFile = new File(classLoader.getResource("20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.fp").getFile());
             fpFileContentString = new String(Files.readAllBytes(inputFPFile.toPath()));
 
         } catch (IOException ioe) {
@@ -215,7 +215,7 @@ public class FootprintProcessorTest {
     @Test
     public void testCreateOutputMessage() {
         FootprintProcessor processor = new FootprintProcessor();
-        String output =  processor.createOutputMessage(cmaString, 334411, "md5-3344",
+        String output =  processor.createOutputMessage(cmaString, 334411,
                 new BigInteger("3244"), "granuleId-3344-22.cmr.json", "my-private",
                 "CMR", "collectionName");
         JsonElement jsonElement = new JsonParser().parse(output);
@@ -224,10 +224,8 @@ public class FootprintProcessorTest {
         JsonObject foundFP =  processor.getFileJsonObjByFileTrailing(files, ".fp");
         assertEquals(null, foundFP);
         JsonObject foundCMR =  processor.getFileJsonObjByFileTrailing(files, ".cmr.json");
-        String eTag = foundCMR.get("etag").getAsString();
         Long  cmrFileSize =  foundCMR.get("size").getAsLong();
         BigInteger  revisionId =  jsonElement.getAsJsonObject().get("cmrRevisionId").getAsBigInteger();
-        assertEquals("md5-3344", eTag);
         assertEquals(334411, cmrFileSize.longValue());
         assertEquals(revisionId.compareTo(new BigInteger("3244")), 0);
     }
