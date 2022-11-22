@@ -14,6 +14,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.Before;
 import static org.junit.Assert.assertTrue;
@@ -179,7 +180,19 @@ public class UMMUtilsTest {
             // force test case to fail if getting exception
             assertTrue(false);
         }
+    }
 
+    @Test
+    public void testExceptionStackTraceToString() {
+        try {
+            NumberFormatException numberFormatException = new NumberFormatException("Self generated NumberFormatException");
+            String stackTraceStr = UMMUtils.getStackTraceAsString(numberFormatException);
+            assertTrue(StringUtils.containsIgnoreCase(stackTraceStr,"gov.nasa.cumulus.metadata.aggregator.UMMUtilsTest.testExceptionStackTraceToString"));
+            assertTrue(StringUtils.containsIgnoreCase(stackTraceStr,"Self generated NumberFormatException"));
+        } catch (Exception e) {
+            // force test case to fail if getting exception
+            assertTrue(false);
+        }
     }
 
 }

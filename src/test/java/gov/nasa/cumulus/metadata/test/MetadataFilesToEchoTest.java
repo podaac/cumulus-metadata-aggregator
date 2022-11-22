@@ -256,6 +256,29 @@ public class MetadataFilesToEchoTest {
     }
 
     @Test
+    public void testCreateTrackTypeWithException () {
+        String input = "Cycle: 5 Pass: [40, Tiles: 4-5L 4-8R] [41, Tiles: 6R 6L] [42, Tiles: 7F]";
+        ClassLoader classLoader = getClass().getClassLoader();
+        File cfgFile = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
+        MetadataFilesToEcho mfte = new MetadataFilesToEcho(true);
+
+        try {
+            mfte.readConfiguration(cfgFile.getAbsolutePath());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+        // if passed in UNKNOWN for either cycle or pass, then NumberFormatException will be thrown
+        assertThrows(NumberFormatException.class, () -> mfte.createTrackType("UNKNOWN", "UNKNOWN", "UNKNOWN"));
+        // if  both cycle and pass string are re-presenting Integer
+        TrackType trackType = mfte.createTrackType("3", "2", "UNKNOWN");
+        assertEquals(trackType.getCycle().intValue(), 3);
+        List<TrackPassTileType> trackPassTileTypes = trackType.getPasses();
+        TrackPassTileType trackPassTileType = trackPassTileTypes.get(0);
+        assertEquals(trackPassTileType.getPass().intValue(), 2);
+        assertEquals(trackPassTileType.getTiles().get(0), "UNKNOWN");
+    }
+    @Test
     public void testMarshellCyclePassTileSceneStrToAchiveType() {
         String input = "Cycle: 5 Pass: [40, Tiles: 4-5L 4-8R] [41, Tiles: 6R 6L] [42, Tiles: 7F]";
         ClassLoader classLoader = getClass().getClassLoader();
@@ -281,6 +304,37 @@ public class MetadataFilesToEchoTest {
         assertEquals(tiles.get(6), "8R");
         List<AdditionalAttributeType> additionalAttributeTypes = isoGranule.getAdditionalAttributeTypes();
         assertEquals(additionalAttributeTypes.size(), 3);
+        // The following test purposely make tile 40R-50R breaking the code.  However, pass 41, 6R 6L shall
+        // still appear in the tiles array
+        input = "Cycle: 5 Pass: [40, Tiles: 40R-50R 4-8R] [41, Tiles: 6R 6L] [42, Tiles: 7-10F]";
+        isoGranule = mfte.createIsoCyclePassTile(input);
+        trackType = isoGranule.getTrackType();
+        trackPassTileTypes = trackType.getPasses();
+        assertEquals(trackPassTileTypes.size(), 3);
+        trackPassTileType = trackPassTileTypes.get(0);
+        assertEquals(trackPassTileType.getPass(), new Integer(40));
+        tiles = trackPassTileType.getTiles();
+        assertEquals(tiles.size(), 0);
+        trackPassTileType = trackPassTileTypes.get(1); //[41, Tiles: 6R 6L]
+        assertEquals(trackPassTileType.getPass(), new Integer(41));
+        tiles = trackPassTileType.getTiles();
+        assertEquals(tiles.size(), 2);
+        assertEquals(tiles.get(0), "6R");
+        assertEquals(tiles.get(1), "6L");
+        trackPassTileType = trackPassTileTypes.get(2);  // [42, Tiles: 7-10F]
+        assertEquals(trackPassTileType.getPass(), new Integer(42));
+        tiles = trackPassTileType.getTiles();
+        assertEquals(tiles.size(), 4);
+        assertEquals(tiles.get(0), "7F");
+        assertEquals(tiles.get(3), "10F");
+        additionalAttributeTypes = isoGranule.getAdditionalAttributeTypes();
+        assertEquals(additionalAttributeTypes.size(), 2);
+        AdditionalAttributeType additionalAttributeType = additionalAttributeTypes.get(1);  // TILE, 7F, 8F, 9F, 10F
+        assertEquals(additionalAttributeType.getName(), "TILE");
+        List<String> tileValues = additionalAttributeType.getValues();  //7F, 8F, 9F, 10F
+        assertEquals(tileValues.get(0), "7F");
+        assertEquals(tileValues.get(3), "10F");
+
     }
 
     @Test
@@ -314,8 +368,6 @@ public class MetadataFilesToEchoTest {
             e.printStackTrace();
             fail();
         }
-
-
     }
 
 }
