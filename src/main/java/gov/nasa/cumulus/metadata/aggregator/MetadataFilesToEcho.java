@@ -560,8 +560,12 @@ public class MetadataFilesToEcho {
 			additionalAttributeTypes=
 					ummgPojoFactory.trackTypeToAdditionalAttributeTypes(trackType);
 		}
-		((IsoGranule)granule).setTrackType(trackType);
-		((IsoGranule)granule).setAdditionalAttributeTypes(additionalAttributeTypes);
+		// It is possible after all the above processing, cycle is present but passes is not (no pass in passes array)
+		// That is, we shall NOT create trackType at all.  Otherwise, CMR will throw validation error
+		if (trackType.getCycle()!=null && trackType.getPasses()!=null && trackType.getPasses().size() >0) {
+			((IsoGranule) granule).setTrackType(trackType);
+			((IsoGranule) granule).setAdditionalAttributeTypes(additionalAttributeTypes);
+		}
 		return (IsoGranule)granule;
 	}
 

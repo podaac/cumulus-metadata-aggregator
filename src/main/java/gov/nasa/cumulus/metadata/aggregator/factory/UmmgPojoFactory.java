@@ -6,6 +6,7 @@ import gov.nasa.cumulus.metadata.umm.generated.TrackType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UmmgPojoFactory {
     private static UmmgPojoFactory _self = null;
@@ -48,6 +49,10 @@ public class UmmgPojoFactory {
 
     public List<AdditionalAttributeType> trackTypeToAdditionalAttributeTypes(TrackType trackType) {
         List<TrackPassTileType> trackPassTileTypes = trackType.getPasses();
+        trackPassTileTypes = trackPassTileTypes.stream().filter(trackPassTileType ->
+                trackPassTileType.getPass()!=null
+                        && trackPassTileType.getTiles() !=null
+        && trackPassTileType.getTiles().size() >0).collect(Collectors.toList());
         ArrayList<AdditionalAttributeType> additionalAttributeTypes = new ArrayList<>();
         trackPassTileTypes.stream().forEach(trackPassTileType ->  {
             AdditionalAttributeType additionalAttributeType = new AdditionalAttributeType();
