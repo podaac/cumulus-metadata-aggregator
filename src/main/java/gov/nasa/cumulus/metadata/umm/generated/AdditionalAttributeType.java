@@ -31,6 +31,24 @@ public class AdditionalAttributeType {
     private List<String> values = new ArrayList<String>();
 
     /**
+     * No args constructor for use in serialization
+     * 
+     */
+    public AdditionalAttributeType() {
+    }
+
+    /**
+     * 
+     * @param values
+     * @param name
+     */
+    public AdditionalAttributeType(String name, List<String> values) {
+        super();
+        this.name = name;
+        this.values = values;
+    }
+
+    /**
      * The additional attribute's name.
      * (Required)
      * 

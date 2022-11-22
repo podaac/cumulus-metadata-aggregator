@@ -281,7 +281,6 @@ public class MetadataFilesToEchoTest {
     @Test
     public void testMarshellCyclePassTileSceneStrToAchiveType() {
         String input = "Cycle: 5 Pass: [40, Tiles: 4-5L 4-8R] [41, Tiles: 6R 6L] [42, Tiles: 7F]";
-        //input = "Cycle: 5 Pass: [40, Tiles: 40R-50R 4-8R] [41, Tiles: 6R 6L] [42, Tiles: 7F]";
         ClassLoader classLoader = getClass().getClassLoader();
         File cfgFile = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
         MetadataFilesToEcho mfte = new MetadataFilesToEcho(true);
@@ -329,8 +328,8 @@ public class MetadataFilesToEchoTest {
         assertEquals(tiles.get(0), "7F");
         assertEquals(tiles.get(3), "10F");
         additionalAttributeTypes = isoGranule.getAdditionalAttributeTypes();
-        assertEquals(additionalAttributeTypes.size(), 3);
-        AdditionalAttributeType additionalAttributeType = additionalAttributeTypes.get(2);  // TILE, 7F, 8F, 9F, 10F
+        assertEquals(additionalAttributeTypes.size(), 2);
+        AdditionalAttributeType additionalAttributeType = additionalAttributeTypes.get(1);  // TILE, 7F, 8F, 9F, 10F
         assertEquals(additionalAttributeType.getName(), "TILE");
         List<String> tileValues = additionalAttributeType.getValues();  //7F, 8F, 9F, 10F
         assertEquals(tileValues.get(0), "7F");
