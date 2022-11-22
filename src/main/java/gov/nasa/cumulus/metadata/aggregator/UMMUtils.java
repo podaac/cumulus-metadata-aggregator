@@ -1,5 +1,7 @@
 package gov.nasa.cumulus.metadata.aggregator;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -9,6 +11,7 @@ import com.vividsolutions.jts.algorithm.CGAlgorithms;
 import com.vividsolutions.jts.io.WKTWriter;
 import gov.nasa.podaac.inventory.model.Dataset;
 import gov.nasa.podaac.inventory.model.DatasetCitation;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -301,6 +304,18 @@ public class UMMUtils {
     public static Double longitudeTypeNormalizer(Double value) {
         value = value > 180 ? value - 360 : value;
         return value;
+    }
+
+    public static String removeLineFeedCarriageReturn(String s){
+        if (s==null) s="";
+        return StringUtils.trim(s).replace("\n"," ").replace("\r", " ");
+    }
+
+    public static String getStackTraceAsString(Exception e) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        return sw.toString();
     }
 
 }

@@ -7,9 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+### Added
 ### Deprecated
 ### Removed
 ### Fixed
+- **PODAAC-5078**
+  - Enhanced MetataAggregator to handle incorrectly formatted cycle, pass or tiles
+  - fixes maily for SWOT acrhive.xml and SWOT iso.xml
 ### Security
 
 ## [8.1.0]
