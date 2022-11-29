@@ -208,21 +208,17 @@ public class MetadataFilesToEcho {
 		 * so far, universal-data-handler is not generating .mp file with tiles yet
 		 * just cycle and passes.
 		 * Passes are under cycle. If there is no cycle then there is no pass
+		 * common metadata file does not include tiles info yet, so there is no need to convert TrackType
+		 * 	 to AdditionalAttributeType Array
 		 */
-		TrackType trackType = null;
-		if (metadata.get("cycle") != null) {
-			int cycleInt = ((Long)metadata.get("cycle")).intValue();
-			Integer iPass = null;
-			if (metadata.get("pass") != null) {
-				int passInt = ((Long)metadata.get("pass")).intValue();
-				iPass = new Integer(passInt);
-			}
-			trackType = createTrackType(new Integer(cycleInt), iPass);
+		try {
+			TrackType trackType = createTrackType(NumberUtils.createInteger(metadata.get("cycle").toString()),
+					NumberUtils.createInteger(metadata.get("pass").toString()));
+			granule.setTrackType(trackType);
+		} catch (Exception e) {
+			AdapterLogger.LogWarning(this.className + " Continue execution after " +
+					"common metadata .mp extracting cycle and pass failed with exception:" + UMMUtils.getStackTraceAsString(e));
 		}
-		//  common metadata file does not include tiles info yet, so there is no need to convert TrackType
-		// to AdditionalAttributeType Array
-		granule.setTrackType(trackType);
-
 
 		if (metadata.get(Constants.Metadata.ORBIT) != null) {
 			granule.setOrbitNumber(((Long) metadata.get(Constants.Metadata.ORBIT)).intValue());
@@ -513,7 +509,15 @@ public class MetadataFilesToEcho {
         ((IsoGranule) granule).setPGEVersionClass(xpath.evaluate(IsoMendsXPath.PGE_VERSION_CLASS, doc));
 		// Process ISO cycle, pass and tile
 		String  cyclePassTileSceneStr =StringUtils.trim(xpath.evaluate(IsoMendsXPath.CYCLE_PASS_TILE_SCENE, doc));
-		createIsoCyclePassTile(cyclePassTileSceneStr);
+
+		try {
+			createIsoCyclePassTile(cyclePassTileSceneStr);
+		} catch (Exception e) {
+			// Since TrackType which contains Cycle Pass Tile and Scenes is not a required field
+			// we catch exception with printStackTrace to know the exact line throwing error
+			// then continue processing.
+			AdapterLogger.LogWarning("Continue processing after iso cyclePassTileScene processing failed :" +  UMMUtils.getStackTraceAsString(e));
+		}
 
 		if(additionalAttributes != null) {
 			NodeList additionalAttributesBlock = (NodeList) xpath.evaluate(IsoMendsXPath.ADDITIONAL_ATTRIBUTES_BLOCK, doc, XPathConstants.NODESET);
@@ -528,6 +532,7 @@ public class MetadataFilesToEcho {
 			additionalAttributes.remove("publishAll");
 			((IsoGranule) granule).setDynamicAttributeNameMapping(additionalAttributes);
 		}
+
 		return  ((IsoGranule) granule);
 	}
 
@@ -594,6 +599,7 @@ public class MetadataFilesToEcho {
 	 * @return
 	 */
 	public IsoGranule createIsoCyclePassTile(String cyclePassTileStr) {
+		cyclePassTileStr = UMMUtils.removeLineFeedCarriageReturn(cyclePassTileStr);
 		AdapterLogger.LogInfo(this.className + " iso cycle pass tile string:" + cyclePassTileStr);
 		String toBeProcessedStr = StringUtils.upperCase(StringUtils.trim(cyclePassTileStr));
 		Pattern p_cycle = Pattern.compile("CYCLE\\s*:\\s*\\d+\\s*?");
@@ -627,14 +633,26 @@ public class MetadataFilesToEcho {
 		}
 		TrackType trackType = null;
 		List<AdditionalAttributeType> additionalAttributeTypes = new ArrayList<>();
+		/**
+		 * This block of code supports multiple cycles.  In theory, during cycle transition, it is possible
+		 * a granule consists 2 cycles.  However, UMMG json schema does support one at the time.
+		 */
 		for(String cps : cyclePassStrs) {
-			trackType = createTrackType(cps, p_cycle);
+			try {
+				trackType = createTrackType(cps, p_cycle);
+			} catch (Exception e) {
+				AdapterLogger.LogWarning(this.className + " continue processing after creating TrackType with exception: " + UMMUtils.getStackTraceAsString(e));
+			}
 			UmmgPojoFactory ummgPojoFactory = UmmgPojoFactory.getInstance();
 			additionalAttributeTypes=
 					ummgPojoFactory.trackTypeToAdditionalAttributeTypes(trackType);
 		}
-		((IsoGranule)granule).setTrackType(trackType);
-		((IsoGranule)granule).setAdditionalAttributeTypes(additionalAttributeTypes);
+		// It is possible after all the above processing, cycle is present but passes is not (no pass in passes array)
+		// That is, we shall NOT create trackType at all.  Otherwise, CMR will throw validation error
+		if (trackType.getCycle()!=null && trackType.getPasses()!=null && trackType.getPasses().size() >0) {
+			((IsoGranule) granule).setTrackType(trackType);
+			((IsoGranule) granule).setAdditionalAttributeTypes(additionalAttributeTypes);
+		}
 		return (IsoGranule)granule;
 	}
 
@@ -671,8 +689,13 @@ public class MetadataFilesToEcho {
 			String[] passTiles = StringUtils.split(passTilesStr, ",");
 			String passStr = StringUtils.trim(passTiles[0]);
 			trackPassTileType.setPass(NumberUtils.createInteger(passStr));
-			List<String> tiles = getTiles(StringUtils.trim(passTiles[1]));
-			trackPassTileType.setTiles(tiles);
+			try {
+				List<String> tiles = getTiles(StringUtils.trim(passTiles[1]));
+				trackPassTileType.setTiles(tiles);
+			} catch (Exception e) {
+				AdapterLogger.LogWarning(this.className + " Continue processing after tile processing failed with " +
+						"exception: " + UMMUtils.getStackTraceAsString(e));
+			}
 			trackPassTileTypes.add(trackPassTileType);
 		}
 		trackType.setPasses(trackPassTileTypes);
@@ -796,6 +819,47 @@ public class MetadataFilesToEcho {
 		String  passStr  =StringUtils.trim(xpath.evaluate(SwotArchiveXmlXPath.ARCHIVE_PASS, doc));
 		String  tileStr  =StringUtils.trim(xpath.evaluate(SwotArchiveXmlXPath.ARCHIVE_TILE, doc));
 
+		// TrackType is not a required field.  Hence, if thrown exception during process, we will swallow exception
+		// log and continue
+		TrackType trackType;
+		try {
+			trackType = createTrackType(cycleStr, passStr, tileStr);
+			granule.setTrackType(trackType);
+			granule.setAdditionalAttributeTypes(UmmgPojoFactory.getInstance().trackTypeToAdditionalAttributeTypes(trackType));
+		} catch (Exception e) {
+			AdapterLogger.LogWarning(this.className + " Exception while creating TrackType: " + UMMUtils.getStackTraceAsString(e));
+		}
+		return granule;
+	}
+
+	/**
+	 * to create TrackType, cycle and passes are both required.
+	 * However, within each passes (TrackPassTileType), only pass is required.
+	 * i.e., it is possible we can have TrackPassTileType with pass but no tile
+	 *
+	 * However, the Track (TrackType) under HorizontalSpatialDomainType, is not required.
+	 * https://git.earthdata.nasa.gov/projects/EMFD/repos/unified-metadata-model/browse/granule/v1.6.3/umm-g-json-schema.json#514
+	 * @param cycleStr
+	 * @param passStr
+	 * @param tileStr
+	 * @return
+	 */
+	public TrackType createTrackType(String cycleStr, String passStr, String tileStr) {
+		/*
+		based on the "do as much we can" theory.  the code shall only allow the situation where
+		title can not be processed, since cycle and passes are both required.
+		According to UMMG schema 1.6.3, cycle and pass are both integer.  tile is String
+		 */
+		try {
+			if (NumberUtils.createInteger(StringUtils.trim(cycleStr)) == null ||
+					NumberUtils.createInteger(StringUtils.trim(passStr)) == null) {
+				return null;
+			}
+		} catch(NumberFormatException nfe) { // if either cycle or pass are un-processable, then return null
+			AdapterLogger.LogWarning(this.className+ " cycle or pass string can not be converted to Integer :" + UMMUtils.getStackTraceAsString(nfe));
+			throw nfe;
+		}
+
 		ArrayList<TrackPassTileType>trackPassTileTypes = new ArrayList<>();
 		TrackType trackType = null;
 		if (StringUtils.isNotEmpty(passStr)) {
@@ -811,9 +875,7 @@ public class MetadataFilesToEcho {
 		if (StringUtils.isNotEmpty(cycleStr)) {
 			trackType = ummgPojoFactory.createTrackType(NumberUtils.createInteger(cycleStr), trackPassTileTypes);
 		}
-		granule.setTrackType(trackType);
-		granule.setAdditionalAttributeTypes(UmmgPojoFactory.getInstance().trackTypeToAdditionalAttributeTypes(trackType));
-		return granule;
+		return trackType;
 	}
 
 	/**
@@ -866,8 +928,12 @@ public class MetadataFilesToEcho {
 		String cycle = StringUtils.trim(xpath.evaluate(ManifestXPath.CYCLE, doc));
 		String pass = StringUtils.trim(xpath.evaluate(ManifestXPath.PASS, doc));
 
-		TrackType trackType = createTrackType(NumberUtils.createInteger(cycle), NumberUtils.createInteger(pass));
-		granule.setTrackType(trackType); // No tile so we don't need to convert trackType to AdditionalAttributeType array
+		try {  // TrackType is not a required field hence continue execution if any exception happened.
+			TrackType trackType = createTrackType(NumberUtils.createInteger(cycle), NumberUtils.createInteger(pass));
+			granule.setTrackType(trackType); // No tile so we don't need to convert trackType to AdditionalAttributeType array
+		} catch (Exception e) {
+			AdapterLogger.LogWarning(this.className + " Continue execution after s6 creating TrackType failed with exception:" + e);
+		}
 
 		String productName = null;
 		try {
