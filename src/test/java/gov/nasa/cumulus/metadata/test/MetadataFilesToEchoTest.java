@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import gov.nasa.cumulus.metadata.aggregator.*;
 
 import gov.nasa.cumulus.metadata.umm.adapter.UMMGCollectionAdapter;
@@ -26,9 +27,8 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 
 import javax.xml.xpath.XPath;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class MetadataFilesToEchoTest {
@@ -318,4 +318,344 @@ public class MetadataFilesToEchoTest {
 
     }
 
+    @Test
+    public void testReadIsoMendsMetadataFileAdditionalFields_publishAll() throws ParseException, IOException, URISyntaxException {
+
+        // Simple "publishAll" is true
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0.iso.xml").getFile());
+        File cfgFile = new File(classLoader.getResource("OPERA_L3_DSWX-HLS_PROVISIONAL_V0_test_1.cmr.cfg").getFile());
+        MetadataFilesToEcho mfte = new MetadataFilesToEcho(true);
+
+        Document doc = null;
+        XPath xpath = null;
+        try {
+            mfte.readConfiguration(cfgFile.getAbsolutePath());
+            doc = mfte.makeDoc(file.getAbsolutePath());
+            xpath = mfte.makeXpath(doc);
+            IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
+
+            File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
+            try {
+                mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
+            } catch (Exception e) {
+                e.printStackTrace();
+                fail();
+            }
+
+            // Verify the values here:
+
+            // Confirm additional attributes has been filled
+            List<AdditionalAttributeType> aat = isoGranule.getAdditionalAttributeTypes();
+            assertEquals(aat.size(), 10);
+
+            List<String> keys = aat.stream().map(AdditionalAttributeType::getName).collect(Collectors.toList());
+
+            List<String> checkForKey = Arrays.asList("HlsDataset",
+                    "SensorProductID",
+                    "Accode",
+                    "MeanSunAzimuthAngle",
+                    "MeanSunZenithAngle",
+                    "NBAR_SolarZenith",
+                    "MeanViewAzimuthAngle",
+                    "MeanViewZenithAngle",
+                    "SpatialCoverage",
+                    "PercentCloudCover");
+
+            if(!checkForKey.equals(keys)){
+                fail(String.format("List mismatch:\n" +
+                        Arrays.toString(keys.toArray()) + "\n" +
+                        Arrays.toString(checkForKey.toArray())));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testReadIsoMendsMetadataFileAdditionalFields_appendFieldToJSON() throws ParseException, IOException, URISyntaxException {
+
+        // publish all is set to true and having a dedicated field added to JSON (CloudCover (JSON) mapped to PercentCloudCover (XML))
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0.iso.xml").getFile());
+        File cfgFile = new File(classLoader.getResource("OPERA_L3_DSWX-HLS_PROVISIONAL_V0_test_2.cmr.cfg").getFile());
+        MetadataFilesToEcho mfte = new MetadataFilesToEcho(true);
+
+        Document doc = null;
+        XPath xpath = null;
+        try {
+            mfte.readConfiguration(cfgFile.getAbsolutePath());
+            doc = mfte.makeDoc(file.getAbsolutePath());
+            xpath = mfte.makeXpath(doc);
+            IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
+
+            File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
+            try {
+                mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
+            } catch (Exception e) {
+                e.printStackTrace();
+                fail();
+            }
+
+            // Verify the values here:
+
+            // Confirm additional attributes has been filled
+            List<AdditionalAttributeType> aat = isoGranule.getAdditionalAttributeTypes();
+            assertEquals(aat.size(), 10);
+
+            List<String> keys = aat.stream().map(AdditionalAttributeType::getName).collect(Collectors.toList());
+
+            List<String> checkForKey = Arrays.asList("HlsDataset",
+                    "SensorProductID",
+                    "Accode",
+                    "MeanSunAzimuthAngle",
+                    "MeanSunZenithAngle",
+                    "NBAR_SolarZenith",
+                    "MeanViewAzimuthAngle",
+                    "MeanViewZenithAngle",
+                    "SpatialCoverage",
+                    "PercentCloudCover");
+
+            if(!checkForKey.equals(keys)){
+                fail(String.format("List mismatch:\n" +
+                        Arrays.toString(keys.toArray()) + "\n" +
+                        Arrays.toString(checkForKey.toArray())));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        mfte.getGranule().setName("some_random_granule_name");
+
+        JSONObject granule = mfte.createJson();
+        Gson gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
+                .registerTypeHierarchyAdapter(Collection.class, new UMMGCollectionAdapter())
+                .registerTypeHierarchyAdapter(List.class, new UMMGListAdapter())
+                .registerTypeHierarchyAdapter(Map.class, new UMMGMapAdapter())
+                .create();
+        String jsonStr = gsonBuilder.toJson(granule);
+
+        // Ensure jsonStr has cloud coverage field (value from PercentCloudCover in iso.xml)
+
+        JSONParser parser = new JSONParser();
+        JSONObject resultJSON = (JSONObject) parser.parse(jsonStr);
+
+        try {
+            if (resultJSON.containsKey("CloudCover")) {
+                long value = (long) resultJSON.get("CloudCover");
+                assertEquals(76, value);
+            } else {
+                fail("Cloud Cover key missing from jsonStr");
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testReadIsoMendsMetadataFileAdditionalFields_publishSpecific() throws ParseException, IOException, URISyntaxException {
+
+        // PublishAll is false and publish list is filled in
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0.iso.xml").getFile());
+        File cfgFile = new File(classLoader.getResource("OPERA_L3_DSWX-HLS_PROVISIONAL_V0_test_3.cmr.cfg").getFile());
+        MetadataFilesToEcho mfte = new MetadataFilesToEcho(true);
+
+        Document doc = null;
+        XPath xpath = null;
+        try {
+            mfte.readConfiguration(cfgFile.getAbsolutePath());
+            doc = mfte.makeDoc(file.getAbsolutePath());
+            xpath = mfte.makeXpath(doc);
+            IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
+
+            File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
+            try {
+                mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
+            } catch (Exception e) {
+                e.printStackTrace();
+                fail();
+            }
+
+            // Verify the values here:
+
+            // Confirm additional attributes has been filled
+            List<AdditionalAttributeType> aat = isoGranule.getAdditionalAttributeTypes();
+            assertEquals(aat.size(), 1);
+
+            List<String> keys = aat.stream().map(AdditionalAttributeType::getName).collect(Collectors.toList());
+
+            List<String> checkForKey = Arrays.asList("PercentCloudCover");
+
+            if(!checkForKey.equals(keys)){
+                fail(String.format("List mismatch:\n" +
+                        Arrays.toString(keys.toArray()) + "\n" +
+                        Arrays.toString(checkForKey.toArray())));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testReadIsoMendsMetadataFileAdditionalFields_publishAllWithSpecific() throws ParseException, IOException, URISyntaxException {
+
+        // This case is when publishAll is True but somehow a publish list is set also; just publish all then
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0.iso.xml").getFile());
+        File cfgFile = new File(classLoader.getResource("OPERA_L3_DSWX-HLS_PROVISIONAL_V0_test_4.cmr.cfg").getFile());
+        MetadataFilesToEcho mfte = new MetadataFilesToEcho(true);
+
+        Document doc = null;
+        XPath xpath = null;
+        try {
+            mfte.readConfiguration(cfgFile.getAbsolutePath());
+            doc = mfte.makeDoc(file.getAbsolutePath());
+            xpath = mfte.makeXpath(doc);
+            IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
+
+            File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
+            try {
+                mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
+            } catch (Exception e) {
+                e.printStackTrace();
+                fail();
+            }
+
+            // Verify the values here:
+
+            // Confirm additional attributes has been filled
+            List<AdditionalAttributeType> aat = isoGranule.getAdditionalAttributeTypes();
+            assertEquals(aat.size(), 10);
+
+            List<String> keys = aat.stream().map(AdditionalAttributeType::getName).collect(Collectors.toList());
+
+            List<String> checkForKey = Arrays.asList("HlsDataset",
+                    "SensorProductID",
+                    "Accode",
+                    "MeanSunAzimuthAngle",
+                    "MeanSunZenithAngle",
+                    "NBAR_SolarZenith",
+                    "MeanViewAzimuthAngle",
+                    "MeanViewZenithAngle",
+                    "SpatialCoverage",
+                    "PercentCloudCover");
+
+            if(!checkForKey.equals(keys)){
+                fail(String.format("List mismatch:\n" +
+                        Arrays.toString(keys.toArray()) + "\n" +
+                        Arrays.toString(checkForKey.toArray())));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testReadIsoMendsMetadataFileAdditionalFields_publishAllEmptyCatchError() throws ParseException, IOException, URISyntaxException {
+
+        // This case is when publishAll key doesn't exist, should throw exception
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0.iso.xml").getFile());
+        File cfgFile = new File(classLoader.getResource("OPERA_L3_DSWX-HLS_PROVISIONAL_V0_test_5.cmr.cfg").getFile());
+        MetadataFilesToEcho mfte = new MetadataFilesToEcho(true);
+
+        Document doc = null;
+        XPath xpath = null;
+        try {
+            mfte.readConfiguration(cfgFile.getAbsolutePath());
+            doc = mfte.makeDoc(file.getAbsolutePath());
+            xpath = mfte.makeXpath(doc);
+            IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
+            fail("Exception was not raised...?");
+        } catch (Exception e) {
+            // Expected catch
+            assertEquals("publishAll key is missing from additionalAttribute", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testReadIsoMendsMetadataFileAdditionalFields_publishAllEmptyCatchError_2() throws ParseException, IOException, URISyntaxException {
+
+        // This case is when publishAll key doesn't exist, should throw exception
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0.iso.xml").getFile());
+        File cfgFile = new File(classLoader.getResource("OPERA_L3_DSWX-HLS_PROVISIONAL_V0_test_6.cmr.cfg").getFile());
+        MetadataFilesToEcho mfte = new MetadataFilesToEcho(true);
+
+        Document doc = null;
+        XPath xpath = null;
+        try {
+            mfte.readConfiguration(cfgFile.getAbsolutePath());
+            doc = mfte.makeDoc(file.getAbsolutePath());
+            xpath = mfte.makeXpath(doc);
+            IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
+            fail("Exception was not raised...?");
+        } catch (Exception e) {
+            // Expected catch
+            assertEquals("publishAll key is empty or null from additionalAttribute", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testReadIsoMendsMetadataFileAdditionalFields_publishAllEmptyCatchError_3() throws ParseException, IOException, URISyntaxException {
+
+        // This case is when publishAll key doesn't exist, should throw exception
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0.iso.xml").getFile());
+        File cfgFile = new File(classLoader.getResource("OPERA_L3_DSWX-HLS_PROVISIONAL_V0_test_7.cmr.cfg").getFile());
+        MetadataFilesToEcho mfte = new MetadataFilesToEcho(true);
+
+        Document doc = null;
+        XPath xpath = null;
+        try {
+            mfte.readConfiguration(cfgFile.getAbsolutePath());
+            doc = mfte.makeDoc(file.getAbsolutePath());
+            xpath = mfte.makeXpath(doc);
+            IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
+
+            File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
+            try {
+                mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
+            } catch (Exception e) {
+                e.printStackTrace();
+                fail();
+            }
+
+        } catch (Exception e) {
+            fail("Some issue when creating mfte");
+        }
+
+        try{
+            mfte.getGranule().setName("some_random_granule_name");
+
+            JSONObject granule = mfte.createJson();
+            Gson gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
+                    .registerTypeHierarchyAdapter(Collection.class, new UMMGCollectionAdapter())
+                    .registerTypeHierarchyAdapter(List.class, new UMMGListAdapter())
+                    .registerTypeHierarchyAdapter(Map.class, new UMMGMapAdapter())
+                    .create();
+            String jsonStr = gsonBuilder.toJson(granule);
+        } catch (Exception e){
+            fail("Issue when generating JSON");
+        }
+
+
+    }
 }

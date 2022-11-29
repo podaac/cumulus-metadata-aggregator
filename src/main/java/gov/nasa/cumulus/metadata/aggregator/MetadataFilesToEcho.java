@@ -7,13 +7,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.Date;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.TimeZone;
 
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.DocumentBuilder;
@@ -48,6 +44,7 @@ import org.json.simple.parser.ParseException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import gov.nasa.podaac.inventory.api.Constant.GranuleArchiveStatus;
@@ -63,6 +60,7 @@ public class MetadataFilesToEcho {
 	boolean forceBB = false;
 	boolean rangeIs360 = false;
     boolean isIsoFile = false;
+	JSONObject additionalAttributes = null;
 	UmmgPojoFactory ummgPojoFactory = UmmgPojoFactory.getInstance();
 
 	public MetadataFilesToEcho() {
@@ -84,6 +82,7 @@ public class MetadataFilesToEcho {
 
 		String shortName = (String)metadata.get("collection");
 		setDatasetValues(shortName, metadata.get("version").toString(), (Boolean) metadata.get("rangeIs360"), null);
+		setAdditionalAttributes(metadata);
 	}
 
 	/**
@@ -114,6 +113,22 @@ public class MetadataFilesToEcho {
 					(Double) boundingBox.get("lonMax"),
 					(Double) boundingBox.get("lonMin"));
 		}
+	}
+
+	public void setAdditionalAttributes(JSONObject metadata){
+		if(validateJSONObjectKeyExists(metadata, "meta") && metadata.get("meta") instanceof JSONObject){
+			// contains meta
+			JSONObject meta = (JSONObject) metadata.get("meta");
+			if(validateJSONObjectKeyExists(meta, "additionalAttributes") && meta.get("additionalAttributes") instanceof JSONObject){
+				// contains additionalAttributes
+				JSONObject additionalAttributes = (JSONObject) meta.get("additionalAttributes");
+				this.additionalAttributes = additionalAttributes;
+			}
+		}
+	}
+
+	public boolean validateJSONObjectKeyExists(JSONObject jsonObject, String key){
+		return (jsonObject.containsKey(key) && jsonObject.get(key) != null);
 	}
 
 	//this method reads the output of a footprint command(.fp.xml)
@@ -472,6 +487,7 @@ public class MetadataFilesToEcho {
         if (qaPercentOutOfBoundsData != "" && BoundingTools.isParseable(qaPercentOutOfBoundsData)) {
             ((IsoGranule) granule).setQAPercentOutOfBoundsData(Double.parseDouble(qaPercentOutOfBoundsData));
         }
+
         ((IsoGranule) granule).setOrbit(xpath.evaluate(IsoMendsXPath.ORBIT, doc));
         ((IsoGranule) granule).setSwotTrack(xpath.evaluate(IsoMendsXPath.SWOT_TRACK, doc));
 
@@ -498,7 +514,76 @@ public class MetadataFilesToEcho {
 		// Process ISO cycle, pass and tile
 		String  cyclePassTileSceneStr =StringUtils.trim(xpath.evaluate(IsoMendsXPath.CYCLE_PASS_TILE_SCENE, doc));
 		createIsoCyclePassTile(cyclePassTileSceneStr);
+
+		if(additionalAttributes != null) {
+			NodeList additionalAttributesBlock = (NodeList) xpath.evaluate(IsoMendsXPath.ADDITIONAL_ATTRIBUTES_BLOCK, doc, XPathConstants.NODESET);
+			List<AdditionalAttributeType> additionalAttributeTypes = appendAdditionalAttributes(additionalAttributes, additionalAttributesBlock);
+			((IsoGranule) granule).setAdditionalAttributeTypes(additionalAttributeTypes);
+
+			// Save anything that isn't in `publishAll` and `publish` into dynamicAttributeNameMapping so can be placed into JSON
+			// TODO: should we make a copy instead?
+			// Also JSONOBJECT.remove might cause memory leak if within loop
+			// (https://arduinojson.org/v6/api/jsonobject/remove/)
+			additionalAttributes.remove("publish");
+			additionalAttributes.remove("publishAll");
+			((IsoGranule) granule).setDynamicAttributeNameMapping(additionalAttributes);
+		}
 		return  ((IsoGranule) granule);
+	}
+
+	public List<AdditionalAttributeType> appendAdditionalAttributes(JSONObject metaAdditionalAttributes, NodeList additionalAttributesBlock){
+		/*
+		Scan through meta.additionalAttributes
+		if `publishAll`, just publish everything mapped
+		if not, see which fields we want to get from the `publish` field
+		 */
+
+		/*
+		Pre-check publishAll and publish list (if any)
+		 */
+		if(!metaAdditionalAttributes.containsKey("publishAll")){
+			//publish all key isn't in additionalAttributes block, assume null
+			throw new MissingResourceException("publishAll key is missing from additionalAttribute",
+					"MetadataFilesToEcho.appendAdditionalAttributes()",
+					"publishAll");
+		}else if(metaAdditionalAttributes.get("publishAll") == null
+				|| metaAdditionalAttributes.get("publishAll").toString().isEmpty()){
+			// Somehow publishAll exists but is null or empty...
+			throw new MissingResourceException("publishAll key is empty or null from additionalAttribute",
+					"MetadataFilesToEcho.appendAdditionalAttributes()",
+					"publishAll");
+		}
+
+			// Make simple List of Additional Attributes
+		List<AdditionalAttributeType> additionalAttributeTypes = new ArrayList<>();
+		List<AdditionalAttributeType> subAdditionalAttributeTypes = new ArrayList<>();
+		List<String> publishList = metaAdditionalAttributes.get("publish") == null ? null : (List<String>) metaAdditionalAttributes.get("publish");
+		// Check to ensure additional attributes are in pairs (key/pair)
+		if (additionalAttributesBlock.getLength() % 2 == 0) {
+			for (int i = 0; i < additionalAttributesBlock.getLength(); i++) {
+				if (i % 2 == 0) {
+					Node key = additionalAttributesBlock.item(i);
+					Node val = additionalAttributesBlock.item(i + 1);
+
+					AdditionalAttributeType aat = new AdditionalAttributeType();
+					aat.setName(key.getTextContent());
+					aat.setValues(Arrays.asList(val.getTextContent()));
+					additionalAttributeTypes.add(aat);
+
+					if(publishList != null && publishList.contains(key.getTextContent())){
+						subAdditionalAttributeTypes.add(aat);
+					}
+				}
+			}
+		}
+
+		// if publish all, just return the list
+		if((Boolean) metaAdditionalAttributes.get("publishAll")){
+			return additionalAttributeTypes;
+		}else{
+			return subAdditionalAttributeTypes;
+		}
+
 	}
 
 	/**

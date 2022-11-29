@@ -2,9 +2,9 @@ package gov.nasa.cumulus.metadata.aggregator;
 
 
 import gov.nasa.cumulus.metadata.umm.generated.AdditionalAttributeType;
-import gov.nasa.cumulus.metadata.umm.generated.TrackPassTileType;
 import gov.nasa.cumulus.metadata.umm.generated.TrackType;
 import gov.nasa.podaac.inventory.model.Granule;
+import org.json.simple.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -17,7 +17,6 @@ public class UMMGranule extends Granule {
     /**
      * A generated type which represents the pass and associate Tiles under Track
      */
-    private TrackPassTileType trackPassTileType;
     private List<AdditionalAttributeType> additionalAttributeTypes;
     private Integer orbitNumber;
     private Integer startOrbit;
@@ -30,6 +29,7 @@ public class UMMGranule extends Granule {
     private Double bbxWesternLongitude;
     private BigDecimal equatorCrossingLongitude;
     private String equatorCrossingDateTime;
+    private JSONObject dynamicAttributeNameMapping;
 
     public Integer getOrbitNumber() {
         return orbitNumber;
@@ -126,4 +126,11 @@ public class UMMGranule extends Granule {
         this.equatorCrossingLongitude = equatorCrossingLongitude;
     }
 
+    public JSONObject getDynamicAttributeNameMapping() {
+        return dynamicAttributeNameMapping;
+    }
+
+    public void setDynamicAttributeNameMapping(JSONObject dynamicAttributeNameMapping) {
+        this.dynamicAttributeNameMapping = dynamicAttributeNameMapping;
+    }
 }
