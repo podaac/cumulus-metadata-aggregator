@@ -5,11 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [8.2.0]
+### Added
 ### Added
 ### Deprecated
 ### Removed
 ### Fixed
+- **PODAAC-5078**
+  - Enhanced MetataAggregator to handle incorrectly formatted cycle, pass or tiles
+  - fixes maily for SWOT acrhive.xml and SWOT iso.xml
 ### Security
 
 ## [8.1.0]
