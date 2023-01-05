@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 ### Removed
 ### Fixed
+- **PODAAC-4273**
+  - Added exclusiive zones for polygon holes and interior rings.
 ### Security
 
 ## [8.2.0]
