@@ -156,7 +156,6 @@ public class FootprintProcessor extends ProcessorBase{
          * First code section here is to de-serialize cmr json string.  2020/12/22 : UMM-G schema version 1.6
          */
 
-        System.out.println("HELLO");
         Gson gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
                 .registerTypeHierarchyAdapter(Collection.class, new UMMGCollectionAdapter())
                 .registerTypeHierarchyAdapter(List.class, new UMMGListAdapter())
@@ -326,11 +325,11 @@ public class FootprintProcessor extends ProcessorBase{
             List<PointType> points = new ArrayList<>();
             BoundaryType boundary = new BoundaryType();
 
-            hole = ((Polygon)geometry).getInteriorRingN(i).reverse();
+            hole = ((Polygon)geometry).getInteriorRingN(i);
             Coordinate[] coordinates = hole.getCoordinates();
             int size = coordinates.length;
 
-            for (int j = 0; j < size; j++){
+            for (int j = 0; j < size; j++) {
                 PointType p = new PointType();
                 p.setLongitude(Double.valueOf(coordinates[j].x));
                 p.setLatitude(Double.valueOf(coordinates[j].y));
