@@ -207,7 +207,7 @@ public class MetadataFilesToEchoTest {
 
         File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
         try {
-            mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
+            mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3.png");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -368,6 +368,42 @@ public class MetadataFilesToEchoTest {
             e.printStackTrace();
             fail();
         }
+    }
+
+    @Test
+    public void testCreateJsonWithPNGFile()
+            throws ParseException, IOException, URISyntaxException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
+        MetadataFilesToEcho mfte = new MetadataFilesToEcho();
+        try {
+            mfte.readConfiguration(file.getAbsolutePath());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        File file2 = new File(classLoader.getResource("20170408033000-JPL-L2P_GHRSST-SSTskin-MODIS_T-N-v02.0-fv01.0.nc.mp").getFile());
+        try {
+            mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3.png");
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        mfte.getGranule().setName("20170408033000-JPL-L2P_GHRSST-SSTskin-MODIS_T-N-v02.0-fv01.0");
+
+        JSONObject granule = mfte.createJson();
+        System.out.println(granule.toJSONString());
+        assertEquals("20170408033000-JPL-L2P_GHRSST-SSTskin-MODIS_T-N-v02.0-fv01.0", granule.get("GranuleUR"));
+
+        JSONObject temp = (JSONObject) ((JSONArray) granule.get("RelatedUrls")).get(0);
+        String mimeType = (String) temp.get("MimeType");
+        String subType = (String) temp.get("Subtype");
+
+        assertEquals("image/png", mimeType);
+        assertEquals("DIRECT DOWNLOAD", subType);
+
     }
 
 }
