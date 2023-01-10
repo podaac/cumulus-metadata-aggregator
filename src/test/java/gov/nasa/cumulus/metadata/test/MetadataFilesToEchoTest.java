@@ -376,20 +376,9 @@ public class MetadataFilesToEchoTest {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
         MetadataFilesToEcho mfte = new MetadataFilesToEcho();
-        try {
-            mfte.readConfiguration(file.getAbsolutePath());
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        }
-
+        mfte.readConfiguration(file.getAbsolutePath());
         File file2 = new File(classLoader.getResource("20170408033000-JPL-L2P_GHRSST-SSTskin-MODIS_T-N-v02.0-fv01.0.nc.mp").getFile());
-        try {
-            mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3.png");
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        }
+        mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3.png");
 
         mfte.getGranule().setName("20170408033000-JPL-L2P_GHRSST-SSTskin-MODIS_T-N-v02.0-fv01.0");
 
