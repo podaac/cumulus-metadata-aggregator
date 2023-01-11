@@ -201,11 +201,13 @@ public class FootprintProcessor extends ProcessorBase{
 
                 GPolygonType gPolygonType = new GPolygonType();
 
-                //Process polygons with holes
-                if(((Polygon)geometry).getNumInteriorRing() > 0){
-                    //Set Interior Ring
-                    ExclusiveZoneType exclusiveZones = getExclusiveZones(singleGeometry);
-                    gPolygonType.setExclusiveZone(exclusiveZones);
+                //Process polygons with holes only with polygons
+                if (StringUtils.equalsIgnoreCase(jtsGeometryTypeStr, GeometryTypeEnum.Polygon.toString())){
+                    if(((Polygon)geometry).getNumInteriorRing() > 0){
+                        //Set Interior Ring
+                        ExclusiveZoneType exclusiveZones = getExclusiveZones(singleGeometry);
+                        gPolygonType.setExclusiveZone(exclusiveZones);
+                    }
                 }
 
                 //Set Exterior Ring
