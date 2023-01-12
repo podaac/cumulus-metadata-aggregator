@@ -832,10 +832,15 @@ public class UMMGranuleFile {
             String type = reference.getType();
             JSONObject relatedUrl = new JSONObject();
             if (!type.startsWith(Constant.LocationPolicyType.ARCHIVE.toString())) {
-
                 if (accessURLs.add(reference.getPath())) {
                     relatedUrl.put("URL", reference.getPath());
-                    relatedUrl.put("Type", "GET DATA");
+                    if(reference.getPath().endsWith(".png")){
+                        relatedUrl.put("Type", "GET RELATED VISUALIZATION");
+                        relatedUrl.put("Subtype", "DIRECT DOWNLOAD");
+                        relatedUrl.put("MimeType", "image/png");
+                    } else {
+                        relatedUrl.put("Type", "GET DATA");
+                    }
                     log.info("Access URL \"" + reference.getPath() + "\" will be added to granule export information");
 
                     if (type.endsWith("FTP"))

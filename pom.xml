@@ -14,7 +14,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>gov.nasa.podaac</groupId>
   <artifactId>cumulus-metadata-aggregator</artifactId>
-  <version>8.1.0-alpha.3-SNAPSHOT</version>
+  <version>8.3.0-alpha.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Metadata-Aggregator</name>
@@ -44,7 +44,7 @@
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-s3</artifactId>
-      <version>1.12.347</version>
+      <version>1.12.378</version>
     </dependency>
     <!-- For AWS Secret Manager -->
     <dependency>
