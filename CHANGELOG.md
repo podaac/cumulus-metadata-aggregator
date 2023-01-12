@@ -7,14 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-### Added
+- **PODAAC-5089**
+  - For each PNG file for granule, append metadata and mimetype for `cmr.json` file
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
 
 ## [8.2.0]
-### Added
 ### Added
 ### Deprecated
 ### Removed
