@@ -151,7 +151,7 @@ public class ProcessorBase {
         return granuleId+ "-" + executionId + ".cmr.json";
     }
 
-    public String createOutputMessage(String input, long uploadedCMRFileSize, String eTag, BigInteger revisionId,
+    public String createOutputMessage(String input, long uploadedCMRFileSize, BigInteger revisionId,
                                       String cmrFileName,
                                       String cmrBucket, String cmrDir, String collectionName) {
         JsonObject inputJsonObj = JsonParser.parseString(input).getAsJsonObject();

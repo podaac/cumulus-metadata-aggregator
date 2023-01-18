@@ -41,7 +41,7 @@ public class ImageProcessor extends ProcessorBase{
             String cmrETag = s3Utils.getS3ObjectETag(this.region, cmrBucket,
                     Paths.get(cmrDir, this.collectionName,
                             cmrFileName).toString());
-            String output = createOutputMessage(input, cmrFileSize, cmrETag, new BigInteger(revisionId),
+            String output = createOutputMessage(input, cmrFileSize, new BigInteger(revisionId),
                     cmrFileName,
                     cmrBucket, cmrDir, this.collectionName);
             return output;

@@ -162,7 +162,7 @@ public class ImageProcessorTest {
     @Test
     public void testCreateOutputMessage() {
         ImageProcessor processor = new ImageProcessor();
-        String output =  processor.createOutputMessage(cmaString, 334411, "md5-3344",
+        String output =  processor.createOutputMessage(cmaString, 334411,
                 new BigInteger("3244"), "granuleId-3344-22.cmr.json", "my-private",
                 "CMR", "collectionName");
         JsonElement jsonElement = JsonParser.parseString(output);

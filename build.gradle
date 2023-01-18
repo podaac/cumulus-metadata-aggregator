@@ -16,4 +16,10 @@ task buildZip(type: Zip) {
 
 }
 
+test {
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: ${descriptor}")
+    }
+}
+
 build.dependsOn buildZip

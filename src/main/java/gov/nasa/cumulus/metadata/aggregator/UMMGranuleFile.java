@@ -7,6 +7,7 @@ import cumulus_message_adapter.message_parser.AdapterLogger;
 import gov.nasa.cumulus.metadata.umm.adapter.UMMGCollectionAdapter;
 import gov.nasa.cumulus.metadata.umm.adapter.UMMGListAdapter;
 import gov.nasa.cumulus.metadata.umm.adapter.UMMGMapAdapter;
+import gov.nasa.cumulus.metadata.umm.generated.AdditionalAttributeType;
 import gov.nasa.cumulus.metadata.util.BoundingTools;
 import gov.nasa.cumulus.metadata.util.JSONUtils;
 import gov.nasa.cumulus.metadata.util.TimeConversion;
@@ -22,6 +23,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -100,7 +102,7 @@ public class UMMGranuleFile {
         granuleJson.put("SpatialExtent", exportSpatial());
 
         /**
-         * AddtionalAttributes
+         * AdditionalAttributes
          */
         if(((UMMGranule) granule).getAdditionalAttributeTypes() != null &&
                 ((UMMGranule) granule).getAdditionalAttributeTypes().size() >0
@@ -136,6 +138,38 @@ public class UMMGranuleFile {
         JSONArray additionalAttribs = exportAdditional();
         if (!additionalAttribs.isEmpty())
             granuleJson.put("AdditionalAttributes", additionalAttribs);
+
+        // directly populate fields if in special additional field mapper
+        // i.e. no need to convert to field in object, just take whatever user inputs and add to JSON
+        // Refer to test testReadIsoMendsMetadataFileAdditionalFields_appendFieldToJSON in MetadataFilesToEchoTest.java to see this code in action
+        JSONObject attributeMapping = ((UMMGranule) granule).getDynamicAttributeNameMapping();
+        if(((UMMGranule) granule).getDynamicAttributeNameMapping() != null
+                && !((UMMGranule) granule).getDynamicAttributeNameMapping().isEmpty()){
+            //key to save into granuleJson
+            for (String key : (Iterable<String>) attributeMapping.keySet()) {
+                String mappedKey = attributeMapping.get(key) instanceof String ? (String) attributeMapping.get(key) : null; //this is the name we're looking for in additionalAttributes
+                Optional<AdditionalAttributeType> filteredAdditionalAttributeType = ((UMMGranule) granule).getAdditionalAttributeTypes()
+                        .stream()
+                        .filter(e -> e.getName().equals(mappedKey))
+                        .findFirst();
+                AdditionalAttributeType foundFilteredAdditionalAttributeType = filteredAdditionalAttributeType.orElse(null);
+                if (foundFilteredAdditionalAttributeType != null) {
+                    // Cast value as Int or String, determine it
+                    if(UMMUtils.isNumeric(foundFilteredAdditionalAttributeType.getValues().get(0))){
+                        double value = Double.parseDouble(foundFilteredAdditionalAttributeType.getValues().get(0));
+                        if(value % 1 == 0)
+                            // Convert to flat int (no 45.0, just 45 in JSON)
+                            granuleJson.put(key, (int) value);
+                        else
+                            // Keep as double (445.323)
+                            granuleJson.put(key, value);
+                    }else{
+                        // Save as String
+                        granuleJson.put(key, foundFilteredAdditionalAttributeType.getValues().get(0));
+                    }
+                }
+            }
+        }
 
         if (granule instanceof IsoGranule) {
             // Populate MeasuredParameters
