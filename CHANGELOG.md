@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 ### Removed
 ### Fixed
+- **PODAAC-5219**
+  - NumberUtils.createInteger(String:s) while s has leading zero, the NumberUtils will treat the string as Octal
+  - implemented a utility function to remove leading zero.
 ### Security
 - Snyk: Security upgrade com.amazonaws:aws-java-sdk-s3 from 1.12.378 to 1.12.386
 

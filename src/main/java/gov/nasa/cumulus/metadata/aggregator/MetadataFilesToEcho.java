@@ -212,8 +212,8 @@ public class MetadataFilesToEcho {
 		 * 	 to AdditionalAttributeType Array
 		 */
 		try {
-			TrackType trackType = createTrackType(NumberUtils.createInteger(metadata.get("cycle").toString()),
-					NumberUtils.createInteger(metadata.get("pass").toString()));
+			TrackType trackType = createTrackType(NumberUtils.createInteger(UMMUtils.removeStrLeadingZeros(metadata.get("cycle").toString())),
+					NumberUtils.createInteger(UMMUtils.removeStrLeadingZeros(metadata.get("pass").toString())));
 			granule.setTrackType(trackType);
 		} catch (Exception e) {
 			AdapterLogger.LogWarning(this.className + " Continue execution after " +
@@ -517,6 +517,7 @@ public class MetadataFilesToEcho {
 			// we catch exception with printStackTrace to know the exact line throwing error
 			// then continue processing.
 			AdapterLogger.LogWarning("Continue processing after iso cyclePassTileScene processing failed :" +  UMMUtils.getStackTraceAsString(e));
+			throw e;
 		}
 
 		if(additionalAttributes != null) {
@@ -641,7 +642,8 @@ public class MetadataFilesToEcho {
 			try {
 				trackType = createTrackType(cps, p_cycle);
 			} catch (Exception e) {
-				AdapterLogger.LogWarning(this.className + " continue processing after creating TrackType with exception: " + UMMUtils.getStackTraceAsString(e));
+				AdapterLogger.LogError(this.className + " Creating TrackType with exception: " + UMMUtils.getStackTraceAsString(e));
+				throw e;
 			}
 			UmmgPojoFactory ummgPojoFactory = UmmgPojoFactory.getInstance();
 			additionalAttributeTypes=
@@ -668,7 +670,7 @@ public class MetadataFilesToEcho {
 						,":",""));
 		AdapterLogger.LogInfo("Cycle:" + cycleNoStr);
 		TrackType trackType  = new TrackType();
-		trackType.setCycle(NumberUtils.createInteger(cycleNoStr));
+		trackType.setCycle(NumberUtils.createInteger(UMMUtils.removeStrLeadingZeros(cycleNoStr)));
 
 		Pattern p_pass = Pattern.compile("\\[.*?\\]");
 		Matcher m_pass = p_pass.matcher(cyclePassTileStr);
@@ -688,7 +690,7 @@ public class MetadataFilesToEcho {
 			passTilesStr = passTilesStr.replaceAll("TILES\\s*:\\s*?", "");
 			String[] passTiles = StringUtils.split(passTilesStr, ",");
 			String passStr = StringUtils.trim(passTiles[0]);
-			trackPassTileType.setPass(NumberUtils.createInteger(passStr));
+			trackPassTileType.setPass(NumberUtils.createInteger(UMMUtils.removeStrLeadingZeros(passStr)));
 			try {
 				List<String> tiles = getTiles(StringUtils.trim(passTiles[1]));
 				trackPassTileType.setTiles(tiles);
@@ -722,10 +724,12 @@ public class MetadataFilesToEcho {
 				String endTileStr = tileRangeTokens[tileRangeTokens.length -1];
 				// find the letter for the last token
 				String tileMarkChar = endTileStr.substring(endTileStr.length() - 1);
-				Integer startTileNum = NumberUtils.createInteger(StringUtils.trim(tileRangeTokens[0]));
+				Integer startTileNum = NumberUtils.createInteger(UMMUtils.removeStrLeadingZeros(
+						StringUtils.trim(tileRangeTokens[0])));
 				Integer endTileNumStr = NumberUtils.createInteger(
+						UMMUtils.removeStrLeadingZeros(
 						StringUtils.trim(
-								StringUtils.substring(endTileStr, 0, endTileStr.length()-1)));
+								StringUtils.substring(endTileStr, 0, endTileStr.length()-1))));
 				for(Integer i = startTileNum; i<=endTileNumStr; i++ ) {
 					tiles.add(i + tileMarkChar);
 				}
@@ -827,7 +831,8 @@ public class MetadataFilesToEcho {
 			granule.setTrackType(trackType);
 			granule.setAdditionalAttributeTypes(UmmgPojoFactory.getInstance().trackTypeToAdditionalAttributeTypes(trackType));
 		} catch (Exception e) {
-			AdapterLogger.LogWarning(this.className + " Exception while creating TrackType: " + UMMUtils.getStackTraceAsString(e));
+			AdapterLogger.LogError(this.className + " Exception while creating TrackType: " + UMMUtils.getStackTraceAsString(e));
+			throw e;
 		}
 		return granule;
 	}
@@ -869,11 +874,11 @@ public class MetadataFilesToEcho {
 				tiles.add(tileStr);
 			}
 			TrackPassTileType trackPassTileType =
-					ummgPojoFactory.createTrackPassTileType(NumberUtils.createInteger(passStr), tiles);
+					ummgPojoFactory.createTrackPassTileType(NumberUtils.createInteger(UMMUtils.removeStrLeadingZeros(passStr)), tiles);
 			trackPassTileTypes.add(trackPassTileType);
 		}
 		if (StringUtils.isNotEmpty(cycleStr)) {
-			trackType = ummgPojoFactory.createTrackType(NumberUtils.createInteger(cycleStr), trackPassTileTypes);
+			trackType = ummgPojoFactory.createTrackType(NumberUtils.createInteger(UMMUtils.removeStrLeadingZeros(cycleStr)), trackPassTileTypes);
 		}
 		return trackType;
 	}
@@ -929,7 +934,8 @@ public class MetadataFilesToEcho {
 		String pass = StringUtils.trim(xpath.evaluate(ManifestXPath.PASS, doc));
 
 		try {  // TrackType is not a required field hence continue execution if any exception happened.
-			TrackType trackType = createTrackType(NumberUtils.createInteger(cycle), NumberUtils.createInteger(pass));
+			TrackType trackType = createTrackType(NumberUtils.createInteger(UMMUtils.removeStrLeadingZeros(cycle)),
+					NumberUtils.createInteger(UMMUtils.removeStrLeadingZeros(pass)));
 			granule.setTrackType(trackType); // No tile so we don't need to convert trackType to AdditionalAttributeType array
 		} catch (Exception e) {
 			AdapterLogger.LogWarning(this.className + " Continue execution after s6 creating TrackType failed with exception:" + e);
