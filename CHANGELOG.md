@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [8.2.1]
+### Added
+### Added
+### Deprecated
+### Removed
+### Fixed
+- **PODAAC-5219**
+  - NumberUtils.createInteger(String:s) while s has leading zero, the NumberUtils will treat the string as Octal
+  - implemented a utility function to remove leading zero.
+### Security
 
 ## [8.2.0]
 ### Added
