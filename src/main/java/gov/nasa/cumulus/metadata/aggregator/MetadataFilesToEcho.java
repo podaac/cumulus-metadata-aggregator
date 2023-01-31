@@ -509,15 +509,16 @@ public class MetadataFilesToEcho {
         ((IsoGranule) granule).setPGEVersionClass(xpath.evaluate(IsoMendsXPath.PGE_VERSION_CLASS, doc));
 		// Process ISO cycle, pass and tile
 		String  cyclePassTileSceneStr =StringUtils.trim(xpath.evaluate(IsoMendsXPath.CYCLE_PASS_TILE_SCENE, doc));
-
-		try {
-			createIsoCyclePassTile(cyclePassTileSceneStr);
-		} catch (Exception e) {
-			// Since TrackType which contains Cycle Pass Tile and Scenes is not a required field
-			// we catch exception with printStackTrace to know the exact line throwing error
-			// then continue processing.
-			AdapterLogger.LogWarning("Continue processing after iso cyclePassTileScene processing failed :" +  UMMUtils.getStackTraceAsString(e));
-			throw e;
+		if(!StringUtils.isBlank(cyclePassTileSceneStr)) {
+			try {
+				createIsoCyclePassTile(cyclePassTileSceneStr);
+			} catch (Exception e) {
+				// Since TrackType which contains Cycle Pass Tile and Scenes is not a required field
+				// we catch exception with printStackTrace to know the exact line throwing error
+				// then continue processing.
+				AdapterLogger.LogError("Iso MENDs cyclePassTileScene processing failed :" + UMMUtils.getStackTraceAsString(e));
+				throw e;
+			}
 		}
 
 		if(additionalAttributes != null) {
@@ -854,8 +855,7 @@ public class MetadataFilesToEcho {
 			granule.setTrackType(trackType);
 			granule.setAdditionalAttributeTypes(UmmgPojoFactory.getInstance().trackTypeToAdditionalAttributeTypes(trackType));
 		} catch (Exception e) {
-			AdapterLogger.LogError(this.className + " Exception while creating TrackType: " + UMMUtils.getStackTraceAsString(e));
-			throw e;
+			AdapterLogger.LogWarning(this.className + " Exception while creating TrackType: " + UMMUtils.getStackTraceAsString(e));
 		}
 		return granule;
 	}
@@ -877,6 +877,8 @@ public class MetadataFilesToEcho {
 		based on the "do as much we can" theory.  the code shall only allow the situation where
 		title can not be processed, since cycle and passes are both required.
 		According to UMMG schema 1.6.3, cycle and pass are both integer.  tile is String
+
+		on the other hand, any exceptions caused by cycle or pass should be thrown all the way up and break the ingestion
 		 */
 		try {
 			if (NumberUtils.createInteger(StringUtils.trim(cycleStr)) == null ||
