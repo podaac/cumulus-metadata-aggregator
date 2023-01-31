@@ -1,0 +1,124 @@
+<GranuleMetaDataFile>
+   <!-- Project Name. Will always be set to SWOTCalVal -->
+   <Project>SWOTCalVal</Project>
+
+   <!-- Name of this XML file delivered with the data identified in this XML file, WITHOUT the .xml extension -->
+   <!-- Naming convention for this file is SWOTCalVal_campaignshortname_shortname_YYYYMMDDTHHMMSS_YYYYMMDDTHHMMSS.xml -->
+   <!-- Two time tags MUST correspond to value in StartDateTime and EndDateTime entries below within the metadata tags below-->
+   <!-- Include a Campaign short name below, and include that in the file names -->
+   <FileIdentifier>SWOTCalVal_WM_ADCP_L0_RiverRay1_20220727T191701_20220727T192858_20220920T142800</FileIdentifier>
+   <!-- Meta data for the referenced collection of data files -->
+   
+   <CollectionMetaData>
+      <Campaign>WillametteRiver</Campaign>
+      <CampaignShortName>WM</CampaignShortName>
+      <ShortName>ADCP_L0</ShortName>
+      <InstrumentName>RiverRay1</InstrumentName>
+      <Description>Acoustic Doppler Current Profiler raw data in instrument-specific format (.mmt and .pd0 for TRDI and .riv for Sontek instruments)</Description>
+   </CollectionMetaData>
+   
+   <Extent>
+      <TemporalExtent>
+         <StartDateTime>2022-07-27T19:17:01.000000Z</StartDateTime>
+         <EndDateTime>2022-07-27T19:28:58.000000Z</EndDateTime>
+      </TemporalExtent>
+      <SpatialExtent>
+         <WestBoundLongitude>-123.303833</WestBoundLongitude>
+         <EastBoundLongitude>-123.029268</EastBoundLongitude>
+         <SouthBoundLatitude>44.506438</SouthBoundLatitude>
+         <NorthBoundLatitude>44.697213</NorthBoundLatitude>
+      </SpatialExtent>
+   </Extent>
+
+   <!-- The DataGranuleMembers encompasses all of the DataGranule members -->
+   <!-- Each DataGranule member must refer to an individual file -->
+   <!-- Each DataGranule member must contain LocalGranuleID(=Filename), Checksum, ChecksumType, and Size -->
+   <!-- ProductDataTime is creation time of this file, and is optional -->
+   <!-- Ideally we want to keep 1 DataGranuleMember per metadata. -->
+   <!-- Otherwise, keep it to a maximum of 10 member. -->
+   <!-- Make the member a tarball to avoid exceeding 10 members. -->
+
+   <DataGranuleMembers>
+      <DataGranuleMember>
+         <!-- Include this XML file as a granule member, and it necessarily will NOT have an associated checksum -->
+         <LocalGranuleID>SWOTCalVal_WM_ADCP_L0_RiverRay1_20220727T191701_20220727T192858_20220920T142800.xml</LocalGranuleID>
+         <ProductionDateTime>2022-09-20T14:28:00.000000Z</ProductionDateTime>
+      </DataGranuleMember>
+      <DataGranuleMember>
+	  <!-- Every tarball contains 1 mmt and can contain multiple .pd0 files for a PT location, do we need to list what is in the tarball?-->
+         <LocalGranuleID>SWOTCalVal_WM_ADCP_L0_RiverRay1_20220727T191701_20220727T192858_20220920T142800.tar.gz</LocalGranuleID>
+         <ProductionDateTime>2022-09-20T14:28:00.000000Z</ProductionDateTime>
+         <Checksum>90a25208aa967bc7b0b8e669ab549de4</Checksum>
+         <ChecksumType>MD5</ChecksumType>
+         <Size>366165</Size>
+      </DataGranuleMember>
+   </DataGranuleMembers>
+
+   <!-- Additional metadata are most likely not captured by the DAAC but are available to the end user in this (XML) archive information package-->
+   <!-- Each campaign can choose additional metadata fields. May or may not be used by PODAAC, and will information generally not used for data searches -->
+   <Additional>
+      <Personnel>JTM</Personnel>
+      <Contact>tminear@colorado.edu</Contact>
+	  <ADCPModel>RiverRay</ADCPModel>
+      <ADCPSerial>2169</ADCPSerial>
+      <AntennaModel>Hemisphere A100</AntennaModel>
+      <IGSCalibration>NONE</IGSCalibration>
+      <Radome>NONE</Radome>
+      <AntennaSerial>12345</AntennaSerial>
+	  <TransducerDepth_m>0.080</TransducerDepth_m>
+	  <MagneticVariation>14.80</MagneticVariation>
+	  <!-- Either GNSS or BottomTracking -->
+	  <Positionmethod>Bottom Tracking</Positionmethod>
+	  <TransectLocation>PT003</TransectLocation>
+	  <!-- Each .pd0 file within the tarball is listed as an event, and associated .mmt is included --> 
+	  <TransectTypes>
+		<TransectType>
+			<Code>0</Code>
+			<Description>test</Description>
+		</TransectType>
+		<TransectType>
+			<Code>1</Code>
+			<Description>longitudinal profile</Description>
+		</TransectType>
+		<TransectType>
+			<Code>2</Code>
+			<Description>cross-section</Description>
+		</TransectType>
+	  </TransectTypes>
+      <Events>
+		  <Event>
+             <StartDateTime>2022-07-27T19:17:01.000000Z</StartDateTime>
+			 <MeasurementFile>wm_pt2.mmt</MeasurementFile>
+             <TransectFile>wm_pt2_008.PD0</TransectFile>
+			 <!-- RiverRight = RR, RiverLeft = RL, does this need to be explained above? -->
+			 <TransectStart>RL</TransectStart>
+			 <TransectEnd>RR</TransectEnd>
+			 <TransectType>2</TransectType>
+          </Event>
+		  <Event>
+             <StartDateTime>2022-07-27T19:21:03.000000Z</StartDateTime>
+			 <MeasurementFile>wm_pt2.mmt</MeasurementFile>
+             <TransectFile>wm_pt2_009.PD0</TransectFile>
+			 <TransectStart>RR</TransectStart>
+			 <TransectEnd>RL</TransectEnd>
+			 <TransectType>2</TransectType>
+          </Event>
+		  <Event>
+             <StartDateTime>2022-07-27T19:24:41.000000Z</StartDateTime>
+			 <MeasurementFile>wm_pt2.mmt</MeasurementFile>
+             <TransectFile>wm_pt2_010.PD0</TransectFile>
+             <TransectStart>RL</TransectStart>
+			 <TransectEnd>RR</TransectEnd>
+			 <TransectType>2</TransectType>
+          </Event>
+		  <Event>
+             <StartDateTime>2022-07-27T19:28:58.000000Z</StartDateTime>
+			 <MeasurementFile>wm_pt2.mmt</MeasurementFile>
+             <TransectFile>wm_pt2_011.PD0</TransectFile>
+             <TransectStart>RR</TransectStart>
+			 <TransectEnd>RL</TransectEnd>
+			 <TransectType>2</TransectType>
+          </Event>
+      </Events>
+   </Additional>
+</GranuleMetaDataFile>

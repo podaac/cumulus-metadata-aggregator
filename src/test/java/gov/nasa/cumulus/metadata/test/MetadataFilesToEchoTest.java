@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import gov.nasa.cumulus.metadata.aggregator.*;
 
@@ -25,8 +26,11 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.junit.Test;
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpressionException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -806,5 +810,51 @@ public class MetadataFilesToEchoTest {
         assertEquals("image/png", mimeType);
         assertEquals("DIRECT DOWNLOAD", subType);
 
+    }
+    
+    @Test
+    public void testCreateJsonSwotCalVal() throws IOException, ParseException, XPathExpressionException, ParserConfigurationException, SAXException, URISyntaxException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("SWOTCalVal_WM_ADCP_L0_RiverRay1_20220727T191701_20220727T192858_20220920T142800.xml").getFile());
+        File cfgFile = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
+        MetadataFilesToEcho mfte = new MetadataFilesToEcho();
+        
+        mfte.readConfiguration(cfgFile.getAbsolutePath());
+        mfte.readSwotCalValXmlFile(file.getAbsolutePath());
+        
+        mfte.getGranule().setName("SWOTCalVal_WM_ADCP_L0_RiverRay1_20220727T191701_20220727T192858_20220920T142800");
+        
+        JSONObject granule = mfte.createJson();
+        Gson gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
+                .registerTypeHierarchyAdapter(Collection.class, new UMMGCollectionAdapter())
+                .registerTypeHierarchyAdapter(List.class, new UMMGListAdapter())
+                .registerTypeHierarchyAdapter(Map.class, new UMMGMapAdapter())
+                .create();
+        String jsonStr = gsonBuilder.toJson(granule);
+        assertEquals("SWOTCalVal_WM_ADCP_L0_RiverRay1_20220727T191701_20220727T192858_20220920T142800", granule.get("GranuleUR"));
+
+        JSONObject temporal = (JSONObject)((JSONObject) granule.get("TemporalExtent")).get("RangeDateTime");
+        String productionTime = ((JSONObject)granule.get("DataGranule")).get("ProductionDateTime").toString();
+        
+        assertEquals("2022-07-27T19:28:58.000Z", temporal.get("EndingDateTime").toString());
+        assertEquals("2022-07-27T19:17:01.000Z", temporal.get("BeginningDateTime").toString());
+        assertEquals("2022-09-20T14:28:00.000Z", productionTime);
+        
+        JSONObject bbox = (JSONObject)((JSONArray)((JSONObject)((JSONObject)((JSONObject)granule
+                .get("SpatialExtent"))
+                .get("HorizontalSpatialDomain"))
+                .get("Geometry"))
+                .get("BoundingRectangles")).get(0);
+        
+        
+        double west = Double.parseDouble(bbox.get("WestBoundingCoordinate").toString());
+        double east = Double.parseDouble(bbox.get("EastBoundingCoordinate").toString());
+        double south = Double.parseDouble(bbox.get("SouthBoundingCoordinate").toString());
+        double north = Double.parseDouble(bbox.get("NorthBoundingCoordinate").toString());
+        
+        assert -123.304 == west;
+        assert -123.029 == east;
+        assert 44.506 == south;
+        assert 44.697 == north;
     }
 }
