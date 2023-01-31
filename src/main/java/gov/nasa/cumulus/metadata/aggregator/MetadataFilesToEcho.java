@@ -500,7 +500,7 @@ public class MetadataFilesToEcho {
 				// Since TrackType which contains Cycle Pass Tile and Scenes is not a required field
 				// we catch exception with printStackTrace to know the exact line throwing error
 				// then continue processing.
-				AdapterLogger.LogWarning("Iso MENDs cyclePassTileScene processing failed :" + UMMUtils.getStackTraceAsString(e));
+				AdapterLogger.LogError("Iso MENDs cyclePassTileScene processing failed :" + UMMUtils.getStackTraceAsString(e));
 				throw e;
 			}
 		}
