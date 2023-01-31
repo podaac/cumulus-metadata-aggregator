@@ -38,4 +38,6 @@ public final class IsoMendsXPath extends IsoXPath {
     public static final String CYCLE_PASS_TILE_SCENE = "/gmi:MI_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription[@id=\"SWOTTrack\"]/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString";
 
     public static final String ADDITIONAL_ATTRIBUTES_BLOCK = "/gmi:MI_Metadata/gmd:contentInfo/gmd:MD_CoverageDescription/gmd:dimension/gmd:MD_Band/gmd:otherProperty/gco:Record/eos:AdditionalAttributes/eos:AdditionalAttribute//eos:name/gco:CharacterString|//eos:value/gco:CharacterString";
+    public static final String MGRS_ID = "/gmi:MI_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString";
+
 }
