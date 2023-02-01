@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - For each PNG file for granule, append metadata and mimetype for `cmr.json` file
 - **PODAAC-5201**
   - Support SWOT Cal/Val XML format
+- **PODAAC-5053**
+  - Extract MGRS_TILE_ID metadata from iso.xml. Used for OPERA processing
 ### Deprecated
 ### Removed
 ### Fixed

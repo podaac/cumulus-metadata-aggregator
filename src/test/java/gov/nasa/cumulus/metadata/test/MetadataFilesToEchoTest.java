@@ -375,7 +375,7 @@ public class MetadataFilesToEchoTest {
     }
 
     @Test
-    public void testReadIsoMendsMetadataFileAdditionalFields_publishAll() throws ParseException, IOException, URISyntaxException {
+    public void testReadIsoMendsMetadataFileAdditionalFields_publishAll() throws ParseException, IOException, URISyntaxException, XPathExpressionException, ParserConfigurationException, SAXException {
 
         // Simple "publishAll" is true
 
@@ -386,50 +386,68 @@ public class MetadataFilesToEchoTest {
 
         Document doc = null;
         XPath xpath = null;
-        try {
-            mfte.readConfiguration(cfgFile.getAbsolutePath());
-            doc = mfte.makeDoc(file.getAbsolutePath());
-            xpath = mfte.makeXpath(doc);
-            IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
 
-            File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
-            try {
-                mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
-            } catch (Exception e) {
-                e.printStackTrace();
-                fail();
-            }
+        mfte.readConfiguration(cfgFile.getAbsolutePath());
+        doc = mfte.makeDoc(file.getAbsolutePath());
+        xpath = mfte.makeXpath(doc);
+        IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
 
-            // Verify the values here:
+        File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
+        mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
 
-            // Confirm additional attributes has been filled
-            List<AdditionalAttributeType> aat = isoGranule.getAdditionalAttributeTypes();
-            assertEquals(aat.size(), 10);
+        // Verify the values here:
 
-            List<String> keys = aat.stream().map(AdditionalAttributeType::getName).collect(Collectors.toList());
+        // Confirm additional attributes has been filled
+        List<AdditionalAttributeType> aat = isoGranule.getAdditionalAttributeTypes();
+        assertEquals(aat.size(), 11);
 
-            List<String> checkForKey = Arrays.asList("HlsDataset",
-                    "SensorProductID",
-                    "Accode",
-                    "MeanSunAzimuthAngle",
-                    "MeanSunZenithAngle",
-                    "NBAR_SolarZenith",
-                    "MeanViewAzimuthAngle",
-                    "MeanViewZenithAngle",
-                    "SpatialCoverage",
-                    "PercentCloudCover");
+        List<String> keys = aat.stream().map(AdditionalAttributeType::getName).collect(Collectors.toList());
 
-            if(!checkForKey.equals(keys)){
-                fail(String.format("List mismatch:\n" +
-                        Arrays.toString(keys.toArray()) + "\n" +
-                        Arrays.toString(checkForKey.toArray())));
-            }
+        List<String> checkForKey = Arrays.asList("HlsDataset",
+                "SensorProductID",
+                "Accode",
+                "MeanSunAzimuthAngle",
+                "MeanSunZenithAngle",
+                "NBAR_SolarZenith",
+                "MeanViewAzimuthAngle",
+                "MeanViewZenithAngle",
+                "SpatialCoverage",
+                "PercentCloudCover",
+                "MGRS_TILE_ID"
+        );
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
+        if(!checkForKey.equals(keys)){
+            fail(String.format("List mismatch:\n" +
+                    Arrays.toString(keys.toArray()) + "\n" +
+                    Arrays.toString(checkForKey.toArray())));
         }
     }
+    
+    /**
+     * Test that confirms MGRS_TILE_ID additional attribute is present even when no other additional attributes
+     * are present
+     */
+    @Test
+    public void testReadIsoMendsMetadataFileNoAdditionalFieldsMGRS() throws ParserConfigurationException, IOException, SAXException, XPathExpressionException, ParseException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0.iso.xml").getFile());
+        MetadataFilesToEcho mfte = new MetadataFilesToEcho(true);
+
+        Document doc = null;
+        XPath xpath = null;
+
+        doc = mfte.makeDoc(file.getAbsolutePath());
+        xpath = mfte.makeXpath(doc);
+        IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
+
+        File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
+        
+        // Confirm additional attribute has been filled
+        List<AdditionalAttributeType> aat = isoGranule.getAdditionalAttributeTypes();
+        assertEquals(aat.size(), 1);
+        assertEquals(aat.get(0).getName(), "MGRS_TILE_ID");
+    }
+    
 
     @Test
     public void testReadIsoMendsMetadataFileAdditionalFields_appendFieldToJSON() throws ParseException, IOException, URISyntaxException {
@@ -461,7 +479,7 @@ public class MetadataFilesToEchoTest {
 
             // Confirm additional attributes has been filled
             List<AdditionalAttributeType> aat = isoGranule.getAdditionalAttributeTypes();
-            assertEquals(aat.size(), 10);
+            assertEquals(aat.size(), 11);  // 10 additional attributes + MGRS_TILE_ID
 
             List<String> keys = aat.stream().map(AdditionalAttributeType::getName).collect(Collectors.toList());
 
@@ -474,7 +492,9 @@ public class MetadataFilesToEchoTest {
                     "MeanViewAzimuthAngle",
                     "MeanViewZenithAngle",
                     "SpatialCoverage",
-                    "PercentCloudCover");
+                    "PercentCloudCover",
+                    "MGRS_TILE_ID"
+            );
 
             if(!checkForKey.equals(keys)){
                 fail(String.format("List mismatch:\n" +
@@ -545,11 +565,11 @@ public class MetadataFilesToEchoTest {
 
             // Confirm additional attributes has been filled
             List<AdditionalAttributeType> aat = isoGranule.getAdditionalAttributeTypes();
-            assertEquals(aat.size(), 1);
+            assertEquals(aat.size(), 2);
 
             List<String> keys = aat.stream().map(AdditionalAttributeType::getName).collect(Collectors.toList());
 
-            List<String> checkForKey = Arrays.asList("PercentCloudCover");
+            List<String> checkForKey = Arrays.asList("PercentCloudCover", "MGRS_TILE_ID");
 
             if(!checkForKey.equals(keys)){
                 fail(String.format("List mismatch:\n" +
@@ -593,7 +613,7 @@ public class MetadataFilesToEchoTest {
 
             // Confirm additional attributes has been filled
             List<AdditionalAttributeType> aat = isoGranule.getAdditionalAttributeTypes();
-            assertEquals(aat.size(), 10);
+            assertEquals(aat.size(), 11);
 
             List<String> keys = aat.stream().map(AdditionalAttributeType::getName).collect(Collectors.toList());
 
@@ -606,7 +626,9 @@ public class MetadataFilesToEchoTest {
                     "MeanViewAzimuthAngle",
                     "MeanViewZenithAngle",
                     "SpatialCoverage",
-                    "PercentCloudCover");
+                    "PercentCloudCover",
+                    "MGRS_TILE_ID"
+            );
 
             if(!checkForKey.equals(keys)){
                 fail(String.format("List mismatch:\n" +
@@ -743,11 +765,11 @@ public class MetadataFilesToEchoTest {
 
             // Confirm additional attributes has been filled
             List<AdditionalAttributeType> aat = isoGranule.getAdditionalAttributeTypes();
-            assertEquals(aat.size(), 1);
+            assertEquals(aat.size(), 2);
 
             List<String> keys = aat.stream().map(AdditionalAttributeType::getName).collect(Collectors.toList());
 
-            List<String> checkForKey = Arrays.asList("SensorProductID");
+            List<String> checkForKey = Arrays.asList("SensorProductID", "MGRS_TILE_ID");
 
             if(!checkForKey.equals(keys)){
                 fail(String.format("List mismatch:\n" +
