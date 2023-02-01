@@ -533,6 +533,29 @@ public class MetadataFilesToEcho {
 			additionalAttributes.remove("publishAll");
 			((IsoGranule) granule).setDynamicAttributeNameMapping(additionalAttributes);
 		}
+		
+					
+        String mgrsId = xpath.evaluate(IsoMendsXPath.MGRS_ID, doc);
+        if (mgrsId != null && !mgrsId.equals("")) {
+            // If MGRS_ID field is not null, set as additional attribute
+            AdditionalAttributeType mgrsAttr = new AdditionalAttributeType("MGRS_TILE_ID", Collections.singletonList(mgrsId));
+            
+            List<AdditionalAttributeType> additionalAttributeTypes = ((IsoGranule) granule).getAdditionalAttributeTypes();
+            if (additionalAttributeTypes == null) {
+                additionalAttributeTypes = Collections.singletonList(mgrsAttr);
+            } else {
+                additionalAttributeTypes.add(mgrsAttr);
+            }
+            
+            JSONObject dynamicAttributeNameMapping = ((IsoGranule) granule).getDynamicAttributeNameMapping();
+            if (dynamicAttributeNameMapping == null) {
+                ((IsoGranule) granule).setDynamicAttributeNameMapping(additionalAttributes);
+            } else {
+                dynamicAttributeNameMapping.put("MGRS_TILE_ID", Collections.singletonList(mgrsId));
+            }
+            ((IsoGranule) granule).setAdditionalAttributeTypes(additionalAttributeTypes);
+            ((IsoGranule) granule).setDynamicAttributeNameMapping(dynamicAttributeNameMapping);
+        }
 
 		return  ((IsoGranule) granule);
 	}
