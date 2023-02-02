@@ -198,12 +198,25 @@ public class FootprintProcessor extends ProcessorBase{
             } else if (StringUtils.equalsIgnoreCase(jtsGeometryTypeStr, GeometryTypeEnum.Polygon.toString()) ||
                     StringUtils.equalsIgnoreCase(jtsGeometryTypeStr, GeometryTypeEnum.MultiPolygon.toString())) {
                 /** One GPolygonType has only one Boundary object as required. One ExclusiveZone as optional */
+
                 GPolygonType gPolygonType = new GPolygonType();
+
+                //Process polygons with holes only with polygons
+                if (StringUtils.equalsIgnoreCase(jtsGeometryTypeStr, GeometryTypeEnum.Polygon.toString())){
+                    if(((Polygon)geometry).getNumInteriorRing() > 0){
+                        //Set Interior Ring
+                        ExclusiveZoneType exclusiveZones = getExclusiveZones(singleGeometry);
+                        gPolygonType.setExclusiveZone(exclusiveZones);
+                    }
+                }
+
+                //Set Exterior Ring
                 List<PointType> pointTypes = getReversedPointArray(singleGeometry);
                 BoundaryType boundaryType = new BoundaryType();
                 boundaryType.setPoints(pointTypes);
                 gPolygonType.setBoundary(boundaryType);
                 gPolygonTypes.add(gPolygonType);
+
             } else {
                 AdapterLogger.LogFatal(this.className + " Severe Problem: Footprint is not LineString, " +
                         "MultiLineString, Polygon or MultiPolygon");
@@ -303,4 +316,35 @@ public class FootprintProcessor extends ProcessorBase{
         }
         return points;
     }
+
+    public ExclusiveZoneType getExclusiveZones(Geometry geometry) {
+
+        List<BoundaryType> boundaries = new ArrayList<>();
+        Geometry hole = null;
+
+        for (int i = 0; i < ((Polygon)geometry).getNumInteriorRing(); i++) {
+
+            List<PointType> points = new ArrayList<>();
+            BoundaryType boundary = new BoundaryType();
+
+            hole = ((Polygon)geometry).getInteriorRingN(i);
+            Coordinate[] coordinates = hole.getCoordinates();
+            int size = coordinates.length;
+
+            for (int j = 0; j < size; j++) {
+                PointType p = new PointType();
+                p.setLongitude(Double.valueOf(coordinates[j].x));
+                p.setLatitude(Double.valueOf(coordinates[j].y));
+                points.add(p);
+            }
+
+            boundary.setPoints(points);
+            boundaries.add(boundary);
+        }
+
+        ExclusiveZoneType exclusiveZoneType = new ExclusiveZoneType(boundaries);
+        return exclusiveZoneType;
+    }
+
+
 }

@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 ### Removed
 ### Fixed
+- **PODAAC-4273**
+  - Added exclusiive zones for polygon holes and interior rings.
 ### Security
 - Snyk: Security upgrade com.amazonaws:aws-java-sdk-s3 from 1.12.378 to 1.12.386
 
