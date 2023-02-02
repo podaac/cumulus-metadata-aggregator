@@ -509,8 +509,7 @@ public class MetadataFilesToEcho {
         ((IsoGranule) granule).setPGEVersionClass(xpath.evaluate(IsoMendsXPath.PGE_VERSION_CLASS, doc));
 		// Process ISO cycle, pass and tile
 		String  cyclePassTileSceneStr =StringUtils.trim(xpath.evaluate(IsoMendsXPath.CYCLE_PASS_TILE_SCENE, doc));
-
-        if(!StringUtils.isBlank(cyclePassTileSceneStr)) {
+		if(!StringUtils.isBlank(cyclePassTileSceneStr)) {
 			try {
 				createIsoCyclePassTile(cyclePassTileSceneStr);
 			} catch (Exception e) {
