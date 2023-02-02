@@ -306,6 +306,15 @@ public class UMMUtils {
         return value;
     }
 
+    public static String removeStrLeadingZeros(String value) {
+        if(StringUtils.isBlank(value)){
+            return "";
+        } else {
+            value = StringUtils.trim(value);
+            return value.replaceFirst("^0+(?!$)", "");
+        }
+    }
+
     public static String removeLineFeedCarriageReturn(String s){
         if (s==null) s="";
         return StringUtils.trim(s).replace("\n"," ").replace("\r", " ");
