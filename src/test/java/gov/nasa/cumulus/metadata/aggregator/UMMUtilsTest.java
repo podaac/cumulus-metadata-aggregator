@@ -195,4 +195,14 @@ public class UMMUtilsTest {
         }
     }
 
+    @Test
+    public void testRemoveLineFeedCarriageReturn() {
+        assertEquals(UMMUtils.removeStrLeadingZeros("   "),"");
+        assertEquals(UMMUtils.removeStrLeadingZeros(""),"");
+        assertEquals(UMMUtils.removeStrLeadingZeros("  0099"),"99");
+        assertEquals(UMMUtils.removeStrLeadingZeros("099"),"99");
+        assertEquals(UMMUtils.removeStrLeadingZeros("009900"),"9900");
+        assertEquals(UMMUtils.removeStrLeadingZeros("099aa"),"99aa");
+    }
+
 }

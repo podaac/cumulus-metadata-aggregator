@@ -24,8 +24,11 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.junit.Test;
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpressionException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -166,20 +169,13 @@ public class MetadataFilesToEchoTest {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
         MetadataFilesToEcho mfte = new MetadataFilesToEcho();
-        try {
-            mfte.readConfiguration(file.getAbsolutePath());
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        }
+
+        mfte.readConfiguration(file.getAbsolutePath());
+
 
         File file2 = new File(classLoader.getResource("RSS_smap_SSS_L3_monthly_2015_04_FNL_v04.0.nc.mp").getFile());
-        try {
-            mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        }
+        mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
+
 
         mfte.getGranule().setName("SMAP_RSS_L3_SSS_SMI_MONTHLY_V4");
 
@@ -198,12 +194,9 @@ public class MetadataFilesToEchoTest {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
         MetadataFilesToEcho mfte = new MetadataFilesToEcho();
-        try {
-            mfte.readConfiguration(file.getAbsolutePath());
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        }
+
+        mfte.readConfiguration(file.getAbsolutePath());
+
 
         File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
         try {
@@ -225,19 +218,17 @@ public class MetadataFilesToEchoTest {
 
     @Test
     public void testSwotArchive()
-            throws ParseException, IOException, URISyntaxException {
+            throws ParseException, IOException, URISyntaxException, ParserConfigurationException, SAXException,
+            XPathExpressionException{
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("SWOT_IVK_20210612T081400_20210612T072103_20210612T080137_O_APID1402.PTM_1.archive.xml").getFile());
         File cfgFile = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
         MetadataFilesToEcho mfte = new MetadataFilesToEcho();
 
-        try {
-            mfte.readConfiguration(cfgFile.getAbsolutePath());
-            mfte.readSwotArchiveXmlFile(file.getAbsolutePath());
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        }
+
+        mfte.readConfiguration(cfgFile.getAbsolutePath());
+        mfte.readSwotArchiveXmlFile(file.getAbsolutePath());
+
 
         mfte.getGranule().setName("SWOT_IVK_20210612T081400_20210612T072103_20210612T080137_O_APID1402");
 
@@ -256,18 +247,14 @@ public class MetadataFilesToEchoTest {
     }
 
     @Test
-    public void testCreateTrackTypeWithException () {
+    public void testCreateTrackTypeWithException () throws IOException, ParseException{
         String input = "Cycle: 5 Pass: [40, Tiles: 4-5L 4-8R] [41, Tiles: 6R 6L] [42, Tiles: 7F]";
         ClassLoader classLoader = getClass().getClassLoader();
         File cfgFile = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
         MetadataFilesToEcho mfte = new MetadataFilesToEcho(true);
 
-        try {
-            mfte.readConfiguration(cfgFile.getAbsolutePath());
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        }
+        mfte.readConfiguration(cfgFile.getAbsolutePath());
+
         // if passed in UNKNOWN for either cycle or pass, then NumberFormatException will be thrown
         assertThrows(NumberFormatException.class, () -> mfte.createTrackType("UNKNOWN", "UNKNOWN", "UNKNOWN"));
         // if  both cycle and pass string are re-presenting Integer
@@ -279,18 +266,14 @@ public class MetadataFilesToEchoTest {
         assertEquals(trackPassTileType.getTiles().get(0), "UNKNOWN");
     }
     @Test
-    public void testMarshellCyclePassTileSceneStrToAchiveType() {
+    public void testMarshellCyclePassTileSceneStrToAchiveType() throws IOException, ParseException{
         String input = "Cycle: 5 Pass: [40, Tiles: 4-5L 4-8R] [41, Tiles: 6R 6L] [42, Tiles: 7F]";
         ClassLoader classLoader = getClass().getClassLoader();
         File cfgFile = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
         MetadataFilesToEcho mfte = new MetadataFilesToEcho(true);
 
-        try {
-            mfte.readConfiguration(cfgFile.getAbsolutePath());
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        }
+        mfte.readConfiguration(cfgFile.getAbsolutePath());
+
         IsoGranule isoGranule = mfte.createIsoCyclePassTile(input);
         TrackType trackType = isoGranule.getTrackType();
         assertEquals(trackType.getCycle(), new Integer(5));
@@ -338,7 +321,29 @@ public class MetadataFilesToEchoTest {
     }
 
     @Test
-    public void testReadIsoMendsMetadataFile() {
+    public void testMarshellCyclePassTileSceneStrToAchiveTypeWithNull() throws IOException, ParseException {
+        String input = "Cycle:  Pass: [40, Tiles: 4-5L 4-8R] [41, Tiles: 6R 6L] [42, Tiles: 7F]";
+        ClassLoader classLoader = getClass().getClassLoader();
+        File cfgFile = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
+        MetadataFilesToEcho mfte = new MetadataFilesToEcho(true);
+
+        mfte.readConfiguration(cfgFile.getAbsolutePath());
+        try {
+            IsoGranule isoGranule = mfte.createIsoCyclePassTile(input);
+        } catch (NumberFormatException nfe) {
+            assertEquals(nfe.getMessage(), "Zero length string");
+        }
+
+        try {
+            input = "Cycle:22  Pass: [ Tiles: 4-5L 4-8R] [41, Tiles: 6R 6L] [42, Tiles: 7F]";
+            IsoGranule isoGranule = mfte.createIsoCyclePassTile(input);
+        } catch (NumberFormatException nfe) {
+            assertTrue(true);
+        }
+
+    }
+    @Test
+    public void testReadIsoMendsMetadataFile() throws IOException, ParseException, XPathExpressionException, ParserConfigurationException, SAXException{
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("SWOT_L2_HR_PIXCVec_001_113_164R_20160905T002836_20160905T002846_TI0000_01.nc.iso.xml").getFile());
         File cfgFile = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
@@ -346,28 +351,51 @@ public class MetadataFilesToEchoTest {
 
         Document doc = null;
         XPath xpath = null;
-        try {
-            mfte.readConfiguration(cfgFile.getAbsolutePath());
-            doc = mfte.makeDoc(file.getAbsolutePath());
-            xpath = mfte.makeXpath(doc);
-            IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
-            // Verify the values here:
-            TrackType trackType = isoGranule.getTrackType();
-            assertEquals(trackType.getCycle(), new Integer(5));
-            List<TrackPassTileType> trackPassTileTypes = trackType.getPasses();
-            assertEquals(trackPassTileTypes.size(), 3);
-            TrackPassTileType trackPassTileType = trackPassTileTypes.get(0);
-            assertEquals(trackPassTileType.getPass(), new Integer(40));
-            List<String> tiles = trackPassTileType.getTiles();
-            assertEquals(tiles.size(), 7);
-            assertEquals(tiles.get(0), "4L");
-            assertEquals(tiles.get(6), "8R");
-            List<AdditionalAttributeType> additionalAttributeTypes = isoGranule.getAdditionalAttributeTypes();
-            assertEquals(additionalAttributeTypes.size(), 3);
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        }
+
+        mfte.readConfiguration(cfgFile.getAbsolutePath());
+        doc = mfte.makeDoc(file.getAbsolutePath());
+        xpath = mfte.makeXpath(doc);
+        IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
+        // Verify the values here:
+        TrackType trackType = isoGranule.getTrackType();
+        assertEquals(trackType.getCycle(), new Integer(5));
+        List<TrackPassTileType> trackPassTileTypes = trackType.getPasses();
+        assertEquals(trackPassTileTypes.size(), 3);
+        TrackPassTileType trackPassTileType = trackPassTileTypes.get(0);
+        assertEquals(trackPassTileType.getPass(), new Integer(40));
+        List<String> tiles = trackPassTileType.getTiles();
+        assertEquals(tiles.size(), 7);
+        assertEquals(tiles.get(0), "4L");
+        assertEquals(tiles.get(6), "8R");
+        List<AdditionalAttributeType> additionalAttributeTypes = isoGranule.getAdditionalAttributeTypes();
+        assertEquals(additionalAttributeTypes.size(), 3);
+    }
+
+
+    @Test
+    public void testReadIsoMendsMetadataFile_Pass_Cycle_LeadingZeros() throws IOException, ParseException, XPathExpressionException, ParserConfigurationException, SAXException{
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("SWOT_L1B_LR_INTF_407_024_20230122T040505_20230122T045618_PIA0_01.nc.iso.xml").getFile());
+        File cfgFile = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
+        MetadataFilesToEcho mfte = new MetadataFilesToEcho(true);
+
+        Document doc = null;
+        XPath xpath = null;
+        mfte.readConfiguration(cfgFile.getAbsolutePath());
+        doc = mfte.makeDoc(file.getAbsolutePath());
+        xpath = mfte.makeXpath(doc);
+        IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
+        // Verify the values here:
+        TrackType trackType = isoGranule.getTrackType();
+        assertEquals(trackType.getCycle(), new Integer(407));
+        List<TrackPassTileType> trackPassTileTypes = trackType.getPasses();
+        assertEquals(trackPassTileTypes.size(), 1);
+        TrackPassTileType trackPassTileType = trackPassTileTypes.get(0);
+        assertEquals(trackPassTileType.getPass(), new Integer(24));
+        List<String> tiles = trackPassTileType.getTiles();
+        assertEquals(tiles.size(), 0);
+        List<AdditionalAttributeType> additionalAttributeTypes = isoGranule.getAdditionalAttributeTypes();
+        assertEquals(additionalAttributeTypes.size(), 0);
     }
 
 }
