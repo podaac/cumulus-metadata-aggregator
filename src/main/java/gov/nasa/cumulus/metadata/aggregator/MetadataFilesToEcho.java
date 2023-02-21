@@ -81,8 +81,8 @@ public class MetadataFilesToEcho {
 		JSONObject metadata = (JSONObject) parser.parse(new FileReader(file));
 
 		String shortName = (String)metadata.get("collection");
-		setDatasetValues(shortName, metadata.get("version").toString(), (Boolean) metadata.get("rangeIs360"), null);
-		setAdditionalAttributes(metadata);
+		setDatasetValues(shortName, metadata.get("version").toString(), (Boolean) metadata.get("rangeIs360"), null, metadata);
+
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class MetadataFilesToEcho {
 	 * @param rangeIs360  true if dataset granule coordinates are 0 to 360, null/false if not
 	 * @param boundingBox JSONObject with latMax, lonMax, latMin, lonMin
 	 */
-	public void setDatasetValues(String shortName, String version, Boolean rangeIs360, JSONObject boundingBox) {
+	public void setDatasetValues(String shortName, String version, Boolean rangeIs360, JSONObject boundingBox, JSONObject additionalAttributes) {
 		dataset.setShortName(shortName);
 
 		DatasetCitation citation = new DatasetCitation();
@@ -113,17 +113,17 @@ public class MetadataFilesToEcho {
 					(Double) boundingBox.get("lonMax"),
 					(Double) boundingBox.get("lonMin"));
 		}
+
+		if (additionalAttributes != null) {
+			setAdditionalAttributes(additionalAttributes);
+		}
 	}
 
 	public void setAdditionalAttributes(JSONObject metadata){
-		if(validateJSONObjectKeyExists(metadata, "meta") && metadata.get("meta") instanceof JSONObject){
-			// contains meta
-			JSONObject meta = (JSONObject) metadata.get("meta");
-			if(validateJSONObjectKeyExists(meta, "additionalAttributes") && meta.get("additionalAttributes") instanceof JSONObject){
-				// contains additionalAttributes
-				JSONObject additionalAttributes = (JSONObject) meta.get("additionalAttributes");
-				this.additionalAttributes = additionalAttributes;
-			}
+		if(validateJSONObjectKeyExists(metadata, "additionalAttributes") && metadata.get("additionalAttributes") instanceof JSONObject){
+			// contains additionalAttributes
+			JSONObject additionalAttributes = (JSONObject) metadata.get("additionalAttributes");
+			this.additionalAttributes = additionalAttributes;
 		}
 	}
 

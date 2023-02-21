@@ -50,6 +50,7 @@ public class MetadataAggregatorLambda implements ITask {
 		String collectionVersion = (String) config.get("version");
 		Boolean rangeIs360 = (Boolean) config.get("rangeIs360");
 		JSONObject boundingBox = (JSONObject) config.get("boundingBox");
+		JSONObject additionalAttributes = (JSONObject) config.get("additionalAttributes");
 		/** call the setWorkFlowType by passing in the stateMachine name to set a WorkflowTypeEnum
 		 * this will help the logic in postIngestProcess function.
 		 */
@@ -139,7 +140,7 @@ public class MetadataAggregatorLambda implements ITask {
         boolean isIsoFile = (iso != null);
 
         mtfe = new MetadataFilesToEcho(isIsoFile);
-        mtfe.setDatasetValues(collectionName, collectionVersion, rangeIs360, boundingBox);
+        mtfe.setDatasetValues(collectionName, collectionVersion, rangeIs360, boundingBox, additionalAttributes);
         if (granules != null && granules.size() > 0) {
             mtfe.setGranuleFileSizeAndChecksum(granules);
         }
@@ -189,6 +190,7 @@ public class MetadataAggregatorLambda implements ITask {
 		s3Utils.upload(region, internalBucket,
 				Paths.get(stagingDirectory, "/" + granuleId + ".cmr.json").toString(),
 				cmrFile);
+		s3Utils.upload(region, internalBucket, "temp/DEBUG.cmr.json", cmrFile);
 
 		JSONObject ummFile = new JSONObject();
 		ummFile.put("bucket", internalBucket);

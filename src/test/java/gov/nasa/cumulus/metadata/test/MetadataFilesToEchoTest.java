@@ -75,7 +75,7 @@ public class MetadataFilesToEchoTest {
         JSONObject boundingBox = (JSONObject) parser.parse("{\"boundingBox\": { \"latMin\": -90.0, \"lonMin\": -180.0, \"latMax\": 90.0, \"lonMax\": 180.0}}");
         MetadataFilesToEcho mfte = new MetadataFilesToEcho();
 
-        mfte.setDatasetValues("MODIS_T-JPL-L2P-v2019.0", "2019.0", false, (JSONObject) boundingBox.get("boundingBox"));
+        mfte.setDatasetValues("MODIS_T-JPL-L2P-v2019.0", "2019.0", false, (JSONObject) boundingBox.get("boundingBox"), null);
         assertEquals("MODIS_T-JPL-L2P-v2019.0", mfte.getDataset().getShortName());
         assertEquals("2019.0", UMMUtils.getDatasetVersion(mfte.getDataset()));
 
@@ -837,6 +837,7 @@ public class MetadataFilesToEchoTest {
         }
     }
 
+    @Test
     public void testCreateJsonWithPNGFile()
             throws ParseException, IOException, URISyntaxException {
         ClassLoader classLoader = getClass().getClassLoader();
