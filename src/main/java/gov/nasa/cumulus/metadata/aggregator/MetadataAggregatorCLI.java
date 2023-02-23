@@ -131,7 +131,7 @@ public class MetadataAggregatorCLI {
         MetadataFilesToEcho mtfe = new MetadataFilesToEcho(true);
         try {
             mtfe.readConfiguration(configFile);
-            mtfe.readIsoMetadataFile(isoFile, s3Location);
+            mtfe.readIsoMetadataFile(isoFile, s3Location, null);
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -146,7 +146,7 @@ public class MetadataAggregatorCLI {
         MetadataFilesToEcho mtfe = new MetadataFilesToEcho();
         try {
             mtfe.readConfiguration(configFile);
-            mtfe.readCommonMetadataFile(metadataFile, s3Location);
+            mtfe.readCommonMetadataFile(metadataFile, s3Location, null);
 
         } catch (IOException | ParseException e) {
             log.error(e.getMessage());

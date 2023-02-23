@@ -147,7 +147,7 @@ public class MetadataAggregatorLambda implements ITask {
 
 		if (isIsoFile) {
 			try {
-                mtfe.readIsoMetadataFile(iso, s3Location);
+                mtfe.readIsoMetadataFile(iso, s3Location, files);
 			} catch (IOException e) {
 				AdapterLogger.LogError(this.className + " MetadataFilesToEcho input TRUE read error:" + e.getMessage());
 				e.printStackTrace();
@@ -156,7 +156,7 @@ public class MetadataAggregatorLambda implements ITask {
 		} else {
 			try {
 				AdapterLogger.LogInfo(this.className + " Creating UMM-G data structure");
-				if (meta != null) mtfe.readCommonMetadataFile(meta, s3Location);
+				if (meta != null) mtfe.readCommonMetadataFile(meta, s3Location, files);
 				if (granules != null && granules.size() > 0) {
 					mtfe.setGranuleFileSizeAndChecksum(granules);
 				}

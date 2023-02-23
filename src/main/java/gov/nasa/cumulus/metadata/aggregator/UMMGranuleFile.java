@@ -835,7 +835,6 @@ public class UMMGranuleFile {
                 if (accessURLs.add(reference.getPath())) {
                     relatedUrl.put("URL", reference.getPath());
                     if(reference.getPath().endsWith(".png")){
-                        relatedUrl.put("Type", "GET RELATED VISUALIZATION");
                         relatedUrl.put("Subtype", "DIRECT DOWNLOAD");
                         relatedUrl.put("MimeType", "image/png");
                     } else {
