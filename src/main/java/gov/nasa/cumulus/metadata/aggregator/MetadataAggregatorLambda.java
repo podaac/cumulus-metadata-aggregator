@@ -58,6 +58,7 @@ public class MetadataAggregatorLambda implements ITask {
 
 		String isoRegex = (String) config.get("isoRegex");
 		String archiveXmlRegex = (String) config.get("archiveXmlRegex");
+		String calValXmlRegex = (String) config.get("calValXmlRegex");
 		String granuleId = (String) config.get("granuleId");
 		context.getLogger().log("Started processing: " + granuleId);
 		String internalBucket = (String) config.get("internalBucket");
@@ -94,6 +95,7 @@ public class MetadataAggregatorLambda implements ITask {
 		String iso = null;
 		String xfdumanifest = null;
 		String archiveXml = null;
+		String calValXml = null;
 		// the bucket and key for .mp file
 		String mpFileBucket = null;
 		String mpFileKey = null;
@@ -125,7 +127,12 @@ public class MetadataAggregatorLambda implements ITask {
 			} else if (archiveXmlRegex != null && filename.matches(archiveXmlRegex)) {
 				archiveXml = s3Utils.download(region, (String) file.get("bucket"), key,
 						Paths.get("/tmp", filename).toString());
-			}
+			} else if (calValXmlRegex != null && filename.matches(calValXmlRegex)) {
+                AdapterLogger.LogDebug(this.className + " download CalVal XML from bucket:" +
+                        file.get("bucket") + "  key" + file.get("key") + " to:" + Paths.get("/tmp", filename));
+                calValXml = s3Utils.download(region, (String) file.get("bucket"), key,
+                        Paths.get("/tmp", filename).toString());
+            }
 		}
 
 		//remove the fp and mp files from the array
@@ -162,6 +169,7 @@ public class MetadataAggregatorLambda implements ITask {
 				if (footprint != null) mtfe.readFootprintFile(footprint);
 				if (xfdumanifest != null) mtfe.readSentinelManifest(xfdumanifest);
 				if (archiveXml != null) mtfe.readSwotArchiveXmlFile(archiveXml);
+				if (calValXml != null) mtfe.readSwotCalValXmlFile(calValXml);
 			} catch (IOException | ParseException e) {
 				AdapterLogger.LogError(this.className + " MetadataFilesToEcho input FALSE read error:" + e.getMessage());
 				e.printStackTrace();

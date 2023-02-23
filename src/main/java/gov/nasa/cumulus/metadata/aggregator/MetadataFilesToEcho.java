@@ -837,6 +837,49 @@ public class MetadataFilesToEcho {
 		// No spatial extent exists for SWOT L0 data so set as global
 		setGranuleBoundingBox(90.0, -90.0, 180.0, -180.0);
 	}
+    
+    /**
+     * Parse metadata from SWOT Cal/Val XML file
+     * @param file path to SWOT Cal/Val XML file on local file system
+     */
+    public void readSwotCalValXmlFile(String file) throws ParserConfigurationException, IOException, SAXException,
+            XPathExpressionException {
+        DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+        docBuilderFactory.setNamespaceAware(true);
+        DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+        Document doc = docBuilder.parse(new File(file));
+    
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        xpath.setNamespaceContext(new NamespaceResolver(doc));
+    
+        String startTime = xpath.evaluate(SwotCalValXmlPath.BEGINNING_DATE_TIME, doc);
+        String stopTime = xpath.evaluate(SwotCalValXmlPath.ENDING_DATE_TIME, doc);
+        String createTime = xpath.evaluate(SwotCalValXmlPath.CREATION_DATE_TIME, doc);
+    
+        String north = xpath.evaluate(SwotCalValXmlPath.NORTH_BOUNDING_COORDINATE, doc);
+        String south = xpath.evaluate(SwotCalValXmlPath.SOUTH_BOUNDING_COORDINATE, doc);
+        String east = xpath.evaluate(SwotCalValXmlPath.EAST_BOUNDING_COORDINATE, doc);
+        String west = xpath.evaluate(SwotCalValXmlPath.WEST_BOUNDING_COORDINATE, doc);
+    
+        try {
+            granule.setStartTime(DatatypeConverter.parseDateTime(startTime).getTime());
+            granule.setStopTime(DatatypeConverter.parseDateTime(stopTime).getTime());
+            granule.setCreateTime(DatatypeConverter.parseDateTime(createTime).getTime());
+        } catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(String.format("Failed to parse datetime start=%s stop=%s create=%s",
+                    startTime, stopTime, createTime), exception);
+        }
+    
+        try {
+            setGranuleBoundingBox(Double.parseDouble(north),
+                    Double.parseDouble(south),
+                    Double.parseDouble(east),
+                    Double.parseDouble(west));
+        } catch (NullPointerException | NumberFormatException exception) {
+            throw new IllegalArgumentException(String.format("Failed to parse bbox N=%s S=%s E=%s W=%s", north, south,
+                    east, west), exception);
+        }
+    }
 
 	UMMGranule createSwotArchiveGranule(Document doc, XPath xpath)
 	throws XPathExpressionException{
