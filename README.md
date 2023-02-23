@@ -101,19 +101,17 @@ CMR_DIR                     = "CMR"
 ### Additional Attribute usage and configuration
 A special field `additionalAttributes` can be added to the `meta` level inside a collection. Once added it'll enable the user to append an ISO.XML's `eos:AdditionalAttribute` data into the CMR.JSON's "AdditionalAttributes" JSON root block
 
-Example CFG: [Link](src/test/resources/OPERA_L3_DSWX-HLS_PROVISIONAL_V0_test_3.cmr.cfg)
+Example Config / Collection: [Link](src/test/resources/OPERA_L3_DSWX-HLS_PROVISIONAL_V0_test_3.cmr.cfg)
 ```json
 {
   "collection": "Collection_Name_Here",
   "version": 0.0,
-  "meta": {
-    "additionalAttributes": {
-      "publishAll": false,
-      "publish": [
-        "PercentCloudCover"
-      ],
-      "CloudCover": "PercentCloudCover"
-    }
+  "additionalAttributes": {
+    "publishAll": false,
+    "publish": [
+      "PercentCloudCover"
+    ],
+    "CloudCover": "PercentCloudCover"
   }
 }
 ```
@@ -178,10 +176,8 @@ Assume this is the XML
 {
   "collection": "Collection_Name_Here",
   "version": 0.0,
-  "meta": {
-    "additionalAttributes": {
-      "publishAll": true
-    }
+  "additionalAttributes": {
+    "publishAll": true
   }
 }
 ```
@@ -209,11 +205,9 @@ the output CMR.JSON would look like follows
 {
   "collection": "Collection_Name_Here",
   "version": 0.0,
-  "meta": {
-    "additionalAttributes": {
-      "publishAll": false,
-      "publish": ["PercentCloudCover"]
-    }
+  "additionalAttributes": {
+    "publishAll": false,
+    "publish": ["PercentCloudCover"]
   }
 }
 ```
@@ -235,11 +229,9 @@ the output CMR.JSON would look like follows
 {
   "collection": "Collection_Name_Here",
   "version": 0.0,
-  "meta": {
-    "additionalAttributes": {
-      "publishAll": true,
-      "CloudCover": "PercentCloudCover"
-    }
+  "additionalAttributes": {
+    "publishAll": true,
+    "CloudCover": "PercentCloudCover"
   }
 }
 ```
