@@ -198,7 +198,6 @@ public class MetadataAggregatorLambda implements ITask {
 		s3Utils.upload(region, internalBucket,
 				Paths.get(stagingDirectory, "/" + granuleId + ".cmr.json").toString(),
 				cmrFile);
-		s3Utils.upload(region, internalBucket, "temp/DEBUG.cmr.json", cmrFile);
 
 		JSONObject ummFile = new JSONObject();
 		ummFile.put("bucket", internalBucket);
