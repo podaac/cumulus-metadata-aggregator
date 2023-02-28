@@ -420,9 +420,6 @@ public class MetadataFilesToEchoTest {
         xpath = mfte.makeXpath(doc);
         IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
 
-        File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
-        mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3", null);
-
         // Verify the values here:
 
         // Confirm additional attributes has been filled
@@ -468,8 +465,6 @@ public class MetadataFilesToEchoTest {
         xpath = mfte.makeXpath(doc);
         IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
 
-        File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
-        
         // Confirm additional attribute has been filled
         List<AdditionalAttributeType> aat = isoGranule.getAdditionalAttributeTypes();
         assertEquals(aat.size(), 1);
