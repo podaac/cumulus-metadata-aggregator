@@ -234,6 +234,7 @@ public class MetadataFilesToEcho {
 		if (granule_files != null) {
 			for (Object f : granule_files) {
 				JSONObject gf = (JSONObject) f;
+				// This is wishing the "metadata" type doesn't needs further processing
 				if (((String) gf.get("type")).equals("data") || ((String) gf.get("type")).equals("browse")) {
 					AdapterLogger.LogDebug(this.className +
 							"buildGranuleReferences - appending file as reference - " +
@@ -535,7 +536,10 @@ public class MetadataFilesToEcho {
 		}
 
 		if(additionalAttributes != null) {
+			// Gets the XML contents of the additional attributes
 			NodeList additionalAttributesBlock = (NodeList) xpath.evaluate(IsoMendsXPath.ADDITIONAL_ATTRIBUTES_BLOCK, doc, XPathConstants.NODESET);
+
+			// Builds full list of additional attributes as the AdditionalAttributeType
 			List<AdditionalAttributeType> additionalAttributeTypes = appendAdditionalAttributes(additionalAttributes, additionalAttributesBlock);
 			((IsoGranule) granule).setAdditionalAttributeTypes(additionalAttributeTypes);
 
@@ -579,6 +583,8 @@ public class MetadataFilesToEcho {
 		Scan through meta.additionalAttributes
 		if `publishAll`, just publish everything mapped
 		if not, see which fields we want to get from the `publish` field
+
+		To see this code in action, run any unit test with `testReadIsoMendsMetadataFileAdditionalFields` as part of its name
 		 */
 
 		/*
@@ -597,13 +603,14 @@ public class MetadataFilesToEcho {
 					"publishAll");
 		}
 
-			// Make simple List of Additional Attributes
+		// Make simple List of Additional Attributes
 		List<AdditionalAttributeType> additionalAttributeTypes = new ArrayList<>();
 		List<AdditionalAttributeType> subAdditionalAttributeTypes = new ArrayList<>();
 		List<String> publishList = metaAdditionalAttributes.get("publish") == null ? null : (List<String>) metaAdditionalAttributes.get("publish");
 		// Check to ensure additional attributes are in pairs (key/pair)
 		if (additionalAttributesBlock.getLength() % 2 == 0) {
 			for (int i = 0; i < additionalAttributesBlock.getLength(); i++) {
+				// We only want to look at address 0, 2, 4..., which should be the key
 				if (i % 2 == 0) {
 					Node key = additionalAttributesBlock.item(i);
 					Node val = additionalAttributesBlock.item(i + 1);

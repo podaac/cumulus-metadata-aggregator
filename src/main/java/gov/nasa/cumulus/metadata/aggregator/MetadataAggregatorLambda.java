@@ -74,6 +74,10 @@ public class MetadataAggregatorLambda implements ITask {
 			return postIngestOutputStr;
 		}
 
+		/*
+		TODO: Ask why is only "one" s3Location file going to be set (loops and overrides??)
+		Almost as if it only expects 1 single file?
+		*/
 		//data location
 		String s3Location = null;
 		String stagingDirectory = null;
@@ -154,6 +158,8 @@ public class MetadataAggregatorLambda implements ITask {
 
 		if (isIsoFile) {
 			try {
+				// Reason for giving a list of files: to check which ones are PNG's so we can add in extra metadata
+				// Just the s3Location isn't enough
                 mtfe.readIsoMetadataFile(iso, s3Location, files);
 			} catch (IOException e) {
 				AdapterLogger.LogError(this.className + " MetadataFilesToEcho input TRUE read error:" + e.getMessage());
@@ -163,6 +169,8 @@ public class MetadataAggregatorLambda implements ITask {
 		} else {
 			try {
 				AdapterLogger.LogInfo(this.className + " Creating UMM-G data structure");
+				// Reason for giving a list of files: to check which ones are PNG's so we can add in extra metadata
+				// Just the s3Location isn't enough
 				if (meta != null) mtfe.readCommonMetadataFile(meta, s3Location, files);
 				if (granules != null && granules.size() > 0) {
 					mtfe.setGranuleFileSizeAndChecksum(granules);
