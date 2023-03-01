@@ -157,8 +157,6 @@ public class MetadataAggregatorLambda implements ITask {
 
 		if (isIsoFile) {
 			try {
-				// Reason for giving a list of files: to check which ones are PNG's so we can add in extra metadata
-				// Just the s3Location isn't enough
                 mtfe.readIsoMetadataFile(iso, s3Location);
 			} catch (IOException e) {
 				AdapterLogger.LogError(this.className + " MetadataFilesToEcho input TRUE read error:" + e.getMessage());
