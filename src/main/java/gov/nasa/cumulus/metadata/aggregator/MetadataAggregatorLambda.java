@@ -75,8 +75,7 @@ public class MetadataAggregatorLambda implements ITask {
 		}
 
 		/*
-		TODO: Ask why is only "one" s3Location file going to be set (loops and overrides??)
-		Almost as if it only expects 1 single file?
+		Typically should only have 1 file tagged with "Data"
 		*/
 		//data location
 		String s3Location = null;

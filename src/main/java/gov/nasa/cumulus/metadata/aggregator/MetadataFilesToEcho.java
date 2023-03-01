@@ -81,7 +81,12 @@ public class MetadataFilesToEcho {
 		JSONObject metadata = (JSONObject) parser.parse(new FileReader(file));
 
 		String shortName = (String)metadata.get("collection");
-		setDatasetValues(shortName, metadata.get("version").toString(), (Boolean) metadata.get("rangeIs360"), null, metadata);
+		JSONObject additionalAttributes = (JSONObject) metadata.get("additionalAttributes");
+		setDatasetValues(shortName,
+				metadata.get("version").toString(),
+				(Boolean) metadata.get("rangeIs360"),
+				null,
+				additionalAttributes);
 
 	}
 
@@ -115,20 +120,8 @@ public class MetadataFilesToEcho {
 		}
 
 		if (additionalAttributes != null) {
-			setAdditionalAttributes(additionalAttributes);
-		}
-	}
-
-	public void setAdditionalAttributes(JSONObject metadata){
-		if(validateJSONObjectKeyExists(metadata, "additionalAttributes") && metadata.get("additionalAttributes") instanceof JSONObject){
-			// contains additionalAttributes
-			JSONObject additionalAttributes = (JSONObject) metadata.get("additionalAttributes");
 			this.additionalAttributes = additionalAttributes;
 		}
-	}
-
-	public boolean validateJSONObjectKeyExists(JSONObject jsonObject, String key){
-		return (jsonObject.containsKey(key) && jsonObject.get(key) != null);
 	}
 
 	//this method reads the output of a footprint command(.fp.xml)
