@@ -99,13 +99,11 @@ CMR_DIR                     = "CMR"
 ```
 
 ### Additional Attribute usage and configuration
-A special field `additionalAttributes` can be added to the `meta` level inside a collection. Once added it'll enable the user to append an ISO.XML's `eos:AdditionalAttribute` data into the CMR.JSON's "AdditionalAttributes" JSON root block
+A special field `additionalAttributes` can be added to the `meta` level inside a collection (`$.meta.collection.meta` from step functions perspective). Once added it'll enable the user to append an ISO.XML's `eos:AdditionalAttribute` data into the CMR.JSON's "AdditionalAttributes" JSON root block
 
-Example CFG: [Link](src/test/resources/OPERA_L3_DSWX-HLS_PROVISIONAL_V0_test_3.cmr.cfg)
+Example Collection Config - Meta section: [cumulus dashboard image](documentation_image/additionalAttributeImage.png)
 ```json
 {
-  "collection": "Collection_Name_Here",
-  "version": 0.0,
   "meta": {
     "additionalAttributes": {
       "publishAll": false,
@@ -113,6 +111,18 @@ Example CFG: [Link](src/test/resources/OPERA_L3_DSWX-HLS_PROVISIONAL_V0_test_3.c
         "PercentCloudCover"
       ],
       "CloudCover": "PercentCloudCover"
+    },
+    "glacier-bucket": "hryeung-ia-podaac-glacier",
+    "granuleMetadataFileExtension": "cmr.json",
+    "granuleRecoveryWorkflow": "OrcaRecoveryWorkflow",
+    "iso-regex": "^OPERA_L3_DSWx-HLS_.*v([0-9]*)\\.([0-9]*).*\\.iso\\.xml$",
+    "response-endpoint": "arn:aws:sns:us-west-2:065089468788:hryeung-ia-podaac-provider-response-sns",
+    "workflowChoice": {
+      "compressed": false,
+      "convertNetCDF": false,
+      "dmrpp": false,
+      "glacier": false,
+      "readDataFileForMetadata": false
     }
   }
 }
@@ -122,7 +132,7 @@ The configuration above has 3 parts to consider
 - `"publish": ["NAME_OF_FIELD_IN_XML_ADDITIONAL_ATTRIBUTES"]` - Publish the field from the XML into JSON `additionalAttributes`
 - `"CloudCover": "PercentCloudCover"` - Append a key `CloudCover` with the value from `PercentCloudCover` inside the CMR.JSON output
 
-#### Example Configurations
+#### Example Collection Configurations
 Assume this is the XML
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -173,15 +183,11 @@ Assume this is the XML
    </eos:AdditionalAttributes>
 </gmi:MI_Metadata>
 ```
-##### with this config
+##### with this collection config
 ```json
 {
-  "collection": "Collection_Name_Here",
-  "version": 0.0,
-  "meta": {
-    "additionalAttributes": {
-      "publishAll": true
-    }
+  "additionalAttributes": {
+    "publishAll": true
   }
 }
 ```
@@ -204,16 +210,12 @@ the output CMR.JSON would look like follows
   ]
 }
 ```
-##### with this config
+##### with this collection config
 ```json
 {
-  "collection": "Collection_Name_Here",
-  "version": 0.0,
-  "meta": {
-    "additionalAttributes": {
-      "publishAll": false,
-      "publish": ["PercentCloudCover"]
-    }
+  "additionalAttributes": {
+    "publishAll": false,
+    "publish": ["PercentCloudCover"]
   }
 }
 ```
@@ -230,16 +232,12 @@ the output CMR.JSON would look like follows
   ]
 }
 ```
-##### with this config
+##### with this collection config
 ```json
 {
-  "collection": "Collection_Name_Here",
-  "version": 0.0,
-  "meta": {
-    "additionalAttributes": {
-      "publishAll": true,
-      "CloudCover": "PercentCloudCover"
-    }
+  "additionalAttributes": {
+    "publishAll": true,
+    "CloudCover": "PercentCloudCover"
   }
 }
 ```

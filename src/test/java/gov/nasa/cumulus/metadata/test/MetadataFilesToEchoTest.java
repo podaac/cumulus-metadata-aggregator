@@ -76,7 +76,7 @@ public class MetadataFilesToEchoTest {
         JSONObject boundingBox = (JSONObject) parser.parse("{\"boundingBox\": { \"latMin\": -90.0, \"lonMin\": -180.0, \"latMax\": 90.0, \"lonMax\": 180.0}}");
         MetadataFilesToEcho mfte = new MetadataFilesToEcho();
 
-        mfte.setDatasetValues("MODIS_T-JPL-L2P-v2019.0", "2019.0", false, (JSONObject) boundingBox.get("boundingBox"));
+        mfte.setDatasetValues("MODIS_T-JPL-L2P-v2019.0", "2019.0", false, (JSONObject) boundingBox.get("boundingBox"), null);
         assertEquals("MODIS_T-JPL-L2P-v2019.0", mfte.getDataset().getShortName());
         assertEquals("2019.0", UMMUtils.getDatasetVersion(mfte.getDataset()));
 
@@ -204,7 +204,7 @@ public class MetadataFilesToEchoTest {
 
         File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
         try {
-            mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3.png");
+            mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -420,9 +420,6 @@ public class MetadataFilesToEchoTest {
         xpath = mfte.makeXpath(doc);
         IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
 
-        File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
-        mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
-
         // Verify the values here:
 
         // Confirm additional attributes has been filled
@@ -468,8 +465,6 @@ public class MetadataFilesToEchoTest {
         xpath = mfte.makeXpath(doc);
         IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
 
-        File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
-        
         // Confirm additional attribute has been filled
         List<AdditionalAttributeType> aat = isoGranule.getAdditionalAttributeTypes();
         assertEquals(aat.size(), 1);
@@ -836,30 +831,6 @@ public class MetadataFilesToEchoTest {
             e.printStackTrace();
             fail();
         }
-    }
-
-    public void testCreateJsonWithPNGFile()
-            throws ParseException, IOException, URISyntaxException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
-        MetadataFilesToEcho mfte = new MetadataFilesToEcho();
-        mfte.readConfiguration(file.getAbsolutePath());
-        File file2 = new File(classLoader.getResource("20170408033000-JPL-L2P_GHRSST-SSTskin-MODIS_T-N-v02.0-fv01.0.nc.mp").getFile());
-        mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3.png");
-
-        mfte.getGranule().setName("20170408033000-JPL-L2P_GHRSST-SSTskin-MODIS_T-N-v02.0-fv01.0");
-
-        JSONObject granule = mfte.createJson();
-        System.out.println(granule.toJSONString());
-        assertEquals("20170408033000-JPL-L2P_GHRSST-SSTskin-MODIS_T-N-v02.0-fv01.0", granule.get("GranuleUR"));
-
-        JSONObject temp = (JSONObject) ((JSONArray) granule.get("RelatedUrls")).get(0);
-        String mimeType = (String) temp.get("MimeType");
-        String subType = (String) temp.get("Subtype");
-
-        assertEquals("image/png", mimeType);
-        assertEquals("DIRECT DOWNLOAD", subType);
-
     }
     
     @Test

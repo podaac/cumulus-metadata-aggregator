@@ -11,6 +11,7 @@ import org.apache.commons.logging.LogFactory;
 import org.json.simple.parser.ParseException;
 
 /**
+ * TODO: CLI might not be working! (or not up to date compared to lambda version)
  * Command-line application for generating CMR metadata file
  */
 public class MetadataAggregatorCLI {

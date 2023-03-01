@@ -11,8 +11,8 @@ task buildZip(type: Zip) {
     from processResources              
     into('lib') {
         from configurations.runtimeClasspath
-    }           
-    archiveName 'cumulus-metadata-aggregator.zip'
+    }
+    archiveFileName.set('cumulus-metadata-aggregator.zip')
 
 }
 

@@ -20,8 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **PODAAC-4748**
   - Enable metadata aggregator to append ISO.XML -> AdditionalAttribute fields (full set or subset) into CMR.JSON
   - Enable metadata aggregator to append Additional Attribute(s) into CMR.JSON as its own root key
-- **PODAAC-5089**
-  - For each PNG file for granule, append metadata and mimetype for `cmr.json` file
 - **PODAAC-5201**
   - Support SWOT Cal/Val XML format
 - **PODAAC-5053**

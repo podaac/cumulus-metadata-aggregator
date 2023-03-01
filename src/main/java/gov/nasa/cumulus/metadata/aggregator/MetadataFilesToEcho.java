@@ -81,8 +81,13 @@ public class MetadataFilesToEcho {
 		JSONObject metadata = (JSONObject) parser.parse(new FileReader(file));
 
 		String shortName = (String)metadata.get("collection");
-		setDatasetValues(shortName, metadata.get("version").toString(), (Boolean) metadata.get("rangeIs360"), null);
-		setAdditionalAttributes(metadata);
+		JSONObject additionalAttributes = (JSONObject) metadata.get("additionalAttributes");
+		setDatasetValues(shortName,
+				metadata.get("version").toString(),
+				(Boolean) metadata.get("rangeIs360"),
+				null,
+				additionalAttributes);
+
 	}
 
 	/**
@@ -93,7 +98,7 @@ public class MetadataFilesToEcho {
 	 * @param rangeIs360  true if dataset granule coordinates are 0 to 360, null/false if not
 	 * @param boundingBox JSONObject with latMax, lonMax, latMin, lonMin
 	 */
-	public void setDatasetValues(String shortName, String version, Boolean rangeIs360, JSONObject boundingBox) {
+	public void setDatasetValues(String shortName, String version, Boolean rangeIs360, JSONObject boundingBox, JSONObject additionalAttributes) {
 		dataset.setShortName(shortName);
 
 		DatasetCitation citation = new DatasetCitation();
@@ -113,22 +118,10 @@ public class MetadataFilesToEcho {
 					(Double) boundingBox.get("lonMax"),
 					(Double) boundingBox.get("lonMin"));
 		}
-	}
 
-	public void setAdditionalAttributes(JSONObject metadata){
-		if(validateJSONObjectKeyExists(metadata, "meta") && metadata.get("meta") instanceof JSONObject){
-			// contains meta
-			JSONObject meta = (JSONObject) metadata.get("meta");
-			if(validateJSONObjectKeyExists(meta, "additionalAttributes") && meta.get("additionalAttributes") instanceof JSONObject){
-				// contains additionalAttributes
-				JSONObject additionalAttributes = (JSONObject) meta.get("additionalAttributes");
-				this.additionalAttributes = additionalAttributes;
-			}
+		if (additionalAttributes != null) {
+			this.additionalAttributes = additionalAttributes;
 		}
-	}
-
-	public boolean validateJSONObjectKeyExists(JSONObject jsonObject, String key){
-		return (jsonObject.containsKey(key) && jsonObject.get(key) != null);
 	}
 
 	//this method reads the output of a footprint command(.fp.xml)
@@ -194,6 +187,7 @@ public class MetadataFilesToEcho {
 		gr.setStatus(GranuleArchiveStatus.ONLINE.toString());
 		gr.setType(GranuleArchiveType.DATA.toString());
 		granule.add(gr);
+
 		//checksum and data size will be constructed by cumulus input granules by calling
 		// setGranuleFileSizeAndChecksum function
 
@@ -232,7 +226,6 @@ public class MetadataFilesToEcho {
 			granule.setEndOrbit(((Long) metadata.get(Constants.Metadata.END_ORBIT)).intValue());
 		}
 	}
-
 
 	/**
 	 * For a certain mission/collections, the workflow might not go through data handler step.
@@ -334,12 +327,19 @@ public class MetadataFilesToEcho {
                 AdapterLogger.LogWarning(isoType.name() + " didn't match any expected ISO type, skipping optional " +
                         "fields.");
             }
+
+			GranuleReference gr = new GranuleReference();
+			gr.setDescription("S3 datafile.");
+			gr.setPath(s3Location);
+			gr.setStatus(GranuleArchiveStatus.ONLINE.toString());
+			gr.setType(GranuleArchiveType.DATA.toString());
+			granule.add(gr);
         }
 		catch (XPathExpressionException e2) {
             AdapterLogger.LogWarning("Xpath error thrown when parsing optional metadata for: " + file + " " + e2);
 			throw e2;
         }
-    }
+	}
 
     /**
      * Parses the ISO granule type from the file path
@@ -421,13 +421,6 @@ public class MetadataFilesToEcho {
                     Double.parseDouble(xpath.evaluate(IsoMendsXPath.WEST_BOUNDING_COORDINATE, doc)));
         }
         ((IsoGranule) granule).setPolygon(xpath.evaluate(IsoMendsXPath.POLYGON, doc));
-
-        GranuleReference gr = new GranuleReference();
-        gr.setDescription("S3 datafile.");
-        gr.setPath(s3Location);
-        gr.setStatus(GranuleArchiveStatus.ONLINE.toString());
-        gr.setType(GranuleArchiveType.DATA.toString());
-        granule.add(gr);
 
         NodeList nodes = (NodeList) xpath.evaluate(IsoMendsXPath.DATA_FILE, doc, XPathConstants.NODESET);
         for (int i = 0; i < nodes.getLength(); i++) {
@@ -522,7 +515,10 @@ public class MetadataFilesToEcho {
 		}
 
 		if(additionalAttributes != null) {
+			// Gets the XML contents of the additional attributes
 			NodeList additionalAttributesBlock = (NodeList) xpath.evaluate(IsoMendsXPath.ADDITIONAL_ATTRIBUTES_BLOCK, doc, XPathConstants.NODESET);
+
+			// Builds full list of additional attributes as the AdditionalAttributeType
 			List<AdditionalAttributeType> additionalAttributeTypes = appendAdditionalAttributes(additionalAttributes, additionalAttributesBlock);
 			((IsoGranule) granule).setAdditionalAttributeTypes(additionalAttributeTypes);
 
@@ -566,6 +562,8 @@ public class MetadataFilesToEcho {
 		Scan through meta.additionalAttributes
 		if `publishAll`, just publish everything mapped
 		if not, see which fields we want to get from the `publish` field
+
+		To see this code in action, run any unit test with `testReadIsoMendsMetadataFileAdditionalFields` as part of its name
 		 */
 
 		/*
@@ -584,13 +582,14 @@ public class MetadataFilesToEcho {
 					"publishAll");
 		}
 
-			// Make simple List of Additional Attributes
+		// Make simple List of Additional Attributes
 		List<AdditionalAttributeType> additionalAttributeTypes = new ArrayList<>();
 		List<AdditionalAttributeType> subAdditionalAttributeTypes = new ArrayList<>();
 		List<String> publishList = metaAdditionalAttributes.get("publish") == null ? null : (List<String>) metaAdditionalAttributes.get("publish");
 		// Check to ensure additional attributes are in pairs (key/pair)
 		if (additionalAttributesBlock.getLength() % 2 == 0) {
 			for (int i = 0; i < additionalAttributesBlock.getLength(); i++) {
+				// We only want to look at address 0, 2, 4..., which should be the key
 				if (i % 2 == 0) {
 					Node key = additionalAttributesBlock.item(i);
 					Node val = additionalAttributesBlock.item(i + 1);
@@ -765,13 +764,6 @@ public class MetadataFilesToEcho {
 	}
 
     private void readIsoSmapMetadataFile(String s3Location, Document doc, XPath xpath) throws XPathExpressionException {
-        GranuleReference gr = new GranuleReference();
-        gr.setDescription("S3 datafile.");
-        gr.setPath(s3Location);
-        gr.setStatus(GranuleArchiveStatus.ONLINE.toString());
-        gr.setType(GranuleArchiveType.DATA.toString());
-        granule.add(gr);
-
         String orbitInformation = xpath.evaluate(IsoSmapXPath.OrbitCalculatedSpatialDomains, doc);
         if (orbitInformation != null) {
             Pattern p = Pattern.compile("OrbitNumber:\\s*([^\\s]+)\\s*EquatorCrossingLongitude:\\s*([^\\s]+)\\s*EquatorCrossingDateTime:\\s*([^\\s]+)\\s*");
