@@ -11,6 +11,7 @@ import org.apache.commons.logging.LogFactory;
 import org.json.simple.parser.ParseException;
 
 /**
+ * TODO: CLI might not be working! (or not up to date compared to lambda version)
  * Command-line application for generating CMR metadata file
  */
 public class MetadataAggregatorCLI {
@@ -131,7 +132,7 @@ public class MetadataAggregatorCLI {
         MetadataFilesToEcho mtfe = new MetadataFilesToEcho(true);
         try {
             mtfe.readConfiguration(configFile);
-            mtfe.readIsoMetadataFile(isoFile, s3Location, null);
+            mtfe.readIsoMetadataFile(isoFile, s3Location);
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -146,7 +147,7 @@ public class MetadataAggregatorCLI {
         MetadataFilesToEcho mtfe = new MetadataFilesToEcho();
         try {
             mtfe.readConfiguration(configFile);
-            mtfe.readCommonMetadataFile(metadataFile, s3Location, null);
+            mtfe.readCommonMetadataFile(metadataFile, s3Location);
 
         } catch (IOException | ParseException e) {
             log.error(e.getMessage());

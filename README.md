@@ -255,3 +255,6 @@ the output CMR.JSON would look like follows
   "CloudCover": 76
 }
 ```
+
+
+TODO: Update clarification for collection config vs cfg

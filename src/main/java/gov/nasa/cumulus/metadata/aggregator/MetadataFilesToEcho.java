@@ -174,7 +174,7 @@ public class MetadataFilesToEcho {
 	 * "productionDateTime":1496701426000,"dataFormat":"NetCDF","checksum":"300d760d9b362cf8b2f869c754ddf192","endingTime":1491622509000,"dataSize":24008128,
 	 * "collection":{"name":"MODIS_T-JPL-L2P-v2014.0","version":1},"beginningTime":1491622211000,"dayNightFlag":"UNSPECIFIED"}
 	 */
-	public void readCommonMetadataFile(String file, String s3Location, JSONArray granule_files) throws IOException, ParseException{
+	public void readCommonMetadataFile(String file, String s3Location) throws IOException, ParseException{
 		//read JSON file
 		JSONParser parser = new JSONParser();
 		JSONObject metadata = (JSONObject) parser.parse(new FileReader(file));
@@ -188,8 +188,12 @@ public class MetadataFilesToEcho {
 		granule.setVersion(((Long)metadata.get("localVersion")).intValue());
 		granule.setDataFormat((String)metadata.get("dataFormat"));
 
-		// appending granule references into granule object
-		buildGranuleReferences(granule_files);
+		GranuleReference gr = new GranuleReference();
+		gr.setDescription("S3 datafile.");
+		gr.setPath(s3Location);
+		gr.setStatus(GranuleArchiveStatus.ONLINE.toString());
+		gr.setType(GranuleArchiveType.DATA.toString());
+		granule.add(gr);
 
 		//checksum and data size will be constructed by cumulus input granules by calling
 		// setGranuleFileSizeAndChecksum function
@@ -229,27 +233,6 @@ public class MetadataFilesToEcho {
 			granule.setEndOrbit(((Long) metadata.get(Constants.Metadata.END_ORBIT)).intValue());
 		}
 	}
-
-	private void buildGranuleReferences(JSONArray granule_files) {
-		if (granule_files != null) {
-			for (Object f : granule_files) {
-				JSONObject gf = (JSONObject) f;
-				// This is wishing the "metadata" type doesn't needs further processing
-				if (((String) gf.get("type")).equals("data") || ((String) gf.get("type")).equals("browse")) {
-					AdapterLogger.LogDebug(this.className +
-							"buildGranuleReferences - appending file as reference - " +
-							gf.get("key"));
-					GranuleReference gr = new GranuleReference();
-					gr.setDescription("S3 datafile.");
-					gr.setPath((String) gf.get("key"));
-					gr.setStatus(GranuleArchiveStatus.ONLINE.toString());
-					gr.setType(GranuleArchiveType.DATA.toString());
-					granule.add(gr);
-				}
-			}
-		}
-	}
-
 
 	/**
 	 * For a certain mission/collections, the workflow might not go through data handler step.
@@ -321,7 +304,7 @@ public class MetadataFilesToEcho {
      * @throws SAXException
      * @throws XPathExpressionException
      */
-    public void readIsoMetadataFile(String file, String s3Location, JSONArray granule_files) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
+    public void readIsoMetadataFile(String file, String s3Location) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
         Document doc = null;
         XPath xpath = null;
         IsoType isoType = null;
@@ -351,15 +334,18 @@ public class MetadataFilesToEcho {
                 AdapterLogger.LogWarning(isoType.name() + " didn't match any expected ISO type, skipping optional " +
                         "fields.");
             }
+
+			GranuleReference gr = new GranuleReference();
+			gr.setDescription("S3 datafile.");
+			gr.setPath(s3Location);
+			gr.setStatus(GranuleArchiveStatus.ONLINE.toString());
+			gr.setType(GranuleArchiveType.DATA.toString());
+			granule.add(gr);
         }
 		catch (XPathExpressionException e2) {
             AdapterLogger.LogWarning("Xpath error thrown when parsing optional metadata for: " + file + " " + e2);
 			throw e2;
         }
-
-		// appending granule references into granule object
-		buildGranuleReferences(granule_files);
-
 	}
 
     /**

@@ -47,7 +47,7 @@ public class MetadataFilesToEchoTest {
         File file = new File(classLoader.getResource("20170408033000-JPL-L2P_GHRSST-SSTskin-MODIS_T-N-v02.0-fv01.0.nc.mp").getFile());
         MetadataFilesToEcho mfte = new MetadataFilesToEcho();
         try {
-            mfte.readCommonMetadataFile(file.getAbsolutePath(), "s3://a/path/to/s3", null);
+            mfte.readCommonMetadataFile(file.getAbsolutePath(), "s3://a/path/to/s3");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -118,7 +118,7 @@ public class MetadataFilesToEchoTest {
 
         File file2 = new File(classLoader.getResource("20170408033000-JPL-L2P_GHRSST-SSTskin-MODIS_T-N-v02.0-fv01.0.nc.mp").getFile());
         try {
-            mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3", null);
+            mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -149,7 +149,7 @@ public class MetadataFilesToEchoTest {
 
         File file2 = new File(classLoader.getResource("RSS_SMAP_SSS_L2C_r00870_20150401T004312_2015091_FNL_V04.0.nc.mp").getFile());
         try {
-            mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3", null);
+            mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -178,7 +178,7 @@ public class MetadataFilesToEchoTest {
 
 
         File file2 = new File(classLoader.getResource("RSS_smap_SSS_L3_monthly_2015_04_FNL_v04.0.nc.mp").getFile());
-        mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3", null);
+        mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
 
 
         mfte.getGranule().setName("SMAP_RSS_L3_SSS_SMI_MONTHLY_V4");
@@ -204,7 +204,7 @@ public class MetadataFilesToEchoTest {
 
         File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
         try {
-            mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3.png", null);
+            mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -492,7 +492,7 @@ public class MetadataFilesToEchoTest {
 
             File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
             try {
-                mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3", null);
+                mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
             } catch (Exception e) {
                 e.printStackTrace();
                 fail();
@@ -578,7 +578,7 @@ public class MetadataFilesToEchoTest {
 
             File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
             try {
-                mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3", null);
+                mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
             } catch (Exception e) {
                 e.printStackTrace();
                 fail();
@@ -626,7 +626,7 @@ public class MetadataFilesToEchoTest {
 
             File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
             try {
-                mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3", null);
+                mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
             } catch (Exception e) {
                 e.printStackTrace();
                 fail();
@@ -733,7 +733,7 @@ public class MetadataFilesToEchoTest {
 
             File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
             try {
-                mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3", null);
+                mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
             } catch (Exception e) {
                 e.printStackTrace();
                 fail();
@@ -778,7 +778,7 @@ public class MetadataFilesToEchoTest {
 
             File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
             try {
-                mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3", null);
+                mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
             } catch (Exception e) {
                 e.printStackTrace();
                 fail();
@@ -831,38 +831,6 @@ public class MetadataFilesToEchoTest {
             e.printStackTrace();
             fail();
         }
-    }
-
-    @Test
-    public void testCreateJsonWithPNGFile()
-            throws ParseException, IOException, URISyntaxException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
-        MetadataFilesToEcho mfte = new MetadataFilesToEcho();
-        mfte.readConfiguration(file.getAbsolutePath());
-        File file2 = new File(classLoader.getResource("20170408033000-JPL-L2P_GHRSST-SSTskin-MODIS_T-N-v02.0-fv01.0.nc.mp").getFile());
-
-        JSONObject test_granule = new JSONObject();
-        test_granule.put("type", "browse");
-        test_granule.put("key", "s3://a/path/to/s3.png");
-        JSONArray files = new JSONArray();
-        files.add(test_granule);
-
-        mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3.png", files);
-
-        mfte.getGranule().setName("20170408033000-JPL-L2P_GHRSST-SSTskin-MODIS_T-N-v02.0-fv01.0");
-
-        JSONObject granule = mfte.createJson();
-        System.out.println(granule.toJSONString());
-        assertEquals("20170408033000-JPL-L2P_GHRSST-SSTskin-MODIS_T-N-v02.0-fv01.0", granule.get("GranuleUR"));
-
-        JSONObject temp = (JSONObject) ((JSONArray) granule.get("RelatedUrls")).get(0);
-        String mimeType = (String) temp.get("MimeType");
-        String subType = (String) temp.get("Subtype");
-
-        assertEquals("image/png", mimeType);
-        assertEquals("DIRECT DOWNLOAD", subType);
-
     }
     
     @Test

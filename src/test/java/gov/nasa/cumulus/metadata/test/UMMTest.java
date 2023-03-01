@@ -55,7 +55,7 @@ public class UMMTest {
         MetadataFilesToEcho mtfe = new MetadataFilesToEcho(true);
 
         mtfe.readConfiguration(testConfigFilePath);
-        mtfe.readIsoMetadataFile(testFilePath, "s3://public/datafile.nc", null);
+        mtfe.readIsoMetadataFile(testFilePath, "s3://public/datafile.nc");
 
         mtfe.getGranule().setName(granuleId);
         // debug breakpoint
@@ -149,7 +149,7 @@ public class UMMTest {
 		MetadataFilesToEcho mtfe = new MetadataFilesToEcho(true);
 		
 		mtfe.readConfiguration(testConfigFilePath);
-		mtfe.readIsoMetadataFile(testFilePath, "s3://public/datafile.nc", null);
+		mtfe.readIsoMetadataFile(testFilePath, "s3://public/datafile.nc");
 		
 		mtfe.getGranule().setName(granuleId);
 
