@@ -89,18 +89,6 @@ public class MetadataAggregatorLambda implements ITask {
 		}
 
 		/*
-		Alter files ending with .png to have type:browse
-		 */
-		for (Object f : files) {
-			JSONObject file = (JSONObject) f;
-			String filename = (String) file.get("fileName");
-			if(filename.endsWith(".png")){
-				AdapterLogger.LogDebug("foundPNG - " + filename + "\nforcing type to be \"browse\"");
-				file.put("type", "browse");
-			}
-		}
-
-		/*
 		 * go through files and process if it's an .FP or an .MP
 		 */
 		//for(int i = 0; i< files.size(); i++){
@@ -119,6 +107,14 @@ public class MetadataAggregatorLambda implements ITask {
 			JSONObject file = (JSONObject) f;
 			String filename = (String) file.get("fileName");
 			String key = (String) file.get("key");
+
+			/*
+			Alter files ending with .png to have type:browse
+			 */
+			if(filename.endsWith(".png")){
+				AdapterLogger.LogDebug("foundPNG - " + filename + "\nforcing type to be \"browse\"");
+				file.put("type", "browse");
+			}
 
 			//String filename = file.getName();
 			if (filename.endsWith(".mp")) {
