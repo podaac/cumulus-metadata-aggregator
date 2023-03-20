@@ -50,6 +50,7 @@ public class MetadataAggregatorLambda implements ITask {
 		String collectionVersion = (String) config.get("version");
 		Boolean rangeIs360 = (Boolean) config.get("rangeIs360");
 		JSONObject boundingBox = (JSONObject) config.get("boundingBox");
+		JSONObject additionalAttributes = (JSONObject) config.get("additionalAttributes");
 		/** call the setWorkFlowType by passing in the stateMachine name to set a WorkflowTypeEnum
 		 * this will help the logic in postIngestProcess function.
 		 */
@@ -58,6 +59,7 @@ public class MetadataAggregatorLambda implements ITask {
 
 		String isoRegex = (String) config.get("isoRegex");
 		String archiveXmlRegex = (String) config.get("archiveXmlRegex");
+		String calValXmlRegex = (String) config.get("calValXmlRegex");
 		String granuleId = (String) config.get("granuleId");
 		context.getLogger().log("Started processing: " + granuleId);
 		String internalBucket = (String) config.get("internalBucket");
@@ -72,6 +74,9 @@ public class MetadataAggregatorLambda implements ITask {
 			return postIngestOutputStr;
 		}
 
+		/*
+		Typically should only have 1 file tagged with "Data"
+		*/
 		//data location
 		String s3Location = null;
 		String stagingDirectory = null;
@@ -94,6 +99,7 @@ public class MetadataAggregatorLambda implements ITask {
 		String iso = null;
 		String xfdumanifest = null;
 		String archiveXml = null;
+		String calValXml = null;
 		// the bucket and key for .mp file
 		String mpFileBucket = null;
 		String mpFileKey = null;
@@ -125,7 +131,12 @@ public class MetadataAggregatorLambda implements ITask {
 			} else if (archiveXmlRegex != null && filename.matches(archiveXmlRegex)) {
 				archiveXml = s3Utils.download(region, (String) file.get("bucket"), key,
 						Paths.get("/tmp", filename).toString());
-			}
+			} else if (calValXmlRegex != null && filename.matches(calValXmlRegex)) {
+                AdapterLogger.LogDebug(this.className + " download CalVal XML from bucket:" +
+                        file.get("bucket") + "  key" + file.get("key") + " to:" + Paths.get("/tmp", filename));
+                calValXml = s3Utils.download(region, (String) file.get("bucket"), key,
+                        Paths.get("/tmp", filename).toString());
+            }
 		}
 
 		//remove the fp and mp files from the array
@@ -139,7 +150,7 @@ public class MetadataAggregatorLambda implements ITask {
         boolean isIsoFile = (iso != null);
 
         mtfe = new MetadataFilesToEcho(isIsoFile);
-        mtfe.setDatasetValues(collectionName, collectionVersion, rangeIs360, boundingBox);
+        mtfe.setDatasetValues(collectionName, collectionVersion, rangeIs360, boundingBox, additionalAttributes);
         if (granules != null && granules.size() > 0) {
             mtfe.setGranuleFileSizeAndChecksum(granules);
         }
@@ -155,6 +166,8 @@ public class MetadataAggregatorLambda implements ITask {
 		} else {
 			try {
 				AdapterLogger.LogInfo(this.className + " Creating UMM-G data structure");
+				// Reason for giving a list of files: to check which ones are PNG's so we can add in extra metadata
+				// Just the s3Location isn't enough
 				if (meta != null) mtfe.readCommonMetadataFile(meta, s3Location);
 				if (granules != null && granules.size() > 0) {
 					mtfe.setGranuleFileSizeAndChecksum(granules);
@@ -162,6 +175,7 @@ public class MetadataAggregatorLambda implements ITask {
 				if (footprint != null) mtfe.readFootprintFile(footprint);
 				if (xfdumanifest != null) mtfe.readSentinelManifest(xfdumanifest);
 				if (archiveXml != null) mtfe.readSwotArchiveXmlFile(archiveXml);
+				if (calValXml != null) mtfe.readSwotCalValXmlFile(calValXml);
 			} catch (IOException | ParseException e) {
 				AdapterLogger.LogError(this.className + " MetadataFilesToEcho input FALSE read error:" + e.getMessage());
 				e.printStackTrace();

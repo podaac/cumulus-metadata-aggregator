@@ -97,3 +97,167 @@ CMR_URL                     = var.cmr_url
 INTERNAL_BUCKET             = var.buckets.internal.name
 CMR_DIR                     = "CMR"
 ```
+
+### Additional Attribute usage and configuration
+A special field `additionalAttributes` can be added to the `meta` level inside a collection (`$.meta.collection.meta` from step functions perspective). Once added it'll enable the user to append an ISO.XML's `eos:AdditionalAttribute` data into the CMR.JSON's "AdditionalAttributes" JSON root block
+
+Example Collection Config - Meta section: [cumulus dashboard image](documentation_image/additionalAttributeImage.png)
+```json
+{
+  "meta": {
+    "additionalAttributes": {
+      "publishAll": false,
+      "publish": [
+        "PercentCloudCover"
+      ],
+      "CloudCover": "PercentCloudCover"
+    },
+    "glacier-bucket": "hryeung-ia-podaac-glacier",
+    "granuleMetadataFileExtension": "cmr.json",
+    "granuleRecoveryWorkflow": "OrcaRecoveryWorkflow",
+    "iso-regex": "^OPERA_L3_DSWx-HLS_.*v([0-9]*)\\.([0-9]*).*\\.iso\\.xml$",
+    "response-endpoint": "arn:aws:sns:us-west-2:065089468788:hryeung-ia-podaac-provider-response-sns",
+    "workflowChoice": {
+      "compressed": false,
+      "convertNetCDF": false,
+      "dmrpp": false,
+      "glacier": false,
+      "readDataFileForMetadata": false
+    }
+  }
+}
+```
+The configuration above has 3 parts to consider
+- `"publishAll": true/false` - whether or not to publish EVERYTHING found in the AdditionalAttribute XML block; this field is **required** if an `additionalAttributes` block is added in `meta`; `true` means publish everything
+- `"publish": ["NAME_OF_FIELD_IN_XML_ADDITIONAL_ATTRIBUTES"]` - Publish the field from the XML into JSON `additionalAttributes`
+- `"CloudCover": "PercentCloudCover"` - Append a key `CloudCover` with the value from `PercentCloudCover` inside the CMR.JSON output
+
+#### Example Collection Configurations
+Assume this is the XML
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<gmi:MI_Metadata xmlns:gmi="http://www.isotc211.org/2005/gmi" xmlns:eos="http://earthdata.nasa.gov/schema/eos" xmlns:gco="http://www.isotc211.org/2005/gco">
+   <eos:AdditionalAttributes>
+      <eos:AdditionalAttribute>
+         <eos:reference>
+            <eos:EOS_AdditionalAttributeDescription>
+               <eos:type>
+                  <eos:EOS_AdditionalAttributeTypeCode codeList="https://cdn.earthdata.nasa.gov/iso/resources/Codelist/eosCodelists.xml#EOS_AdditionalAttributeTypeCode" codeListValue="qualityInformation">qualityInformation</eos:EOS_AdditionalAttributeTypeCode>
+               </eos:type>
+               <eos:name>
+                  <gco:CharacterString>PercentCloudCover</gco:CharacterString>
+               </eos:name>
+               <eos:description>
+                  <gco:CharacterString>The percentage of cloud and cloud shadow in the L3_DSWx_HLS product based on the HLS QA mask</gco:CharacterString>
+               </eos:description>
+               <eos:dataType>
+                  <eos:EOS_AdditionalAttributeDataTypeCode codeList="https://cdn.earthdata.nasa.gov/iso/resources/Codelist/eosCodelists.xml#EOS_AdditionalAttributeDataTypeCode" codeListValue="int">int</eos:EOS_AdditionalAttributeDataTypeCode>
+               </eos:dataType>
+            </eos:EOS_AdditionalAttributeDescription>
+         </eos:reference>
+         <eos:value>
+            <gco:CharacterString>76</gco:CharacterString>
+         </eos:value>
+      </eos:AdditionalAttribute>
+      <eos:AdditionalAttribute>
+         <eos:reference>
+            <eos:EOS_AdditionalAttributeDescription>
+               <eos:type>
+                  <eos:EOS_AdditionalAttributeTypeCode codeList="https://cdn.earthdata.nasa.gov/iso/resources/Codelist/eosCodelists.xml#EOS_AdditionalAttributeTypeCode" codeListValue="platformInformation">platformInformation</eos:EOS_AdditionalAttributeTypeCode>
+               </eos:type>
+               <eos:name>
+                  <gco:CharacterString>SensorProductID</gco:CharacterString>
+               </eos:name>
+               <eos:description>
+                  <gco:CharacterString>The Landsat product ID or Sentinel L1C granule URI</gco:CharacterString>
+               </eos:description>
+               <eos:dataType>
+                  <eos:EOS_AdditionalAttributeDataTypeCode codeList="https://cdn.earthdata.nasa.gov/iso/resources/Codelist/eosCodelists.xml#EOS_AdditionalAttributeDataTypeCode" codeListValue="string">string</eos:EOS_AdditionalAttributeDataTypeCode>
+               </eos:dataType>
+            </eos:EOS_AdditionalAttributeDescription>
+         </eos:reference>
+         <eos:value>
+            <gco:CharacterString>LC08_L1TP_027038_20210906_20210915_02_T1; LC08_L1TP_027039_20210906_20210915_02_T1</gco:CharacterString>
+         </eos:value>
+      </eos:AdditionalAttribute>
+   </eos:AdditionalAttributes>
+</gmi:MI_Metadata>
+```
+##### with this collection config
+```json
+{
+  "additionalAttributes": {
+    "publishAll": true
+  }
+}
+```
+the output CMR.JSON would look like follows
+```json
+{
+  "AdditionalAttributes": [
+    {
+      "Values": [
+        "76"
+      ],
+      "Name": "PercentCloudCover"
+    },
+    {
+      "Values": [
+        "LC08_L1TP_027038_20210906_20210915_02_T1; LC08_L1TP_027039_20210906_20210915_02_T1"
+      ],
+      "Name": "SensorProductID"
+    }
+  ]
+}
+```
+##### with this collection config
+```json
+{
+  "additionalAttributes": {
+    "publishAll": false,
+    "publish": ["PercentCloudCover"]
+  }
+}
+```
+the output CMR.JSON would look like follows
+```json
+{
+  "AdditionalAttributes": [
+    {
+      "Values": [
+        "76"
+      ],
+      "Name": "PercentCloudCover"
+    }
+  ]
+}
+```
+##### with this collection config
+```json
+{
+  "additionalAttributes": {
+    "publishAll": true,
+    "CloudCover": "PercentCloudCover"
+  }
+}
+```
+the output CMR.JSON would look like follows
+```json
+{
+  "AdditionalAttributes": [
+    {
+      "Values": [
+        "76"
+      ],
+      "Name": "PercentCloudCover"
+    },
+    {
+      "Values": [
+        "LC08_L1TP_027038_20210906_20210915_02_T1; LC08_L1TP_027039_20210906_20210915_02_T1"
+      ],
+      "Name": "SensorProductID"
+    }
+  ],
+  "CloudCover": 76
+}
+```

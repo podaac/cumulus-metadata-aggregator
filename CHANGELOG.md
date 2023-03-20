@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [8.3.0]
+### Added
+- **PODAAC-4748**
+  - Enable metadata aggregator to append ISO.XML -> AdditionalAttribute fields (full set or subset) into CMR.JSON
+  - Enable metadata aggregator to append Additional Attribute(s) into CMR.JSON as its own root key
+- **PODAAC-5201**
+  - Support SWOT Cal/Val XML format
+- **PODAAC-5053**
+  - Extract MGRS_TILE_ID metadata from iso.xml. Used for OPERA processing
+### Deprecated
+### Removed
+### Fixed
+- **PODAAC-4273**
+  - Added exclusiive zones for polygon holes and interior rings.
+### Security
+- Snyk: Security upgrade com.amazonaws:aws-java-sdk-s3 from 1.12.378 to 1.12.386
+
 ## [8.2.1]
 ### Added
 ### Added
@@ -16,7 +34,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 
 ## [8.2.0]
-### Added
 ### Added
 ### Deprecated
 ### Removed

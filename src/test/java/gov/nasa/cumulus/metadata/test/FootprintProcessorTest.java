@@ -32,13 +32,13 @@ public class FootprintProcessorTest {
     public void initialize() {
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            File inputCMRJsonFile = new File(classLoader.getResource("src/test/resources/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.cmr.json").getFile());
+            File inputCMRJsonFile = new File(classLoader.getResource("20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.cmr.json").getFile());
             cmrString = new String(Files.readAllBytes(inputCMRJsonFile.toPath()));
 
-            File inputCMAJsonFile = new File(classLoader.getResource("src/test/resources/cumulus_message_input_example.json").getFile());
+            File inputCMAJsonFile = new File(classLoader.getResource("cumulus_message_input_example.json").getFile());
             cmaString = new String(Files.readAllBytes(inputCMAJsonFile.toPath()));
 
-            File inputFPFile = new File(classLoader.getResource("src/test/resources/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.fp").getFile());
+            File inputFPFile = new File(classLoader.getResource("20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.fp").getFile());
             fpFileContentString = new String(Files.readAllBytes(inputFPFile.toPath()));
 
         } catch (IOException ioe) {
@@ -131,6 +131,7 @@ public class FootprintProcessorTest {
     
     @Test
     public void testGeometryToUMMGWithPolygonWithHolesFP() throws ParseException {
+        
         String geoString = "POLYGON ((-180 -90, -180 -71.3994, -175.14178 -68.5248, -162.83525 -70" +
          ".22509, -149.612 -70.93377, -135.74252 -70.62437, -123.01198 -69.31587, -117.27825 -73.16094, -110" +
           ".25503 -76.16162, -90.93015 -80.18354, -65.75008 -81.87383, -36.9085 -81.58469, -28.65802 -84.17944, " +
@@ -138,6 +139,7 @@ public class FootprintProcessorTest {
             "-79.77406, 134.06645 -79.86031, 157.50354 -77.81788, 170.15286 -75.16526, 180 -71.3994, 180 -90, 90 " +
              "-90, 0 -90, -90 -90, -180 -90), (23.84973 -87.30936, 25.02681 -87.31821, 25.103 -87.318, 23.84973 " +
               "-87.30936))";
+              
         final WKTReader reader = new WKTReader();
         Geometry geometry = reader.read(geoString);
         FootprintProcessor processor = new FootprintProcessor();
@@ -154,6 +156,9 @@ public class FootprintProcessorTest {
                 .getAsJsonArray("Points");
         assertTrue(pointArray.isJsonArray());
         assertEquals(28,pointArray.size());
+        // Ensure the inner polygon points are in the exclusion zone point array
+        JsonArray exclusionZone = gPolygonArray.get(0).getAsJsonObject().getAsJsonObject("ExclusiveZone").getAsJsonArray("Boundaries").get(0).getAsJsonObject().getAsJsonArray("Points");
+        assertEquals(4,exclusionZone.size());
     }
 
     @Test
@@ -215,7 +220,7 @@ public class FootprintProcessorTest {
     @Test
     public void testCreateOutputMessage() {
         FootprintProcessor processor = new FootprintProcessor();
-        String output =  processor.createOutputMessage(cmaString, 334411, "md5-3344",
+        String output =  processor.createOutputMessage(cmaString, 334411,
                 new BigInteger("3244"), "granuleId-3344-22.cmr.json", "my-private",
                 "CMR", "collectionName");
         JsonElement jsonElement = new JsonParser().parse(output);
@@ -224,10 +229,8 @@ public class FootprintProcessorTest {
         JsonObject foundFP =  processor.getFileJsonObjByFileTrailing(files, ".fp");
         assertEquals(null, foundFP);
         JsonObject foundCMR =  processor.getFileJsonObjByFileTrailing(files, ".cmr.json");
-        String eTag = foundCMR.get("etag").getAsString();
         Long  cmrFileSize =  foundCMR.get("size").getAsLong();
         BigInteger  revisionId =  jsonElement.getAsJsonObject().get("cmrRevisionId").getAsBigInteger();
-        assertEquals("md5-3344", eTag);
         assertEquals(334411, cmrFileSize.longValue());
         assertEquals(revisionId.compareTo(new BigInteger("3244")), 0);
     }
