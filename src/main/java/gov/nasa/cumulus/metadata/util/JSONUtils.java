@@ -3,11 +3,14 @@ package gov.nasa.cumulus.metadata.util;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
 import gov.nasa.cumulus.metadata.aggregator.UMMUtils;
+import gov.nasa.cumulus.metadata.umm.generated.RelatedUrlType;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -120,5 +123,104 @@ public class JSONUtils {
         JSONArray jarray = (JSONArray) parser.parse(input.toString());;
         return jarray;
     }
+
+    public static JSONObject sortRelatedUrls(JSONObject input)throws ParseException {
+        /**
+         * JSONArray extends ArrayList implements List, JSONAware, JSONStreamAware
+         * so JSONArray maintains insert order
+         */
+        JSONArray unsortedRelatedUrls = (JSONArray)input.get("RelatedUrls");
+        JSONArray sortedRelatedUrls = new JSONArray();
+        ArrayList<JSONObject> toBeRemovedItems = new ArrayList<>();
+        // first, extract URL starts with http/https and Type == GET DATA to added into sortedRelatedUrls
+        for(int i =0; i< unsortedRelatedUrls.size(); i++) {
+            JSONObject relatedUrl = (JSONObject) unsortedRelatedUrls.get(i);
+            if( isStartingWithHttpHttps((String)relatedUrl.get("URL"))
+                    &&
+                    isGETTYPE((String)relatedUrl.get("Type"))
+                 ) {
+                sortedRelatedUrls.add(relatedUrl);
+                toBeRemovedItems.add(relatedUrl);
+            }
+        }
+        unsortedRelatedUrls = shrinkUnsortedRelatedUrls(unsortedRelatedUrls, toBeRemovedItems);
+        toBeRemovedItems.clear();
+
+        // other http/https files
+        for(int i =0; i< unsortedRelatedUrls.size(); i++) {
+            JSONObject relatedUrl = (JSONObject) unsortedRelatedUrls.get(i);
+            if(isStartingWithHttpHttps((String)relatedUrl.get("URL"))) {
+                sortedRelatedUrls.add(relatedUrl);
+                toBeRemovedItems.add(relatedUrl);
+            }
+        }
+        unsortedRelatedUrls = shrinkUnsortedRelatedUrls(unsortedRelatedUrls, toBeRemovedItems);
+        toBeRemovedItems.clear();
+
+        // s3 link to scientific data
+        for(int i =0; i< unsortedRelatedUrls.size(); i++) {
+            JSONObject relatedUrl = (JSONObject) unsortedRelatedUrls.get(i);
+            if(isGETTYPE((String)relatedUrl.get("Type"))
+                &&
+                    isStartingWithS3((String)relatedUrl.get("URL"))) {
+                sortedRelatedUrls.add(relatedUrl);
+                toBeRemovedItems.add(relatedUrl);
+            }
+        }
+        unsortedRelatedUrls = shrinkUnsortedRelatedUrls(unsortedRelatedUrls, toBeRemovedItems);
+        toBeRemovedItems.clear();
+        // other s3 links
+        for(int i =0; i< unsortedRelatedUrls.size(); i++) {
+            JSONObject relatedUrl = (JSONObject) unsortedRelatedUrls.get(i);
+            if(isStartingWithS3((String)relatedUrl.get("URL"))) {
+                sortedRelatedUrls.add(relatedUrl);
+                toBeRemovedItems.add(relatedUrl);
+            }
+        }
+        unsortedRelatedUrls = shrinkUnsortedRelatedUrls(unsortedRelatedUrls, toBeRemovedItems);
+        toBeRemovedItems.clear();
+
+        // left of item in unsorted array
+        for(Object e: unsortedRelatedUrls) {
+            JSONObject relatedUrl = (JSONObject) e;
+            sortedRelatedUrls.add(relatedUrl);
+        }
+        input.remove("RelatedUrls");
+        input.put("RelatedUrls", sortedRelatedUrls);
+        return input;
+    }
+
+    public static JSONArray shrinkUnsortedRelatedUrls(JSONArray unsortedRelatedUrls,
+                                                           ArrayList<JSONObject> toBeRemovedItems){
+        toBeRemovedItems.forEach(item -> {
+            unsortedRelatedUrls.remove(item);
+        });
+        return unsortedRelatedUrls;
+    }
+
+    public static boolean isStartingWithHttpHttps(String s) {
+        s = StringUtils.trim(s);
+        if(StringUtils.startsWithIgnoreCase(s,"http://") || StringUtils.startsWithIgnoreCase(s,"https://")) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isStartingWithS3(String s) {
+        s = StringUtils.trim(s);
+        if(StringUtils.startsWithIgnoreCase(s,"s3://") ) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isGETTYPE(String s) {
+        s = StringUtils.trim(s);
+        if(StringUtils.equalsIgnoreCase(s,RelatedUrlType.RelatedUrlTypeEnum.GET_DATA.value()) ) {
+            return true;
+        }
+        return false;
+    }
+
 
 }

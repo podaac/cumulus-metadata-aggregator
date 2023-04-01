@@ -1,0 +1,108 @@
+{
+  "TemporalExtent": {
+    "RangeDateTime": {
+      "EndingDateTime": "2020-01-01T00:04:57.000Z",
+      "BeginningDateTime": "2020-01-01T00:00:00.000Z"
+    }
+  },
+  "MetadataSpecification": {
+    "Version": "1.6",
+    "URL": "https://cdn.earthdata.nasa.gov/umm/granule/v1.6",
+    "Name": "UMM-G"
+  },
+  "GranuleUR": "20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0",
+  "ProviderDates": [
+    {
+      "Type": "Insert",
+      "Date": "2020-07-17T23:10:21.470Z"
+    },
+    {
+      "Type": "Update",
+      "Date": "2020-07-17T23:10:21.484Z"
+    }
+  ],
+  "SpatialExtent": {
+    "HorizontalSpatialDomain": {
+      "Geometry": {
+        "BoundingRectangles": [
+          {
+            "WestBoundingCoordinate": 123.165,
+            "SouthBoundingCoordinate": -89.989,
+            "EastBoundingCoordinate": 180,
+            "NorthBoundingCoordinate": -66.906
+          },
+          {
+            "WestBoundingCoordinate": -180,
+            "SouthBoundingCoordinate": -89.989,
+            "EastBoundingCoordinate": -74.116,
+            "NorthBoundingCoordinate": -66.906
+          }
+        ]
+      }
+    }
+  },
+  "DataGranule": {
+    "ArchiveAndDistributionInformation": [
+      {
+        "SizeUnit": "MB",
+        "Size": 17.387483596801758,
+        "Name": "20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc"
+      }
+    ],
+    "DayNightFlag": "Unspecified",
+    "ProductionDateTime": "2020-02-29T12:20:15.000Z"
+  },
+  "CollectionReference": {
+    "Version": "2019.0",
+    "ShortName": "MODIS_A-JPL-L2P-v2019.0"
+  },
+  "RelatedUrls": [
+    {
+      "URL": "https://vtdmnpv139.execute-api.us-west-2.amazonaws.com:9000/DEV/dyen-cumulus-public/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc.md5",
+      "Description": "File to download",
+      "Type": "EXTENDED METADATA"
+    },
+    {
+      "URL": "https://vtdmnpv139.execute-api.us-west-2.amazonaws.com:9000/DEV/dyen-cumulus-protected/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc",
+      "Description": "The base directory location for the granule.",
+      "Type": "GET DATA"
+    },
+    {
+      "URL": "s3://my-bucket/folder/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc",
+      "Description": "The base directory location for the granule.",
+      "Type": "GET DATA"
+    },
+    {
+      "URL": "https://vtdmnpv139.execute-api.us-west-2.amazonaws.com:9000/DEV/dyen-cumulus-public/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.cmr.json",
+      "Description": "File to download",
+      "Type": "EXTENDED METADATA"
+    },
+    {
+      "URL": "https://vtdmnpv139.execute-api.us-west-2.amazonaws.com:9000/DEV/s3credentials",
+      "Description": "api endpoint to retrieve temporary credentials valid for same-region direct s3 access",
+      "Type": "VIEW RELATED INFORMATION"
+    },
+    {
+      "URL": "https://opendap.uat.earthdata.nasa.gov/providers/POCUMULUS/collections/GHRSST%20Level%202P%20Global%20Sea%20Surface%20Skin%20Temperature%20from%20the%20Moderate%20Resolution%20Imaging%20Spectroradiometer%20(MODIS)%20on%20the%20NASA%20Aqua%20satellite%20(GDS2)/granules/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0",
+      "Type": "GET DATA",
+      "Subtype": "OPENDAP DATA",
+      "Description": "OPeNDAP request URL"
+    },
+    {
+      "URL": "https://jh72u371y2.execute-api.us-west-2.amazonaws.com:9000/DEV/dyen-cumulus-public/MODIS_A-JPL-L2P-v2019.0/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.sses_standard_deviation.png",
+      "Type": "GET RELATED VISUALIZATION",
+      "Subtype": "DIRECT DOWNLOAD",
+      "MimeType": "image/png"
+    },
+    {
+      "URL": "s3://my-bucket/folder/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc.md5",
+      "Description": "The base directory location for the granule.",
+      "Type": "EXTENDED METADATA"
+    },
+    {
+      "URL": "s3://my-bucket/folder/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.iso.xml",
+      "Description": "The base directory location for the granule.",
+      "Type": "EXTENDED METADATA"
+    }
+  ]
+}
