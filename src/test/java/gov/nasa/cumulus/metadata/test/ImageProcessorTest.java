@@ -145,7 +145,7 @@ public class ImageProcessorTest {
     @Test
     public void testIsDownloadUrlAlreadyExist() {
         ImageProcessor imageProcessor = new ImageProcessor();
-        JsonObject cmrJsonObj = new JsonParser().parse(cmrString).getAsJsonObject();
+        JsonObject cmrJsonObj = JsonParser.parseString(cmrString).getAsJsonObject();
         JsonArray relatedUrls = cmrJsonObj.getAsJsonArray("RelatedUrls");
         boolean isAlreadyExist = imageProcessor.isDownloadUrlAlreadyExist(relatedUrls,
                 "https://jh72u371y2.execute-api.us-west-2.amazonaws.com:9000/DEV/dyen-cumulus-public/MODIS_A-JPL-L2P-v2019.0/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.sses_standard_deviation.png");

@@ -133,11 +133,12 @@ public class JSONUtils {
         JSONArray sortedRelatedUrls = new JSONArray();
         ArrayList<JSONObject> toBeRemovedItems = new ArrayList<>();
         // first, extract URL starts with http/https and Type == GET DATA to added into sortedRelatedUrls
+        String[] httpStrs = {"http", "https"};
         for(int i =0; i< unsortedRelatedUrls.size(); i++) {
             JSONObject relatedUrl = (JSONObject) unsortedRelatedUrls.get(i);
-            if( isStartingWithHttpHttps((String)relatedUrl.get("URL"))
+            if( isStrStarsWithIgnoreCase((String)relatedUrl.get("URL"),httpStrs)
                     &&
-                    isGETTYPE((String)relatedUrl.get("Type"))
+                    isGETDataType((String)relatedUrl.get("Type"))
                  ) {
                 sortedRelatedUrls.add(relatedUrl);
                 toBeRemovedItems.add(relatedUrl);
@@ -149,7 +150,7 @@ public class JSONUtils {
         // other http/https files
         for(int i =0; i< unsortedRelatedUrls.size(); i++) {
             JSONObject relatedUrl = (JSONObject) unsortedRelatedUrls.get(i);
-            if(isStartingWithHttpHttps((String)relatedUrl.get("URL"))) {
+            if(isStrStarsWithIgnoreCase((String)relatedUrl.get("URL"),httpStrs)) {
                 sortedRelatedUrls.add(relatedUrl);
                 toBeRemovedItems.add(relatedUrl);
             }
@@ -160,9 +161,9 @@ public class JSONUtils {
         // s3 link to scientific data
         for(int i =0; i< unsortedRelatedUrls.size(); i++) {
             JSONObject relatedUrl = (JSONObject) unsortedRelatedUrls.get(i);
-            if(isGETTYPE((String)relatedUrl.get("Type"))
+            if(isGETDataType((String)relatedUrl.get("Type"))
                 &&
-                    isStartingWithS3((String)relatedUrl.get("URL"))) {
+                    isStrStarsWithIgnoreCase((String)relatedUrl.get("URL"), "s3://")) {
                 sortedRelatedUrls.add(relatedUrl);
                 toBeRemovedItems.add(relatedUrl);
             }
@@ -172,7 +173,7 @@ public class JSONUtils {
         // other s3 links
         for(int i =0; i< unsortedRelatedUrls.size(); i++) {
             JSONObject relatedUrl = (JSONObject) unsortedRelatedUrls.get(i);
-            if(isStartingWithS3((String)relatedUrl.get("URL"))) {
+            if(isStrStarsWithIgnoreCase((String)relatedUrl.get("URL"), "s3://")) {
                 sortedRelatedUrls.add(relatedUrl);
                 toBeRemovedItems.add(relatedUrl);
             }
@@ -198,23 +199,37 @@ public class JSONUtils {
         return unsortedRelatedUrls;
     }
 
-    public static boolean isStartingWithHttpHttps(String s) {
+    /**
+     *
+     * @param s   : The string to be verified
+     * @param startStr : verifies the input s is starting with startStr ignoring case
+     * return  true/false
+     */
+    public static boolean isStrStarsWithIgnoreCase(String s, String startStr) {
         s = StringUtils.trim(s);
-        if(StringUtils.startsWithIgnoreCase(s,"http://") || StringUtils.startsWithIgnoreCase(s,"https://")) {
+        if(StringUtils.startsWithIgnoreCase(s,startStr)) {
             return true;
         }
         return false;
     }
 
-    public static boolean isStartingWithS3(String s) {
+    /**
+     *
+     * @param s: The string to be verified
+     * @param startStrs: verifies the input s is starting with at least one item in startStrs[] ignoring case
+     * @return true/false
+     */
+    public static boolean isStrStarsWithIgnoreCase(String s, String[] startStrs) {
         s = StringUtils.trim(s);
-        if(StringUtils.startsWithIgnoreCase(s,"s3://") ) {
-            return true;
+        for(String elementStr:startStrs) {
+            if(StringUtils.startsWithIgnoreCase(s, elementStr)){
+                return true;
+            }
         }
         return false;
     }
 
-    public static boolean isGETTYPE(String s) {
+    public static boolean isGETDataType(String s) {
         s = StringUtils.trim(s);
         if(StringUtils.equalsIgnoreCase(s,RelatedUrlType.RelatedUrlTypeEnum.GET_DATA.value()) ) {
             return true;

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonObject;
 
+import gov.nasa.cumulus.metadata.umm.generated.RelatedUrlType;
 import gov.nasa.cumulus.metadata.umm.generated.TrackPassTileType;
 import gov.nasa.cumulus.metadata.umm.generated.TrackType;
 import gov.nasa.cumulus.metadata.util.JSONUtils;
@@ -44,38 +45,31 @@ public class JSONUtilsTest {
     }
 
     @Test
-    public void testIsStartingWithHttpHttps() throws IOException, ParseException{
-        assertEquals(JSONUtils.isStartingWithHttpHttps("http://aabbcc"), true);
-        assertEquals(JSONUtils.isStartingWithHttpHttps("https://myresourc.com"), true);
-        //test with space
-        assertEquals(JSONUtils.isStartingWithHttpHttps(" http://mm.ee.com "), true);
-        assertEquals(JSONUtils.isStartingWithHttpHttps(" https://mm.com/resource  "), true);
+    public void testIsStartWithStrings() {
+        String elements[] = {"http", "https"};
+        String httpStr = "http://distribution_url/resource.nc";
+        assertEquals(JSONUtils.isStrStarsWithIgnoreCase(httpStr, elements), true);
+        httpStr = "https://distribution_url/resource.nc";
+        assertEquals(JSONUtils.isStrStarsWithIgnoreCase(httpStr, elements), true);
+        httpStr = "  http://distribution_url/resource.nc";  // test with space
+        assertEquals(JSONUtils.isStrStarsWithIgnoreCase(httpStr, elements), true);
 
-        // test false condition
-        assertEquals(JSONUtils.isStartingWithHttpHttps(" htt:p:// "), false);
-        assertEquals(JSONUtils.isStartingWithHttpHttps(" https;//  "), false);
+        httpStr = "  s3://my_bucket/my_folder/resource.nc";  // test with space
+        assertEquals(JSONUtils.isStrStarsWithIgnoreCase(httpStr, elements), false);
+
+
     }
     @Test
-    public void testIsStartingWithS3() throws IOException, ParseException{
-        assertEquals(JSONUtils.isStartingWithS3("s3://mybucket/myfolder/file.txt"), true);
+    public void testIsGETDataType() {
+        assertEquals(JSONUtils.isGETDataType("GET DATA"), true);
+        assertEquals(JSONUtils.isGETDataType(" GET DATA "), true);
+        assertEquals(JSONUtils.isGETDataType(" Get data "), true);
         //test with space
-        assertEquals(JSONUtils.isStartingWithS3(" s3://mybucket/myfolder/file.txt "), true);
-
-        // test false condition
-        assertEquals(JSONUtils.isStartingWithS3(" s3:p://mybucket/myfolder/file.txt "), false);
-        assertEquals(JSONUtils.isStartingWithS3(" s3;//mybucket/myfolder/file.txt  "), false);
-    }
-    @Test
-    public void testIsGETTYPE() throws IOException, ParseException {
-        assertEquals(JSONUtils.isGETTYPE("GET DATA"), true);
-        assertEquals(JSONUtils.isGETTYPE(" GET DATA "), true);
-        assertEquals(JSONUtils.isGETTYPE(" Get data "), true);
-        //test with space
-        assertEquals(JSONUtils.isStartingWithS3(" GEET Type "), false);
+        assertEquals(JSONUtils.isGETDataType(" GEET Type "), false);
     }
 
     @Test
-    public void testSorting() throws  ParseException{
+    public void testRelatedUrlsSorting() throws  ParseException{
         String cmr_filename= "20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0-unsortedUrls.cmr.json";
         try {
             ClassLoader classLoader = getClass().getClassLoader();
@@ -84,8 +78,15 @@ public class JSONUtilsTest {
             JSONParser parser = new JSONParser();
             JSONObject json = (JSONObject) parser.parse(cmrString);
             json = JSONUtils.sortRelatedUrls(json);
-            //TODO check sorted result
-            assertEquals(true, true);
+            //check the first item must be http/https resource scientific data
+            JSONArray relatedUrlsArray = (JSONArray)json.get("RelatedUrls");
+            JSONObject firstJSONObject = (JSONObject)relatedUrlsArray.get(0);
+            assertEquals(firstJSONObject.get("URL").toString(), "https://vtdmnpv139.execute-api.us-west-2.amazonaws.com:9000/DEV/dyen-cumulus-protected/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc");
+            assertEquals(firstJSONObject.get("Type").toString(), RelatedUrlType.RelatedUrlTypeEnum.GET_DATA.value());
+            //check the 6th item must be http/https resource scientific data
+            JSONObject sixthJSONObject = (JSONObject)relatedUrlsArray.get(6);
+            assertEquals(sixthJSONObject.get("URL").toString(), "s3://my-bucket/folder/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0.nc");
+            assertEquals(sixthJSONObject.get("Type").toString(), RelatedUrlType.RelatedUrlTypeEnum.GET_DATA.value());
         } catch (IOException ioe) {
             System.out.println("Test initialization failed: " + ioe);
             ioe.printStackTrace();

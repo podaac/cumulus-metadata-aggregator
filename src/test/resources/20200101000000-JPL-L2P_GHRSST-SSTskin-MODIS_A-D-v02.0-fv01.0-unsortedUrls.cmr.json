@@ -84,7 +84,7 @@
     },
     {
       "URL": "https://opendap.uat.earthdata.nasa.gov/providers/POCUMULUS/collections/GHRSST%20Level%202P%20Global%20Sea%20Surface%20Skin%20Temperature%20from%20the%20Moderate%20Resolution%20Imaging%20Spectroradiometer%20(MODIS)%20on%20the%20NASA%20Aqua%20satellite%20(GDS2)/granules/20200101000000-JPL-L2P_GHRSST-SSTskin-MODIS_A-D-v02.0-fv01.0",
-      "Type": "GET DATA",
+      "Type": "USE SERVICE API",
       "Subtype": "OPENDAP DATA",
       "Description": "OPeNDAP request URL"
     },

@@ -83,12 +83,13 @@ public class ImageProcessor extends ProcessorBase{
             // first split relatedUrls to 2 arrays, one including http/https resources and
             // the other array contain items which are NOT http/https resources
             JsonArray httpArray = new JsonArray();
-            JsonArray otherArray = new JsonArray();
+            JsonArray otherItemsArray = new JsonArray();
+            String[] httpStrs = {"http", "https"};
             relatedUrls.forEach(e -> {
-                if(JSONUtils.isStartingWithHttpHttps(((JsonObject)e).getAsString())) {
+                if(JSONUtils.isStrStarsWithIgnoreCase(e.getAsJsonObject().get("URL").getAsString(), httpStrs)) {
                     httpArray.add(e);
                 } else {
-                    otherArray.add(e);
+                    otherItemsArray.add(e);
                 }
             });
             for (JsonElement f : files) {
@@ -111,7 +112,7 @@ public class ImageProcessor extends ProcessorBase{
                 }
             }
             // now add all elements from the other array into the end of the httpArray
-            otherArray.forEach(e -> httpArray.add(e)); // now httpArray has everything, http, http-image and non-http resources
+            otherItemsArray.forEach(e -> httpArray.add(e)); // append otherItmesArray on the end of httpArray
             cmrJsonObj.add("RelatedUrls", httpArray);
             String newCMRStr = gsonBuilder.toJson(cmrJsonObj);
             return newCMRStr;
