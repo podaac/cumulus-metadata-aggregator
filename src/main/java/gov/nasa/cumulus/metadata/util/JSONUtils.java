@@ -207,10 +207,7 @@ public class JSONUtils {
      */
     public static boolean isStrStarsWithIgnoreCase(String s, String startStr) {
         s = StringUtils.trim(s);
-        if(StringUtils.startsWithIgnoreCase(s,startStr)) {
-            return true;
-        }
-        return false;
+        return StringUtils.startsWithIgnoreCase(s,startStr);
     }
 
     /**
