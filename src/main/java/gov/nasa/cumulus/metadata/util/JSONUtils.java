@@ -231,10 +231,7 @@ public class JSONUtils {
 
     public static boolean isGETDataType(String s) {
         s = StringUtils.trim(s);
-        if(StringUtils.equalsIgnoreCase(s,RelatedUrlType.RelatedUrlTypeEnum.GET_DATA.value()) ) {
-            return true;
-        }
-        return false;
+        return StringUtils.equalsIgnoreCase(s,RelatedUrlType.RelatedUrlTypeEnum.GET_DATA.value());
     }
 
 
