@@ -44,13 +44,13 @@
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-s3</artifactId>
-      <version>1.12.414</version>
+      <version>1.12.440</version>
     </dependency>
     <!-- For AWS Secret Manager -->
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-secretsmanager</artifactId>
-      <version>1.12.398</version>
+      <version>1.12.440</version>
     </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>

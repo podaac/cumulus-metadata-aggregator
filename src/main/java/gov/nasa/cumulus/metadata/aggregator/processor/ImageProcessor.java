@@ -3,6 +3,7 @@ package gov.nasa.cumulus.metadata.aggregator.processor;
 import com.google.gson.*;
 import cumulus_message_adapter.message_parser.AdapterLogger;
 import gov.nasa.cumulus.metadata.umm.generated.RelatedUrlType;
+import gov.nasa.cumulus.metadata.util.JSONUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 
@@ -33,7 +34,7 @@ public class ImageProcessor extends ProcessorBase{
             this.region = region;
             decodeVariables(input);
             this.workingDir = createWorkDir();
-            String newCMRStr = appendImageUrl(input, ummgStr);
+            String newCMRStr = appendImageUrls(input, ummgStr);
             String cmrFileName = buildCMRFileName(this.granuleId, this.executionId);
             long cmrFileSize = uploadCMRJson(cmrBucket, cmrDir, this.collectionName, cmrFileName,
                     newCMRStr);
@@ -53,16 +54,15 @@ public class ImageProcessor extends ProcessorBase{
         }
     }
 
-    public String appendImageUrl(String input, String cmrString)
+    public String appendImageUrls(String input, String cmrString)
             throws IOException, URISyntaxException {
         try {
             Gson gsonBuilder = getGsonBuilder();
             JsonObject cmrJsonObj = JsonParser.parseString(cmrString).getAsJsonObject();
             JsonArray relatedUrls = cmrJsonObj.getAsJsonArray("RelatedUrls");
-            // If cmrJson does not included relatedURLs jsonArray, then create one and then attached to cmrJsonObj
+            // If cmrJson does not include relatedURLs jsonArray, then create one and then attached to cmrJsonObj
             if (relatedUrls == null) {
                 relatedUrls = new JsonArray();
-                cmrJsonObj.add("RelatedUrls", relatedUrls);
             }
 
             JsonObject inputJsonObj = JsonParser.parseString(input).getAsJsonObject();
@@ -74,7 +74,24 @@ public class ImageProcessor extends ProcessorBase{
 
             files = granule.get("files").getAsJsonArray();
             JsonArray files = granule.get("files").getAsJsonArray();
-
+            /*  At this point, the RelatedUrls array has been sorted with
+                http/https scientific data
+                other http files
+                s3 scientific data
+                other s3 file
+             */
+            // first split relatedUrls to 2 arrays, one including http/https resources and
+            // the other array contain items which are NOT http/https resources
+            JsonArray httpArray = new JsonArray();
+            JsonArray otherItemsArray = new JsonArray();
+            String[] httpStrs = {"http", "https"};
+            relatedUrls.forEach(e -> {
+                if(JSONUtils.isStrStarsWithIgnoreCase(e.getAsJsonObject().get("URL").getAsString(), httpStrs)) {
+                    httpArray.add(e);
+                } else {
+                    otherItemsArray.add(e);
+                }
+            });
             for (JsonElement f : files) {
                 JsonObject fileObj = f.getAsJsonObject();
                 String filename = StringUtils.trim(f.getAsJsonObject().get("fileName").getAsString());
@@ -89,10 +106,14 @@ public class ImageProcessor extends ProcessorBase{
                         relatedUrlType.setMimeType(getImageMimeType(filename));
 
                         String relatedUrlTypeStr = gsonBuilder.toJson(relatedUrlType);
-                        relatedUrls.add(JsonParser.parseString(relatedUrlTypeStr));
+                        // append image Url to the end of the http array which has all http/https resources
+                        httpArray.add(JsonParser.parseString(relatedUrlTypeStr));
                     }
                 }
             }
+            // now add all elements from the other array into the end of the httpArray
+            otherItemsArray.forEach(e -> httpArray.add(e)); // append otherItmesArray on the end of httpArray
+            cmrJsonObj.add("RelatedUrls", httpArray);
             String newCMRStr = gsonBuilder.toJson(cmrJsonObj);
             return newCMRStr;
         } catch (URISyntaxException ipe) {

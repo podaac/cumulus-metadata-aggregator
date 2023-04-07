@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+### Deprecated
+### Removed
+### Fixed
+- **PODAAC-5291**
+  - Assure the UMMG RelatedUrls arry in the following order
+    - http/https scientific data
+    - other http/https files
+    - s3 scientific data
+    - other s3 files
+### Security
+- Snyk: Security upgrade com.amazonaws:aws-java-sdk-s3 from 1.12.378 to 1.12.386
+
+
 ## [8.3.0]
 ### Added
 - **PODAAC-4748**
