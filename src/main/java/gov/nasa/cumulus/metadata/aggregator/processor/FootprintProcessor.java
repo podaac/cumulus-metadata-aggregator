@@ -171,11 +171,18 @@ public class FootprintProcessor extends ProcessorBase{
             spatialExtentType = new SpatialExtentType();
         }
         GeometryType geometryType = spatialExtentType.getHorizontalSpatialDomain().getGeometry();
+        geometryType = geometryType == null ? new GeometryType() : geometryType;
         // If CMR is down during the process, the cmr.json might be written successfully
         // then if re-execute this step, the code will keep appending to the existing CLine and GPolygon.
         // Hence, we remove the CLine and Polygon list each time before trying
-        geometryType.getGPolygons().clear();
-        geometryType.getLines().clear();
+        AdapterLogger.LogDebug(this.className + " About to clean up CMR GPolygons and Lines");
+        if(spatialExtentType.getHorizontalSpatialDomain()!=null && geometryType!=null && geometryType.getGPolygons() !=null) {
+            geometryType.getGPolygons().clear();
+        }
+        if(spatialExtentType.getHorizontalSpatialDomain()!=null && geometryType!=null && geometryType.getLines() != null) {
+            geometryType.getLines().clear();
+        }
+
 
         /**
          * Section 2 use vividsolution JTS api to de-serialize WKT into geometry objects and extract the coordinates.
@@ -223,6 +230,7 @@ public class FootprintProcessor extends ProcessorBase{
             }
         }
         if (lineTypes.size() > 0) geometryType.setLines(lineTypes);
+        AdapterLogger.LogDebug(this.className + " geometryType:" +geometryType);
         if (gPolygonTypes.size() > 0) geometryType.setGPolygons(gPolygonTypes);
         // Remove the BoundingRectangles if Footprint appeared
         spatialExtentType = removeBBX(spatialExtentType);
