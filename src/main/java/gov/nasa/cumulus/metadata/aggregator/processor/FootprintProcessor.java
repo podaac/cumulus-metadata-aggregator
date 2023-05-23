@@ -172,6 +172,7 @@ public class FootprintProcessor extends ProcessorBase{
         }
         GeometryType geometryType = spatialExtentType.getHorizontalSpatialDomain().getGeometry();
         geometryType = geometryType == null ? new GeometryType() : geometryType;
+        spatialExtentType.getHorizontalSpatialDomain().setGeometry(geometryType);
         // If CMR is down during the process, the cmr.json might be written successfully
         // then if re-execute this step, the code will keep appending to the existing CLine and GPolygon.
         // Hence, we remove the CLine and Polygon list each time before trying
