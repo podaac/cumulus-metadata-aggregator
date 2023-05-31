@@ -162,6 +162,32 @@ public class FootprintProcessorTest {
     }
 
     @Test
+    public void testGeometryToUMMGWithMultiPolygonWithHolesFP() throws ParseException {
+        
+        String geoString = "MULTIPOLYGON (((-169.2 83.125, -170.8018 82.9472, -180 80.9907, -180 83.1247, -169.2 83.125)), ((-130.201 85.287, -135.3056 85.4781, -180 84.604, -180 90, -90 90, 0 90, 90 90, 180 90, 180 84.604, 156.6564 81.5689, 149.2778 79.089, 143.9208 75.6997, 140.5963 71.7761, 138.3207 66.6428, 137.0153 60.1011, 136.5873 51.7803, 137.701 34.1644, 140.9063 12.8192, 145.322 -6.6414, 150.6283 -22.9028, 156.2545 -34.8904, 162.8907 -44.6269, 170.7279 -52.3217, 180 -58.2379, 180 -90, 90 -90, 0 -90, -90 -90, -180 -90, -180 -58.2379, -167.7469 -62.9958, -153.13 -66.0281, -136.1299 -67.2944, -118.8084 -66.5928, -104.1706 -64.2283, -91.6835 -60.3057, -81.3258 -54.823, -72.721 -47.6063, -66.9792 -40.5738, -61.8884 -32.0362, -57.4103 -21.919, -53.4414 -10.0442, -49.6623 4.9294, -46.5276 21.7217, -44.4587 38.0417, -43.7383 51.7576, -44.7057 63.5788, -47.7657 71.8118, -53.2623 77.36, -62.0117 81.0995, -71.4182 83.032, -84.0939 84.392, -121.5466 85.5784, -130.201 85.287), (-26.1728 -72.5394, -23.2505 -75.824, -19.4496 -78.4197, -8.2753 -82.1561, 9.5547 -84.4325, 36.0773 -85.5391, 68.8479 -85.2292, 93.7991 -83.4125, 108.4788 -80.2248, 113.5033 -77.9033, 117.3107 -74.9635, 120.0237 -71.4115, 121.933 -67.0014, 123.6806 -54.8431, 122.7914 -36.141, 119.2843 -12.4657, 114.4768 8.2314, 108.7339 25.022, 101.9588 38.213, 93.8396 48.4056, 85.0989 55.4072, 74.4355 60.7671, 61.5201 64.5594, 46.5839 66.73, 31.5342 64.5344, 18.6059 60.7177, 7.9504 55.3329, -0.9433 48.1387, -8.5169 38.6528, -14.9734 26.4418, -20.4383 11.2802, -25.1099 -7.3171, -28.994 -30.4544, -30.5677 -50.3136, -29.6355 -63.6575, -26.1728 -72.5394)))";
+              
+        final WKTReader reader = new WKTReader();
+        Geometry geometry = reader.read(geoString);
+        FootprintProcessor processor = new FootprintProcessor();
+        String newCMRStr = processor.geometryToUMMG(geometry, cmrString);
+        // Use JsonObject instead of model to verify the constructed CMR String
+        JsonElement jsonElement = new JsonParser().parse(newCMRStr);
+        JsonObject cmrJsonObj = jsonElement.getAsJsonObject();
+        JsonArray gPolygonArray= cmrJsonObj.getAsJsonObject("SpatialExtent").getAsJsonObject("HorizontalSpatialDomain")
+                .getAsJsonObject("Geometry").getAsJsonArray("GPolygons");
+        assertTrue(gPolygonArray.isJsonArray());
+        assertEquals(2,gPolygonArray.size());
+        // Ensure the inner polygon points are no in the resulting point array
+        JsonArray pointArray = gPolygonArray.get(0).getAsJsonObject().getAsJsonObject("Boundary")
+                .getAsJsonArray("Points");
+        assertTrue(pointArray.isJsonArray());
+        assertEquals(5,pointArray.size());
+        // Ensure the inner polygon points are in the exclusion zone point array
+        JsonArray exclusionZone = gPolygonArray.get(1).getAsJsonObject().getAsJsonObject("ExclusiveZone").getAsJsonArray("Boundaries").get(0).getAsJsonObject().getAsJsonArray("Points");
+        assertEquals(36,exclusionZone.size());
+    }
+
+    @Test
     public void testGeometryToUMMGWithMultiPolygonFP() {
         try {
             String geoString = "MULTIPOLYGON (((-111.9544 -0.9509, -116.2529 16.2903, -120.6858 29.9048, -125.5866 40.9519, -131.168 49.8449, -139.5216 58.514, -150.0154 64.973, -163.1201 69.4971, -180 72.3943, -180 89.1358, -150.1221 88.771, -129.4545 87.6218, -119.9373 85.5193, -114.5003 81.4352, -111.5117 75.5964, -108.8645 66.0564, -96.6588 2.4989, -111.9544 -0.9509)), ((180 72.3943, 165.3457 73.361, 150.3927 73.2403, 135.8107 72.008, 123.6451 69.8473, 113.6286 66.8634, 104.9988 62.8624, 97.8406 57.8898, 91.8021 51.8071, 83.6725 38.999, 76.7941 21.2214, 69.7472 -6.9187, 57.4107 -71.5836, 53.9102 -80.8553, 49.0822 -85.3613, 40.0903 -87.6821, 20.5092 -88.8541, -89.5338 -88.7732, -103.5059 -87.9975, -112.2627 -86.5393, -117.4931 -83.9796, -120.8295 -79.6801, -125.2427 -64.7844, -137.7474 1.0682, -122.4402 4.5183, -115.4475 -22.4797, -107.6618 -41.4253, -103.1775 -48.6444, -97.9605 -54.8336, -92.1886 -59.789, -85.4903 -63.8905, -77.9391 -67.127, -68.7925 -69.7764, -46.7842 -72.8784, -21.3213 -72.9948, 1.7328 -69.9572, 15.8856 -65.4674, 27.0474 -58.9437, 35.7824 -50.1551, 43.0533 -38.1672, 48.8665 -23.4444, 54.1664 -4.3334, 69.0936 70.7681, 71.9396 78.7813, 75.5919 83.5292, 83.0052 86.7315, 97.9919 88.36, 180 89.1358, 180 72.3943)))";

@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 import cumulus_message_adapter.message_parser.AdapterLogger;
@@ -207,6 +208,22 @@ public class FootprintProcessor extends ProcessorBase{
                         //Set Interior Ring
                         ExclusiveZoneType exclusiveZones = getExclusiveZones(singleGeometry);
                         gPolygonType.setExclusiveZone(exclusiveZones);
+                    }
+                }
+
+                //Process multipolygons with holes
+                else if (StringUtils.equalsIgnoreCase(jtsGeometryTypeStr, GeometryTypeEnum.MultiPolygon.toString())){
+                
+                    MultiPolygon multiPolygon = (MultiPolygon) geometry; 
+                    int numPolygons = multiPolygon.getNumGeometries();
+
+                    for (int j = 0; j < numPolygons; j++) {
+                        Polygon hole = (Polygon) multiPolygon.getGeometryN(i);
+                        if( hole.getNumInteriorRing() > 0){
+                            //Set Interior Ring
+                            ExclusiveZoneType exclusiveZones = getExclusiveZones(hole);
+                            gPolygonType.setExclusiveZone(exclusiveZones);
+                        }
                     }
                 }
 
