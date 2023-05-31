@@ -423,10 +423,13 @@ public class UMMGranuleFile {
         spatialExtent.put("HorizontalSpatialDomain", horizontalSpatialDomain);
 
         if (granule instanceof IsoGranule) {
-            String polygon = ((IsoGranule) granule).getPolygon();
-            if (polygon != "" && polygon != null) {
+            String polygonString = ((IsoGranule) granule).getPolygon();
+            if (polygonString != "" && polygonString != null) {
                 // Export Polygon
-                addPolygon(geometry, polygon);
+                ArrayList<Coordinate> polygonCoordinates = UMMUtils.lineString2Coordinates(polygonString);
+                ArrayList<ArrayList<Coordinate>> polygonCoordinatesArrayList = new ArrayList<ArrayList<Coordinate>>(1);
+                polygonCoordinatesArrayList.add(polygonCoordinates);
+                addPolygons(geometry, polygonCoordinatesArrayList, true);
             }
             // Export Orbit
             // Commented out for now since UMM v1.5 only allows for either Geometry or Orbit not both
@@ -663,7 +666,7 @@ public class UMMGranuleFile {
                     // use the original coordinate array instead of splittedGeos.get(0)
                     // for the original coordinate array is "un-damaged
                     polygons.add(coordinates);
-                    geometry = addPolygons(geometry, polygons);
+                    geometry = addPolygons(geometry, polygons, false);
                 } else if (dividedSize == 2) {
                     // dont know how to process. Create global bounding box
                     AdapterLogger.LogError(this.className + " split divided to more than 2 geos. Creating global bounding box");
@@ -677,7 +680,7 @@ public class UMMGranuleFile {
                     ArrayList<ArrayList<Coordinate>> polygons = new ArrayList<>();
                     polygons.add(polygon1);
                     polygons.add(UMMUtils.closeUp((ArrayList<Coordinate>) splittedGeos.get(1)));
-                    geometry = addPolygons(geometry, polygons);
+                    geometry = addPolygons(geometry, polygons, false);
                 } else if (dividedSize > 3) {
                     // donot know how to process, Perhaps throw exception
                     AdapterLogger.LogError(this.className + " split divided to more than 3 geos, ");
@@ -703,7 +706,7 @@ public class UMMGranuleFile {
         return geometry;
     }
 
-    public JSONObject addPolygons(JSONObject geometry, ArrayList<ArrayList<Coordinate>> inputPolygons) {
+    public JSONObject addPolygons(JSONObject geometry, ArrayList<ArrayList<Coordinate>> inputPolygons, boolean invalidOK) {
         JSONArray polygons = new JSONArray();
         geometry.put("GPolygons", polygons);
         GeometryFactory geometryFactory = new GeometryFactory();
@@ -721,7 +724,7 @@ public class UMMGranuleFile {
                     );
 
             // valid polygon by vividsolution again
-            if(polygon.isValid()) {
+            if(polygon.isValid() || invalidOK) {
                 JSONObject gPolygon = new JSONObject();
                 JSONObject boundary = new JSONObject();
                 gPolygon.put("Boundary", boundary);
@@ -863,33 +866,6 @@ public class UMMGranuleFile {
         parameter.put("QAStats", qaStats);
 
         return parameter;
-    }
-
-    private void addPolygon(JSONObject geometry, String polygon) {
-        JSONArray polygons = new JSONArray();
-        geometry.put("GPolygons", polygons);
-
-        JSONObject gPolygon = new JSONObject();
-        JSONObject boundary = new JSONObject();
-        gPolygon.put("Boundary", boundary);
-        polygons.add(gPolygon);
-
-        JSONArray points = new JSONArray();
-        String[] polygonArray = polygon.split(" ");
-
-        for (int i = 0; i < polygonArray.length; i += 2) {
-            JSONObject point = new JSONObject();
-            String lon = polygonArray[i + 1];
-            String lat = polygonArray[i];
-            if (BoundingTools.allParsable(lon, lat)) {
-                point.put("Longitude", Double.parseDouble(lon));
-                point.put("Latitude", Double.parseDouble(lat));
-                points.add(point);
-            } else {
-                AdapterLogger.LogWarning("Unable to parse polygon, lon: " + lon + ", lat: " + lat);
-            }
-        }
-        boundary.put("Points", points);
     }
 
     /**
