@@ -424,12 +424,12 @@ public class UMMGranuleFile {
 
         if (granule instanceof IsoGranule) {
             String polygonString = ((IsoGranule) granule).getPolygon();
-            if (polygonString != "" && polygonString != null) {
+            if (!StringUtils.isEmpty(StringUtils.trim(polygonString))) {
                 // Export Polygon
                 ArrayList<Coordinate> polygonCoordinates = UMMUtils.lineString2Coordinates(polygonString);
                 ArrayList<ArrayList<Coordinate>> polygonCoordinatesArrayList = new ArrayList<ArrayList<Coordinate>>(1);
                 polygonCoordinatesArrayList.add(polygonCoordinates);
-                addPolygons(geometry, polygonCoordinatesArrayList, true);
+                addPolygons(geometry, polygonCoordinatesArrayList);
             }
             // Export Orbit
             // Commented out for now since UMM v1.5 only allows for either Geometry or Orbit not both
@@ -666,7 +666,7 @@ public class UMMGranuleFile {
                     // use the original coordinate array instead of splittedGeos.get(0)
                     // for the original coordinate array is "un-damaged
                     polygons.add(coordinates);
-                    geometry = addPolygons(geometry, polygons, false);
+                    geometry = addPolygons(geometry, polygons);
                 } else if (dividedSize == 2) {
                     // dont know how to process. Create global bounding box
                     AdapterLogger.LogError(this.className + " split divided to more than 2 geos. Creating global bounding box");
@@ -680,7 +680,7 @@ public class UMMGranuleFile {
                     ArrayList<ArrayList<Coordinate>> polygons = new ArrayList<>();
                     polygons.add(polygon1);
                     polygons.add(UMMUtils.closeUp((ArrayList<Coordinate>) splittedGeos.get(1)));
-                    geometry = addPolygons(geometry, polygons, false);
+                    geometry = addPolygons(geometry, polygons);
                 } else if (dividedSize > 3) {
                     // donot know how to process, Perhaps throw exception
                     AdapterLogger.LogError(this.className + " split divided to more than 3 geos, ");
@@ -706,7 +706,7 @@ public class UMMGranuleFile {
         return geometry;
     }
 
-    public JSONObject addPolygons(JSONObject geometry, ArrayList<ArrayList<Coordinate>> inputPolygons, boolean invalidOK) {
+    public JSONObject addPolygons(JSONObject geometry, ArrayList<ArrayList<Coordinate>> inputPolygons) {
         JSONArray polygons = new JSONArray();
         geometry.put("GPolygons", polygons);
         GeometryFactory geometryFactory = new GeometryFactory();
@@ -724,7 +724,7 @@ public class UMMGranuleFile {
                     );
 
             // valid polygon by vividsolution again
-            if(polygon.isValid() || invalidOK) {
+            if(polygon.isValid()) {
                 JSONObject gPolygon = new JSONObject();
                 JSONObject boundary = new JSONObject();
                 gPolygon.put("Boundary", boundary);
