@@ -726,9 +726,9 @@ public class UMMGranuleFile {
             Coordinate[] coordinates_array = geo.toArray(new Coordinate[geo.size()]);
             List<Coordinate> orientedCoordinates;
             if (orientation != desired_orientation) {
-                orientedCoordinates = Arrays.asList(
-                    UMMUtils.ensureOrientation(desired_orientation, coordinates_array)
-                    );
+            orientedCoordinates = Arrays.asList(
+                UMMUtils.ensureOrientation(desired_orientation, orientation, coordinates_array)
+                );
             } else {
                 orientedCoordinates = Arrays.asList(coordinates_array);
             }

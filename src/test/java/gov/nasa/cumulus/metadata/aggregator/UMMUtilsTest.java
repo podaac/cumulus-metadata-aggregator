@@ -112,7 +112,7 @@ public class UMMUtilsTest {
         Geometry geometry = wktReader.read(clockwisePolygonWKT);
         Coordinate[] coordinates = geometry.getCoordinates();
         // the original input array's trailing 3 coordinates will become leading 3 coordinates
-        Coordinate[] reversedCoordinates = UMMUtils.ensureOrientation(CGAlgorithms.COUNTERCLOCKWISE, coordinates);
+        Coordinate[] reversedCoordinates = UMMUtils.ensureOrientation(CGAlgorithms.COUNTERCLOCKWISE, 0, coordinates);
         assertTrue(reversedCoordinates[0].x == Double.valueOf(45.261678) &&
                 reversedCoordinates[0].y == Double.valueOf(-65.651128));
         assertTrue(reversedCoordinates[1].x == Double.valueOf(45.36766) &&
@@ -132,7 +132,7 @@ public class UMMUtilsTest {
         WKTReader wktReader = new WKTReader();
         Geometry geometry = wktReader.read(clockwisePolygonWKT);
         Coordinate[] coordinates = geometry.getCoordinates();
-        Coordinate[] sameSequenceCoordinates = UMMUtils.ensureOrientation(CGAlgorithms.COUNTERCLOCKWISE, coordinates);
+        Coordinate[] sameSequenceCoordinates = UMMUtils.ensureOrientation(CGAlgorithms.COUNTERCLOCKWISE, 0, coordinates);
         assertTrue(sameSequenceCoordinates[0].x == Double.valueOf(-66.1897) &&
                 sameSequenceCoordinates[0].y == Double.valueOf(63.1972));
         assertTrue(sameSequenceCoordinates[1].x == Double.valueOf(-83.1304) &&
