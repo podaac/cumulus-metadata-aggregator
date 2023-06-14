@@ -21,6 +21,7 @@ public class IsoGranule extends UMMGranule {
     private String PGEVersionClass;
 
     private IsoType isoType;
+    private int orientation;
 
     public IsoGranule() {
         this.identifiers = new HashMap<>();
@@ -105,6 +106,14 @@ public class IsoGranule extends UMMGranule {
 
     public void setPolygon(String polygon) {
         this.polygon = polygon;
+    }
+
+    public int getOrientation() {
+        return this.orientation;
+    }
+
+    public void setOrientation(int orientation) {
+        this.orientation = orientation;
     }
 
     public void addIdentifier(String name, String value) {

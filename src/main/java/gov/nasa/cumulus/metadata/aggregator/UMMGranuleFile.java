@@ -593,7 +593,7 @@ public class UMMGranuleFile {
         Set<GranuleCharacter> granuleCharacters = granule.getGranuleCharacterSet();
         for (GranuleCharacter granuleCharacter : granuleCharacters) {
             if (granuleCharacter.getDatasetElement().getElementDD().getShortName().equals("line")) {
-                geometry = line2Polygons(geometry,granuleCharacter.getValue());
+                geometry = line2Polygons(geometry, granuleCharacter.getValue());
                 break;
             }
         }
@@ -711,6 +711,9 @@ public class UMMGranuleFile {
         geometry.put("GPolygons", polygons);
         GeometryFactory geometryFactory = new GeometryFactory();
 
+        int orientation = ((IsoGranule) granule).getOrientation();
+        int desired_orientation = CGAlgorithms.COUNTERCLOCKWISE;
+
         for(int i =0; i<inputPolygons.size(); i++) {
             ArrayList<Coordinate> geo = inputPolygons.get(i);
 
@@ -719,9 +722,16 @@ public class UMMGranuleFile {
             AdapterLogger.LogInfo(this.className + " Polygon is valid: " + polygon.isValid());
             AdapterLogger.LogInfo(this.className + " Polygon WKT: " + UMMUtils.getWKT(polygon));
             AdapterLogger.LogInfo(this.className + " ------------------------------------------");
-            List<Coordinate> counterClockwiseCoordinates = Arrays.asList(
-                    UMMUtils.ensureOrientation(CGAlgorithms.COUNTERCLOCKWISE, geo.toArray(new Coordinate[geo.size()]))
+
+            Coordinate[] coordinates_array = geo.toArray(new Coordinate[geo.size()]);
+            List<Coordinate> orientedCoordinates;
+            if (orientation != desired_orientation) {
+                orientedCoordinates = Arrays.asList(
+                    UMMUtils.ensureOrientation(desired_orientation, coordinates_array)
                     );
+            } else {
+                orientedCoordinates = Arrays.asList(coordinates_array);
+            }
 
             // valid polygon by vividsolution again
             if(polygon.isValid() || invalidOK) {
@@ -730,9 +740,9 @@ public class UMMGranuleFile {
                 gPolygon.put("Boundary", boundary);
                 polygons.add(gPolygon);
                 JSONArray points = new JSONArray();
-                for(int j=0; j<counterClockwiseCoordinates.size(); j++) {
+                for(int j=0; j<orientedCoordinates.size(); j++) {
                     JSONObject point = new JSONObject();
-                    Coordinate c = counterClockwiseCoordinates.get(j);
+                    Coordinate c = orientedCoordinates.get(j);
                     point.put("Longitude", c.x);
                     point.put("Latitude", c.y);
                     points.add(point);

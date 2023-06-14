@@ -51,6 +51,9 @@ import gov.nasa.podaac.inventory.api.Constant.GranuleArchiveStatus;
 import gov.nasa.podaac.inventory.api.Constant.GranuleArchiveType;
 import gov.nasa.cumulus.metadata.umm.model.UMMGranuleArchive;
 import org.xml.sax.SAXException;
+
+import com.vividsolutions.jts.algorithm.CGAlgorithms;
+
 import cumulus_message_adapter.message_parser.AdapterLogger;
 
 public class MetadataFilesToEcho {
@@ -421,6 +424,7 @@ public class MetadataFilesToEcho {
                     Double.parseDouble(xpath.evaluate(IsoMendsXPath.WEST_BOUNDING_COORDINATE, doc)));
         }
         ((IsoGranule) granule).setPolygon(xpath.evaluate(IsoMendsXPath.POLYGON, doc));
+		((IsoGranule) granule).setOrientation(CGAlgorithms.COUNTERCLOCKWISE);
 
         NodeList nodes = (NodeList) xpath.evaluate(IsoMendsXPath.DATA_FILE, doc, XPathConstants.NODESET);
         for (int i = 0; i < nodes.getLength(); i++) {
@@ -530,20 +534,20 @@ public class MetadataFilesToEcho {
 			additionalAttributes.remove("publishAll");
 			((IsoGranule) granule).setDynamicAttributeNameMapping(additionalAttributes);
 		}
-		
-					
+
+
         String mgrsId = xpath.evaluate(IsoMendsXPath.MGRS_ID, doc);
         if (mgrsId != null && !mgrsId.equals("")) {
             // If MGRS_ID field is not null, set as additional attribute
             AdditionalAttributeType mgrsAttr = new AdditionalAttributeType("MGRS_TILE_ID", Collections.singletonList(mgrsId));
-            
+
             List<AdditionalAttributeType> additionalAttributeTypes = ((IsoGranule) granule).getAdditionalAttributeTypes();
             if (additionalAttributeTypes == null) {
                 additionalAttributeTypes = Collections.singletonList(mgrsAttr);
             } else {
                 additionalAttributeTypes.add(mgrsAttr);
             }
-            
+
             JSONObject dynamicAttributeNameMapping = ((IsoGranule) granule).getDynamicAttributeNameMapping();
             if (dynamicAttributeNameMapping == null) {
                 ((IsoGranule) granule).setDynamicAttributeNameMapping(additionalAttributes);
@@ -788,6 +792,7 @@ public class MetadataFilesToEcho {
 
         ((IsoGranule) granule).setSwotTrack(xpath.evaluate(IsoSmapXPath.SWOT_TRACK, doc));
 		((IsoGranule) granule).setPolygon(xpath.evaluate(IsoSmapXPath.POLYGON, doc));
+		((IsoGranule) granule).setOrientation(CGAlgorithms.CLOCKWISE);
 
         Source source = new Source();
         source.setSourceShortName(xpath.evaluate(IsoSmapXPath.PLATFORM, doc));
@@ -829,7 +834,7 @@ public class MetadataFilesToEcho {
 		// No spatial extent exists for SWOT L0 data so set as global
 		setGranuleBoundingBox(90.0, -90.0, 180.0, -180.0);
 	}
-    
+
     /**
      * Parse metadata from SWOT Cal/Val XML file
      * @param file path to SWOT Cal/Val XML file on local file system
@@ -840,19 +845,19 @@ public class MetadataFilesToEcho {
         docBuilderFactory.setNamespaceAware(true);
         DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
         Document doc = docBuilder.parse(new File(file));
-    
+
         XPath xpath = XPathFactory.newInstance().newXPath();
         xpath.setNamespaceContext(new NamespaceResolver(doc));
-    
+
         String startTime = xpath.evaluate(SwotCalValXmlPath.BEGINNING_DATE_TIME, doc);
         String stopTime = xpath.evaluate(SwotCalValXmlPath.ENDING_DATE_TIME, doc);
         String createTime = xpath.evaluate(SwotCalValXmlPath.CREATION_DATE_TIME, doc);
-    
+
         String north = xpath.evaluate(SwotCalValXmlPath.NORTH_BOUNDING_COORDINATE, doc);
         String south = xpath.evaluate(SwotCalValXmlPath.SOUTH_BOUNDING_COORDINATE, doc);
         String east = xpath.evaluate(SwotCalValXmlPath.EAST_BOUNDING_COORDINATE, doc);
         String west = xpath.evaluate(SwotCalValXmlPath.WEST_BOUNDING_COORDINATE, doc);
-    
+
         try {
             granule.setStartTime(DatatypeConverter.parseDateTime(startTime).getTime());
             granule.setStopTime(DatatypeConverter.parseDateTime(stopTime).getTime());
@@ -861,7 +866,7 @@ public class MetadataFilesToEcho {
             throw new IllegalArgumentException(String.format("Failed to parse datetime start=%s stop=%s create=%s",
                     startTime, stopTime, createTime), exception);
         }
-    
+
         try {
             setGranuleBoundingBox(Double.parseDouble(north),
                     Double.parseDouble(south),

@@ -230,14 +230,15 @@ public class UMMUtils {
      * @return  an array of coordinates in the desired counterclockwise or clockwise sequence
      */
     public static Coordinate[] ensureOrientation(
-            final int desiredOrientation, final Coordinate... coord) {
+            final int desiredOrientation, int inputOrientation, final Coordinate... coord) {
         if (coord.length == 0) {
             return coord;
         }
-        final int orientation = CGAlgorithms.isCCW(coord) ? CGAlgorithms.COUNTERCLOCKWISE
+        if (inputOrientation != CGAlgorithms.COUNTERCLOCKWISE && inputOrientation != CGAlgorithms.CLOCKWISE) {
+            inputOrientation = CGAlgorithms.isCCW(coord) ? CGAlgorithms.COUNTERCLOCKWISE
                 : CGAlgorithms.CLOCKWISE;
-
-        if (orientation != desiredOrientation) {
+        }
+        if (inputOrientation != desiredOrientation) {
             final Coordinate[] reverse = coord.clone();
             reverse(reverse);
 
