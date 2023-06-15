@@ -916,8 +916,8 @@ public class MetadataFilesToEcho {
 		on the other hand, any exceptions caused by cycle or pass should be thrown all the way up and break the ingestion
 		 */
 		try {
-			if (NumberUtils.createInteger(StringUtils.trim(cycleStr)) == null ||
-					NumberUtils.createInteger(StringUtils.trim(passStr)) == null) {
+			if (NumberUtils.createInteger(UMMUtils.removeStrLeadingZeros(StringUtils.trim(cycleStr))) == null ||
+					NumberUtils.createInteger(UMMUtils.removeStrLeadingZeros(StringUtils.trim(passStr))) == null) {
 				return null;
 			}
 		} catch(NumberFormatException nfe) { // if either cycle or pass are un-processable, then return null
