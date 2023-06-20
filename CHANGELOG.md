@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - other http/https files
     - s3 scientific data
     - other s3 files
+- **PODAAC-5614**
+  - Strip leading zeros from cycle and pass in validity check
 ### Security
 - Snyk: Security upgrade com.amazonaws:aws-java-sdk-s3 from 1.12.378 to 1.12.386
 
