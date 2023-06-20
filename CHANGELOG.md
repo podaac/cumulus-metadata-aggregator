@@ -10,12 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 ### Removed
 ### Fixed
-- **PODAAC-5291**
-  - Assure the UMMG RelatedUrls arry in the following order
-    - http/https scientific data
-    - other http/https files
-    - s3 scientific data
-    - other s3 files
 - **PODAAC-5614**
   - Strip leading zeros from cycle and pass in validity check
 ### Security
