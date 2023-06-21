@@ -1051,7 +1051,6 @@ public class MetadataFilesToEcho {
 			throws IOException, ParseException, URISyntaxException{
 		JSONObject granuleJson = createJson();
         JSONUtils.cleanJSON(granuleJson);
-		granuleJson = JSONUtils.sortRelatedUrls(granuleJson);
         FileUtils.writeStringToFile(new File(outputLocation), granuleJson.toJSONString());
 	}
 

@@ -3,14 +3,11 @@ package gov.nasa.cumulus.metadata.util;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
 import gov.nasa.cumulus.metadata.aggregator.UMMUtils;
-import gov.nasa.cumulus.metadata.umm.generated.RelatedUrlType;
-import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -123,113 +120,5 @@ public class JSONUtils {
         JSONArray jarray = (JSONArray) parser.parse(input.toString());;
         return jarray;
     }
-
-    public static JSONObject sortRelatedUrls(JSONObject input)throws ParseException {
-        /**
-         * JSONArray extends ArrayList implements List, JSONAware, JSONStreamAware
-         * so JSONArray maintains insert order
-         */
-        JSONArray unsortedRelatedUrls = (JSONArray)input.get("RelatedUrls");
-        JSONArray sortedRelatedUrls = new JSONArray();
-        ArrayList<JSONObject> toBeRemovedItems = new ArrayList<>();
-        // first, extract URL starts with http/https and Type == GET DATA to added into sortedRelatedUrls
-        String[] httpStrs = {"http", "https"};
-        for(int i =0; i< unsortedRelatedUrls.size(); i++) {
-            JSONObject relatedUrl = (JSONObject) unsortedRelatedUrls.get(i);
-            if( isStrStarsWithIgnoreCase((String)relatedUrl.get("URL"),httpStrs)
-                    &&
-                    isGETDataType((String)relatedUrl.get("Type"))
-                 ) {
-                sortedRelatedUrls.add(relatedUrl);
-                toBeRemovedItems.add(relatedUrl);
-            }
-        }
-        unsortedRelatedUrls = shrinkUnsortedRelatedUrls(unsortedRelatedUrls, toBeRemovedItems);
-        toBeRemovedItems.clear();
-
-        // other http/https files
-        for(int i =0; i< unsortedRelatedUrls.size(); i++) {
-            JSONObject relatedUrl = (JSONObject) unsortedRelatedUrls.get(i);
-            if(isStrStarsWithIgnoreCase((String)relatedUrl.get("URL"),httpStrs)) {
-                sortedRelatedUrls.add(relatedUrl);
-                toBeRemovedItems.add(relatedUrl);
-            }
-        }
-        unsortedRelatedUrls = shrinkUnsortedRelatedUrls(unsortedRelatedUrls, toBeRemovedItems);
-        toBeRemovedItems.clear();
-
-        // s3 link to scientific data
-        for(int i =0; i< unsortedRelatedUrls.size(); i++) {
-            JSONObject relatedUrl = (JSONObject) unsortedRelatedUrls.get(i);
-            if(isGETDataType((String)relatedUrl.get("Type"))
-                &&
-                    isStrStarsWithIgnoreCase((String)relatedUrl.get("URL"), "s3://")) {
-                sortedRelatedUrls.add(relatedUrl);
-                toBeRemovedItems.add(relatedUrl);
-            }
-        }
-        unsortedRelatedUrls = shrinkUnsortedRelatedUrls(unsortedRelatedUrls, toBeRemovedItems);
-        toBeRemovedItems.clear();
-        // other s3 links
-        for(int i =0; i< unsortedRelatedUrls.size(); i++) {
-            JSONObject relatedUrl = (JSONObject) unsortedRelatedUrls.get(i);
-            if(isStrStarsWithIgnoreCase((String)relatedUrl.get("URL"), "s3://")) {
-                sortedRelatedUrls.add(relatedUrl);
-                toBeRemovedItems.add(relatedUrl);
-            }
-        }
-        unsortedRelatedUrls = shrinkUnsortedRelatedUrls(unsortedRelatedUrls, toBeRemovedItems);
-        toBeRemovedItems.clear();
-
-        // left of item in unsorted array
-        for(Object e: unsortedRelatedUrls) {
-            JSONObject relatedUrl = (JSONObject) e;
-            sortedRelatedUrls.add(relatedUrl);
-        }
-        input.remove("RelatedUrls");
-        input.put("RelatedUrls", sortedRelatedUrls);
-        return input;
-    }
-
-    public static JSONArray shrinkUnsortedRelatedUrls(JSONArray unsortedRelatedUrls,
-                                                           ArrayList<JSONObject> toBeRemovedItems){
-        toBeRemovedItems.forEach(item -> {
-            unsortedRelatedUrls.remove(item);
-        });
-        return unsortedRelatedUrls;
-    }
-
-    /**
-     *
-     * @param s   : The string to be verified
-     * @param startStr : verifies the input s is starting with startStr ignoring case
-     * return  true/false
-     */
-    public static boolean isStrStarsWithIgnoreCase(String s, String startStr) {
-        s = StringUtils.trim(s);
-        return StringUtils.startsWithIgnoreCase(s,startStr);
-    }
-
-    /**
-     *
-     * @param s: The string to be verified
-     * @param startStrs: verifies the input s is starting with at least one item in startStrs[] ignoring case
-     * @return true/false
-     */
-    public static boolean isStrStarsWithIgnoreCase(String s, String[] startStrs) {
-        s = StringUtils.trim(s);
-        for(String elementStr:startStrs) {
-            if(StringUtils.startsWithIgnoreCase(s, elementStr)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean isGETDataType(String s) {
-        s = StringUtils.trim(s);
-        return StringUtils.equalsIgnoreCase(s,RelatedUrlType.RelatedUrlTypeEnum.GET_DATA.value());
-    }
-
 
 }
