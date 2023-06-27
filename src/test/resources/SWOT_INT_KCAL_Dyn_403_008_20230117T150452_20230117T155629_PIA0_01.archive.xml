@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ..................................................................................
+        Copyright (c) <2022>, California Institute of Technology ("Caltech")_ U.S. Government sponsorship acknowledged.
+        All rights reserved.
+        This document has been reviewed and determined not to contain export controlled technical data.
+   -->
+<!-- Reference Document .................................................................
+      metadata_archive_template_v3.xml.jinja2:
+         Based on example file from D-101950_SWOT_PGE_PCM_ICS_L0B_HR_FRAME_RevA(draft v2)_20220314b 4ECR.docx 
+   -->
+<!-- Definition .........................................................................
+        Archive Data Package:
+        = the data package delivered to DAAC has multiple categories: single data file, a list of files, tar-ed file
+        = For the tar-ed data package, this Archive-Only metadata file may or may be not included in the tar-ed file
+        = depending on the production scenario.
+        = When this file is included in the tar file, some informatioin in this file may be incomplete
+        Granule, aka, Dataset
+        = [1] (required)
+        = one file or a set of files that constitute a single data product
+        = It is further categorized into a prime [science] data file and the supporting files that are members of the granule
+        = e.g., a granule may be composed of ProductID.nc, ProductID.nc.iso.xml, ProductID.nc.met, ProductID.rc.xml, ProductID.png, etc
+        GranuleID
+        = File name of the prime [science] data file
+        = e.g., ProductID.nc is the GrauleID in the above example
+        Member of the Granule
+        = [0 ... n (optional)]
+        = The rest of the files that support the prime science data file, if the Granule is composed of multiple files
+        = There may be 0 to many member files
+    SourceType
+    = Defines the venue the data is generated
+    = O=operations, T=test, S=simulation
+    Off-nominal attribute values
+    = "unknown": when a value of an attribute is expected but PGE cannot determine what value to use or
+                 when a value of an attribute is not applicable to the current product type
+   -->
+<GranuleMetaDataFile>
+   <Project>test</Project>
+   <!-- FileIdentifier: Name of the data package delivered to DAAC: either the expected tar file or a prime science data file name, if not tar-ed
+      It is okay not to have “.tar.gz” in the value, particularly if it is not known to the PGE at the time of archive.xml file generation
+ -->
+   <FileIdentifier>SWOT_INT_KCAL_Dyn_403_008_20230117T150452_20230117T155629_PIA0_01.nc</FileIdentifier>
+   <GranuleURMetaData>
+      <CollectionMetaData>
+         <ShortName>test</ShortName>
+         <Description>test</Description>
+         <!-- VersionID = equivalent to SMAP's SeriesID: Determined in advance by ADT/MS CCB -->
+         <VersionID>test</VersionID>
+      </CollectionMetaData>
+      <!-- List the Prime Data File only -->
+      <ECSDataGranule>
+         <LocalGranuleID>SWOT_INT_KCAL_Dyn_403_008_20200117T000000_20200117T000000_PIA0_01.nc</LocalGranuleID>
+         <ProductionDateTime>2020-01-18T11:16:35.056934Z</ProductionDateTime>
+         <SourceType>unknown</SourceType>
+         <APID>1075</APID>
+         <CRID>PIA0</CRID>
+         <ProductCounter>01</ProductCounter>
+         <Description>Size: 123456789 SizeUnit: B</Description>
+         <CycleID>403</CycleID>
+         <PassID>008</PassID>
+         <TileID>unknown</TileID>
+      </ECSDataGranule>
+      <MemberOfECSDataGranule>
+         <LocalGranuleID>SWOT_INT_KCAL_Dyn_403_008_20200117T000000_20200117T000000_PIA0_01.met.json</LocalGranuleID>
+         <Description>Size: 123 SizeUnit: B</Description>
+      </MemberOfECSDataGranule>
+      <MemberOfECSDataGranule>
+         <LocalGranuleID>SWOT_INT_KCAL_Dyn_403_008_20200117T000000_20200117T000000_PIA0_01.rc.xml</LocalGranuleID>
+         <Description>Size: 4567 SizeUnit: B</Description>
+      </MemberOfECSDataGranule>
+      <MemberOfECSDataGranule>
+         <LocalGranuleID>SWOT_INT_KCAL_Dyn_403_008_20200117T000000_20200117T000000_PIA0_01.log</LocalGranuleID>
+         <Description>Size: unknown SizeUnit: B</Description>
+      </MemberOfECSDataGranule>
+      <MemberOfECSDataGranule>
+         <LocalGranuleID>SWOT_INT_KCAL_Dyn_403_008_20200117T000000_20200117T000000_PIA0_01.archive.xml</LocalGranuleID>
+         <Description>Size: unknown SizeUnit: B</Description>
+      </MemberOfECSDataGranule>
+      <RangeDateTime>
+         <RangeBeginningDateTime>2020-01-17T15:04:58.187000Z</RangeBeginningDateTime>
+         <RangeEndingDateTime>2020-01-17T15:56:23.716000Z</RangeEndingDateTime>
+      </RangeDateTime>
+      <Producer>test</Producer>
+      <AccessPermission>test</AccessPermission>
+      <!-- When a granile/dataset is composed of multiple files, list members of data package -->
+   </GranuleURMetaData>
+</GranuleMetaDataFile>

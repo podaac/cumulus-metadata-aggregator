@@ -401,6 +401,33 @@ public class MetadataFilesToEchoTest {
         List<AdditionalAttributeType> additionalAttributeTypes = isoGranule.getAdditionalAttributeTypes();
         assertEquals(additionalAttributeTypes.size(), 0);
     }
+    
+        @Test
+    public void testReadSwotArchoveMetadataFile_Pass_Cycle_LeadingZeros() throws IOException, ParseException, XPathExpressionException, ParserConfigurationException, SAXException{
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("SWOT_INT_KCAL_Dyn_403_008_20230117T150452_20230117T155629_PIA0_01.archive.xml").getFile());
+        File cfgFile = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
+        MetadataFilesToEcho mfte = new MetadataFilesToEcho(true);
+
+        Document doc = null;
+        XPath xpath = null;
+        mfte.readConfiguration(cfgFile.getAbsolutePath());
+        doc = mfte.makeDoc(file.getAbsolutePath());
+        xpath = mfte.makeXpath(doc);
+        mfte.readSwotArchiveXmlFile(file.getAbsolutePath());
+        UMMGranule granule = (UMMGranule) mfte.getGranule();
+        // Verify the values here:
+        TrackType trackType = granule.getTrackType();
+        assertEquals(trackType.getCycle(), new Integer(403));
+        List<TrackPassTileType> trackPassTileTypes = trackType.getPasses();
+        assertEquals(trackPassTileTypes.size(), 1);
+        TrackPassTileType trackPassTileType = trackPassTileTypes.get(0);
+        assertEquals(trackPassTileType.getPass(), new Integer(8));
+        List<String> tiles = trackPassTileType.getTiles();
+        assertEquals(tiles.size(), 1);
+        List<AdditionalAttributeType> additionalAttributeTypes = granule.getAdditionalAttributeTypes();
+        assertEquals(additionalAttributeTypes.size(), 1);
+    }
 
     @Test
     public void testReadIsoMendsMetadataFileAdditionalFields_publishAll() throws ParseException, IOException, URISyntaxException, XPathExpressionException, ParserConfigurationException, SAXException {
