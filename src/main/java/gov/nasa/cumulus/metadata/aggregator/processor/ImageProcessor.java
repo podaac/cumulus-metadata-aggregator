@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
+import java.util.Iterator;
+
 
 public class ImageProcessor extends ProcessorBase{
     private final String className = this.getClass().getName();
