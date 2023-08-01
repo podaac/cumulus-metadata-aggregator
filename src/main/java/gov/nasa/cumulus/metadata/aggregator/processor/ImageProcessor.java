@@ -85,7 +85,7 @@ public class ImageProcessor extends ProcessorBase{
                     String downloadUrl = getImageDownloadUrl(distribution_endpoint, fileObj.get("bucket").getAsString(),
                             fileObj.get("key").getAsString());
 
-                    // remvoe the related url if it already exists in related urls
+                    // remove the related url if it already exists in related urls
                     removeExistingUrls(relatedUrls, downloadUrl);
 
                     // add related url for the new images in case something has changed
