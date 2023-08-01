@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
+import java.util.Iterator;
+
 
 public class ImageProcessor extends ProcessorBase{
     private final String className = this.getClass().getName();
@@ -79,8 +81,29 @@ public class ImageProcessor extends ProcessorBase{
                 JsonObject fileObj = f.getAsJsonObject();
                 String filename = StringUtils.trim(f.getAsJsonObject().get("fileName").getAsString());
                 if(isImageFile(filename)) {
+
                     String downloadUrl = getImageDownloadUrl(distribution_endpoint, fileObj.get("bucket").getAsString(),
                             fileObj.get("key").getAsString());
+
+                    // remvoe the related url if it already exists in related urls
+                    removeExistingUrls(relatedUrls, downloadUrl);
+
+                    // add related url for the new images in case something has changed
+                    RelatedUrlType relatedUrlType = new RelatedUrlType();
+                    relatedUrlType.setUrl(downloadUrl);
+                    relatedUrlType.setType(RelatedUrlType.RelatedUrlTypeEnum.GET_RELATED_VISUALIZATION);
+                    relatedUrlType.setSubtype(RelatedUrlType.RelatedUrlSubTypeEnum.DIRECT_DOWNLOAD);
+                    relatedUrlType.setMimeType(getImageMimeType(filename));
+
+                    if(fileObj.has("description")){
+                        relatedUrlType.setDescription(fileObj.get("description").getAsString());
+                    }
+
+                    String relatedUrlTypeStr = gsonBuilder.toJson(relatedUrlType);
+                    relatedUrls.add(JsonParser.parseString(relatedUrlTypeStr));
+
+                    /*
+                    // add new related urls images
                     if(!isDownloadUrlAlreadyExist(relatedUrls, downloadUrl)) {
                         RelatedUrlType relatedUrlType = new RelatedUrlType();
                         relatedUrlType.setUrl(downloadUrl);
@@ -88,9 +111,14 @@ public class ImageProcessor extends ProcessorBase{
                         relatedUrlType.setSubtype(RelatedUrlType.RelatedUrlSubTypeEnum.DIRECT_DOWNLOAD);
                         relatedUrlType.setMimeType(getImageMimeType(filename));
 
+                        if(fileObj.has("description")){
+                            relatedUrlType.setDescription(fileObj.get("description").getAsString());
+                        }
+
                         String relatedUrlTypeStr = gsonBuilder.toJson(relatedUrlType);
                         relatedUrls.add(JsonParser.parseString(relatedUrlTypeStr));
                     }
+                    */
                 }
             }
             String newCMRStr = gsonBuilder.toJson(cmrJsonObj);
@@ -106,9 +134,21 @@ public class ImageProcessor extends ProcessorBase{
         downloadUrl = StringUtils.trim(downloadUrl);
         for (JsonElement relatdUrl : relatedUrls) {
             String umg_downloadUrl = StringUtils.trim(relatdUrl.getAsJsonObject().get("URL").getAsString());
-            if(StringUtils.compare(umg_downloadUrl, downloadUrl) ==0) return true;
+            if(StringUtils.compare(umg_downloadUrl, downloadUrl) == 0) return true;
         }
         return false;
+    }
+
+    public void removeExistingUrls(JsonArray relatedUrls, String downloadUrl) {
+        downloadUrl = StringUtils.trim(downloadUrl);
+        Iterator<JsonElement> iterator = relatedUrls.iterator();
+        while (iterator.hasNext()) {
+            JsonElement relatedUrlElement = iterator.next();
+            String umg_downloadUrl = StringUtils.trim(relatedUrlElement.getAsJsonObject().get("URL").getAsString());
+            if (StringUtils.compare(umg_downloadUrl, downloadUrl) == 0) {
+                iterator.remove();
+            }
+        }
     }
 
     public boolean isImageFile(String filename) {

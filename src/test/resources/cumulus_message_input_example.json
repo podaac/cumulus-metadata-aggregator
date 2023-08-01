@@ -40,7 +40,8 @@
           "key": "dataset-image/MODIS_A-JPL-L2P-v2019.0/sst.png",
           "size": 7152,
           "fileName": "sst.png",
-          "type": "metadata"
+          "type": "metadata",
+          "description": "sst"
         },
         {
           "bucket": "dyen-cumulus-public",

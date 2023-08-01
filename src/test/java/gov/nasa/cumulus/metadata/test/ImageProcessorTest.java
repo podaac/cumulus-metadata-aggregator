@@ -107,6 +107,7 @@ public class ImageProcessorTest {
 
     @Test
     public void testAppendImageUrl() {
+
         try {
             /**
              * From the input message , the distribution_endpoint is set to be:
@@ -127,11 +128,21 @@ public class ImageProcessorTest {
                     "https://distribution_endpoint.jpl.nasa.gov/s3distribute/dyen-cumulus-public/dataset-image/MODIS_A-JPL-L2P-v2019.0/standard-deviation.jpg");
             assertEquals(count, 1);
 
+            // test description
+            for (JsonElement relatedUrl : relatedUrls) {
+                JsonObject fileObj = relatedUrl.getAsJsonObject();
+                String ummg_downloadUrl = StringUtils.trim(fileObj.get("URL").getAsString());
+                if(ummg_downloadUrl.equals("https://distribution_endpoint.jpl.nasa.gov/s3distribute/dyen-cumulus-public/dataset-image/MODIS_A-JPL-L2P-v2019.0/sst.png")){
+                    assertEquals(fileObj.get("Description").getAsString(), "sst");
+                }
+            }
+
         } catch (URISyntaxException | IOException pe) {
             System.out.println("testAppendImageUrl Error:" + pe);
             pe.printStackTrace();
         }
     }
+
 
     int findTimesOfAppearance(JsonArray relatedUrls, String downloadUrl) {
         int count = 0;
