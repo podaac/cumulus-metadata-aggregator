@@ -101,24 +101,6 @@ public class ImageProcessor extends ProcessorBase{
 
                     String relatedUrlTypeStr = gsonBuilder.toJson(relatedUrlType);
                     relatedUrls.add(JsonParser.parseString(relatedUrlTypeStr));
-
-                    /*
-                    // add new related urls images
-                    if(!isDownloadUrlAlreadyExist(relatedUrls, downloadUrl)) {
-                        RelatedUrlType relatedUrlType = new RelatedUrlType();
-                        relatedUrlType.setUrl(downloadUrl);
-                        relatedUrlType.setType(RelatedUrlType.RelatedUrlTypeEnum.GET_RELATED_VISUALIZATION);
-                        relatedUrlType.setSubtype(RelatedUrlType.RelatedUrlSubTypeEnum.DIRECT_DOWNLOAD);
-                        relatedUrlType.setMimeType(getImageMimeType(filename));
-
-                        if(fileObj.has("description")){
-                            relatedUrlType.setDescription(fileObj.get("description").getAsString());
-                        }
-
-                        String relatedUrlTypeStr = gsonBuilder.toJson(relatedUrlType);
-                        relatedUrls.add(JsonParser.parseString(relatedUrlTypeStr));
-                    }
-                    */
                 }
             }
             String newCMRStr = gsonBuilder.toJson(cmrJsonObj);
