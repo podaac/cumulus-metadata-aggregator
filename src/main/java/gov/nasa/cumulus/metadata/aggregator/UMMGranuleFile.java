@@ -398,8 +398,8 @@ public class UMMGranuleFile {
         range.put("BeginningDateTime", TimeConversion.convertDate(granule.getStartTime()).toString());
         range.put("EndingDateTime", TimeConversion.convertDate(granule.getStopTime()).toString());
         //TODO hard coded value for testing.  Remove them later:
-        range.put("BeginningDateTime", "2022-12-16T22:41:48.323Z");
-        range.put("EndingDateTime", "2022-12-17T19:30:21.553Z");
+//        range.put("BeginningDateTime", "2022-12-16T22:41:48.323Z");
+//        range.put("EndingDateTime", "2022-12-17T19:30:21.553Z");
 
         temporal.put("RangeDateTime", range);
         return temporal;
