@@ -3,6 +3,7 @@ package gov.nasa.cumulus.metadata.umm.generated;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,6 +12,7 @@ import com.google.gson.annotations.SerializedName;
  * This entity holds the horizontal spatial coverage of a line. A line area contains at lease two points.
  * 
  */
+@Generated("jsonschema2pojo")
 public class LineType {
 
     /**
@@ -21,22 +23,6 @@ public class LineType {
     @SerializedName("Points")
     @Expose
     private List<PointType> points = new ArrayList<PointType>();
-
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
-    public LineType() {
-    }
-
-    /**
-     * 
-     * @param points
-     */
-    public LineType(List<PointType> points) {
-        super();
-        this.points = points;
-    }
 
     /**
      * 

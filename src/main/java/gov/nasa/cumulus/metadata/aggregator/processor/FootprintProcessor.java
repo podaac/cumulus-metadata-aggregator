@@ -341,8 +341,8 @@ public class FootprintProcessor extends ProcessorBase{
             boundary.setPoints(points);
             boundaries.add(boundary);
         }
-
-        ExclusiveZoneType exclusiveZoneType = new ExclusiveZoneType(boundaries);
+        ExclusiveZoneType exclusiveZoneType = new ExclusiveZoneType();
+        exclusiveZoneType.setBoundaries(boundaries);
         return exclusiveZoneType;
     }
 

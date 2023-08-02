@@ -200,6 +200,7 @@ public class UMMGranuleFile {
          * Only when having gone through S6A Line to Polygon processing, then call UMMGPostProcessing.
          */
         if(this.isLineFormattedPolygon) {
+            AdapterLogger.LogInfo(this.className + " Start post processing of UMMG by posting UMMG to CMR. If failed, put GBBox into UMMG");
             granuleJson = UMMGPostProcessing(granuleJson);
         }
 
@@ -396,6 +397,10 @@ public class UMMGranuleFile {
         JSONObject range = new JSONObject();
         range.put("BeginningDateTime", TimeConversion.convertDate(granule.getStartTime()).toString());
         range.put("EndingDateTime", TimeConversion.convertDate(granule.getStopTime()).toString());
+        //TODO hard coded value for testing.  Remove them later:
+        range.put("BeginningDateTime", "2022-12-16T22:41:48.323Z");
+        range.put("EndingDateTime", "2022-12-17T19:30:21.553Z");
+
         temporal.put("RangeDateTime", range);
         return temporal;
     }
@@ -429,18 +434,26 @@ public class UMMGranuleFile {
                 addPolygon(geometry, polygon);
             }
             // Export Orbit
-            // Commented out for now since UMM v1.5 only allows for either Geometry or Orbit not both
-            JSONObject orbit = new JSONObject();
-            horizontalSpatialDomain.put("Orbit", orbit);
-            Pattern p = Pattern.compile("AscendingCrossing:\\s?(.*)\\s?StartLatitude:\\s?(.*)\\s?StartDirection:\\s?(.*)\\s?EndLatitude:\\s?(.*)\\s?EndDirection:\\s?(.*)");
-            Matcher m = p.matcher(((IsoGranule) granule).getOrbit());
-            foundOrbitalData = m.find();
-            if (foundOrbitalData && BoundingTools.allParsable(m.group(1), m.group(2), m.group(4))) {
-                orbit.put("AscendingCrossing", UMMUtils.longitudeTypeNormalizer(Double.parseDouble(m.group(1))));
-                orbit.put("StartLatitude", Double.parseDouble(m.group(2)));
-                orbit.put("StartDirection", m.group(3).trim());
-                orbit.put("EndLatitude", Double.parseDouble(m.group(4)));
-                orbit.put("EndDirection", m.group(5).trim());
+            // UMM v1.5 only allows for either Geometry or Orbit not both
+            /**
+             * Export Orbit
+             * UMM v1.5 only allows for either Geometry or Orbit not both.  Only process orbit if the orbitString stored
+             * (during MetatdataFilesToEcho.readIsoxxxx()) is not empty or null
+             */
+            String orbitStr = ((IsoGranule) granule).getOrbit();
+            if (!StringUtils.isEmpty(orbitStr)) {
+                JSONObject orbit = new JSONObject();
+                horizontalSpatialDomain.put("Orbit", orbit);
+                Pattern p = Pattern.compile("AscendingCrossing:\\s?(.*)\\s?StartLatitude:\\s?(.*)\\s?StartDirection:\\s?(.*)\\s?EndLatitude:\\s?(.*)\\s?EndDirection:\\s?(.*)");
+                Matcher m = p.matcher(orbitStr);
+                foundOrbitalData = m.find();
+                if (foundOrbitalData && BoundingTools.allParsable(m.group(1), m.group(2), m.group(4))) {
+                    orbit.put("AscendingCrossing", UMMUtils.longitudeTypeNormalizer(Double.parseDouble(m.group(1))));
+                    orbit.put("StartLatitude", Double.parseDouble(m.group(2)));
+                    orbit.put("StartDirection", m.group(3).trim());
+                    orbit.put("EndLatitude", Double.parseDouble(m.group(4)));
+                    orbit.put("EndDirection", m.group(5).trim());
+                }
             }
 
             // Export track
@@ -586,10 +599,11 @@ public class UMMGranuleFile {
         }
 
         // Export footprint if it exists
-
         Set<GranuleCharacter> granuleCharacters = granule.getGranuleCharacterSet();
         for (GranuleCharacter granuleCharacter : granuleCharacters) {
             if (granuleCharacter.getDatasetElement().getElementDD().getShortName().equals("line")) {
+                AdapterLogger.LogInfo(this.className + " Start processing line2Polygons : " + granuleCharacter.getValue() );
+                this.isLineFormattedPolygon = true;
                 geometry = line2Polygons(geometry,granuleCharacter.getValue());
                 break;
             }

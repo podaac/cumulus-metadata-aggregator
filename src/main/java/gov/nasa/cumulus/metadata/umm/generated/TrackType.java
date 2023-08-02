@@ -3,6 +3,7 @@ package gov.nasa.cumulus.metadata.umm.generated;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,6 +12,7 @@ import com.google.gson.annotations.SerializedName;
  * This element stores track information of the granule. Track information is used to allow a user to search for granules whose spatial extent is based on an orbital cycle, pass, and tile mapping. Though it is derived from the SWOT mission requirements, it is intended that this element type be generic enough so that other missions can make use of it. While track information is a type of spatial domain, it is expected that the metadata provider will provide geometry information that matches the spatial extent of the track information.
  * 
  */
+@Generated("jsonschema2pojo")
 public class TrackType {
 
     /**
@@ -23,30 +25,11 @@ public class TrackType {
     private Integer cycle;
     /**
      * A pass number identifies a subset of a granule's spatial extent. This element holds a list of pass numbers and their tiles that exist in the granule. It will allow a user to search by pass number and its tiles that are contained with in a cycle number.  While trying to keep this generic for all to use, this comes from a SWOT requirement where a pass represents a 1/2 orbit. This element will then hold a list of 1/2 orbits and their tiles that together represent the granule's spatial extent.
-     * (Required)
      * 
      */
     @SerializedName("Passes")
     @Expose
     private List<TrackPassTileType> passes = new ArrayList<TrackPassTileType>();
-
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
-    public TrackType() {
-    }
-
-    /**
-     * 
-     * @param passes
-     * @param cycle
-     */
-    public TrackType(Integer cycle, List<TrackPassTileType> passes) {
-        super();
-        this.cycle = cycle;
-        this.passes = passes;
-    }
 
     /**
      * An integer that represents a specific set of orbital spatial extents defined by passes and tiles. Though intended to be generic, this comes from a SWOT mission requirement where each cycle represents a set of 1/2 orbits. Each 1/2 orbit is called a 'pass'. During science mode, a cycle represents 21 days of 14 full orbits or 588 passes.
@@ -68,7 +51,6 @@ public class TrackType {
 
     /**
      * A pass number identifies a subset of a granule's spatial extent. This element holds a list of pass numbers and their tiles that exist in the granule. It will allow a user to search by pass number and its tiles that are contained with in a cycle number.  While trying to keep this generic for all to use, this comes from a SWOT requirement where a pass represents a 1/2 orbit. This element will then hold a list of 1/2 orbits and their tiles that together represent the granule's spatial extent.
-     * (Required)
      * 
      */
     public List<TrackPassTileType> getPasses() {
@@ -77,7 +59,6 @@ public class TrackType {
 
     /**
      * A pass number identifies a subset of a granule's spatial extent. This element holds a list of pass numbers and their tiles that exist in the granule. It will allow a user to search by pass number and its tiles that are contained with in a cycle number.  While trying to keep this generic for all to use, this comes from a SWOT requirement where a pass represents a 1/2 orbit. This element will then hold a list of 1/2 orbits and their tiles that together represent the granule's spatial extent.
-     * (Required)
      * 
      */
     public void setPasses(List<TrackPassTileType> passes) {

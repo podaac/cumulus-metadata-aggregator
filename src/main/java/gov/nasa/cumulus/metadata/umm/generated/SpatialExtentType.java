@@ -3,6 +3,7 @@ package gov.nasa.cumulus.metadata.umm.generated;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,6 +12,7 @@ import com.google.gson.annotations.SerializedName;
  * This class contains attributes which describe the spatial extent of a granule. Spatial Extent includes any or all of Granule Localities, Horizontal Spatial Domain, and Vertical Spatial Domain.
  * 
  */
+@Generated("jsonschema2pojo")
 public class SpatialExtentType {
 
     /**
@@ -34,26 +36,6 @@ public class SpatialExtentType {
     @SerializedName("VerticalSpatialDomains")
     @Expose
     private Set<VerticalSpatialDomainType> verticalSpatialDomains = new LinkedHashSet<VerticalSpatialDomainType>();
-
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
-    public SpatialExtentType() {
-    }
-
-    /**
-     * 
-     * @param verticalSpatialDomains
-     * @param granuleLocalities
-     * @param horizontalSpatialDomain
-     */
-    public SpatialExtentType(Set<String> granuleLocalities, HorizontalSpatialDomainType horizontalSpatialDomain, Set<VerticalSpatialDomainType> verticalSpatialDomains) {
-        super();
-        this.granuleLocalities = granuleLocalities;
-        this.horizontalSpatialDomain = horizontalSpatialDomain;
-        this.verticalSpatialDomains = verticalSpatialDomains;
-    }
 
     /**
      * This entity stores information used at the granule level to describe the labeling of granules with compounded time/space text values and which are subsequently used to define more phenomenological-based granules, thus the locality type and description are contained.

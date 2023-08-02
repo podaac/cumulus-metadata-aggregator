@@ -34,6 +34,8 @@ public final class IsoMendsXPath extends IsoXPath {
     // AscendingCrossing, StartLatitude, StartDirection, EndLatitude, EndDirection
     public static final String ORBIT = "/gmi:MI_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription[@id=\"Orbit\"]/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString";
 
+    /** list of coordinates representing footprint */
+    public static final String LINE = "/gmi:MI_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_BoundingPolygon/gmd:polygon/gml:Polygon/gml:exterior/gml:LinearRing/gml:posList ";
     public static final String GRANULE_INPUT = "/gmi:MI_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source/gmi:LE_Source[gmd:description/gco:CharacterString[text()=\"GranuleInput\"]]/gmd:sourceCitation/gmd:CI_Citation/gmd:title/gmx:FileName";
     public static final String CYCLE_PASS_TILE_SCENE = "/gmi:MI_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription[@id=\"SWOTTrack\"]/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString";
 

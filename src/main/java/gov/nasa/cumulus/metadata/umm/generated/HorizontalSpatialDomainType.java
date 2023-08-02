@@ -1,6 +1,7 @@
 
 package gov.nasa.cumulus.metadata.umm.generated;
 
+import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,6 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * Information about a granule with horizontal spatial coverage.
  * 
  */
+@Generated("jsonschema2pojo")
 public class HorizontalSpatialDomainType {
 
     /**
@@ -39,28 +41,6 @@ public class HorizontalSpatialDomainType {
     @SerializedName("Track")
     @Expose
     private TrackType track;
-
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
-    public HorizontalSpatialDomainType() {
-    }
-
-    /**
-     * 
-     * @param zoneIdentifier
-     * @param geometry
-     * @param orbit
-     * @param track
-     */
-    public HorizontalSpatialDomainType(String zoneIdentifier, GeometryType geometry, OrbitType orbit, TrackType track) {
-        super();
-        this.zoneIdentifier = zoneIdentifier;
-        this.geometry = geometry;
-        this.orbit = orbit;
-        this.track = track;
-    }
 
     /**
      * The appropriate numeric or alpha code used to identify the various zones in the granule's grid coordinate system.

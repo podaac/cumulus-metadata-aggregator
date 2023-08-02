@@ -1,6 +1,7 @@
 
 package gov.nasa.cumulus.metadata.umm.generated;
 
+import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,6 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * A GPolygon specifies an area on the earth represented by a main boundary with optional boundaries for regions excluded from the main boundary.
  * 
  */
+@Generated("jsonschema2pojo")
 public class GPolygonType {
 
     /**
@@ -26,24 +28,6 @@ public class GPolygonType {
     @SerializedName("ExclusiveZone")
     @Expose
     private ExclusiveZoneType exclusiveZone;
-
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
-    public GPolygonType() {
-    }
-
-    /**
-     * 
-     * @param boundary
-     * @param exclusiveZone
-     */
-    public GPolygonType(BoundaryType boundary, ExclusiveZoneType exclusiveZone) {
-        super();
-        this.boundary = boundary;
-        this.exclusiveZone = exclusiveZone;
-    }
 
     /**
      * A boundary is set of points connected by straight lines representing a polygon on the earth. It takes a minimum of three points to make a boundary. Points must be specified in counter-clockwise order and closed (the first and last vertices are the same).
