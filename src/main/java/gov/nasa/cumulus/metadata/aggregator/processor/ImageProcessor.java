@@ -127,7 +127,7 @@ public class ImageProcessor extends ProcessorBase{
         while (iterator.hasNext()) {
             JsonElement relatedUrlElement = iterator.next();
             String umg_downloadUrl = StringUtils.trim(relatedUrlElement.getAsJsonObject().get("URL").getAsString());
-            if (StringUtils.compare(umg_downloadUrl, downloadUrl) == 0) {
+            if (StringUtils.compareIgnoreCase(umg_downloadUrl, downloadUrl) == 0) {
                 iterator.remove();
             }
         }
