@@ -9,7 +9,9 @@ import org.junit.runners.Suite;
   AggregatorRelease_4_3_0_Test.class,
   gov.nasa.cumulus.metadata.test.MetadataFilesToEchoTest.class,
   gov.nasa.cumulus.metadata.test.UMMTest.class,
-  
+  gov.nasa.cumulus.metadata.test.ImageProcessorTest.class,
+  gov.nasa.cumulus.metadata.test.FootprintProcessorTest.class,
+
 })
 public class AggregatorTestSuite {
     // the class remains completely empty, 
