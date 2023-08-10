@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+- **PODAAC-5708**
+  - Add capability in order to extract swot nc.iso.xml footprint and divide over IDL
+- **PODAAC-5717**
+  - Upgrade to UMMG 1.6.5
+  - support empty Pass in Cycle/Pass/Tile string
+### Deprecated
+### Removed
+### Fixed
+
+### Security
+
+- 
 ## [8.4.0]
 ### Added
 - Update metadata aggregator to add description to image variables from image processor and test tig forge processor
