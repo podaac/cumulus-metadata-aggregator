@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **PODAAC-5717**
   - Upgrade to UMMG 1.6.5
   - support empty Pass in Cycle/Pass/Tile string
+- **PODAAC-5594**
+  - Support BasinID
 ### Deprecated
 ### Removed
 ### Fixed

@@ -331,6 +331,40 @@ public class MetadataFilesToEchoTest {
         isoGranule = mfte.createIsoCyclePassTile(input);
         trackType = isoGranule.getTrackType();
         assertEquals(trackType.getCycle(), new Integer("1"));
+
+        /**
+         * Cycle: 483 Pass: [10, Tiles: 72-84R 111-111R 72-84L 110-111L]
+         */
+        input = "Cycle: 483 Pass: [10, Tiles: 72-84R 111-111R 72-84L 110-111L]";
+        isoGranule = mfte.createIsoCyclePassTile(input);
+        trackType = isoGranule.getTrackType();
+        assertEquals(trackType.getCycle(), new Integer("483"));
+
+        List<TrackPassTileType> passes = trackType.getPasses();
+        tiles = passes.get(0).getTiles();
+        assertEquals(tiles.size(), 29);
+        assertEquals(tiles.get(0), "72R");
+        assertEquals(tiles.get(28), "111L");
+
+        input = "Cycle: 406, Pass: [40, Tiles: 4-5L 4-5R] [41, Tiles: 6R 6L], BasinID: 123";
+        isoGranule = mfte.createIsoCyclePassTile(input);
+        trackType = isoGranule.getTrackType();
+        assertEquals(trackType.getCycle(), new Integer("406"));
+
+        passes = trackType.getPasses();
+        tiles = passes.get(0).getTiles();
+        assertEquals(tiles.size(), 4);
+        assertEquals(tiles.get(0), "4L");
+        assertEquals(tiles.get(1), "5L");
+        tiles = passes.get(1).getTiles();
+        assertEquals(tiles.size(), 2);
+        assertEquals(tiles.get(0), "6R");
+        assertEquals(tiles.get(1), "6L");
+        additionalAttributeTypes = isoGranule.getAdditionalAttributeTypes();
+        additionalAttributeType = additionalAttributeTypes.get(2);
+        assertEquals(additionalAttributeType.getName(), "BasinID");
+        List<String> basinIdStrs = additionalAttributeType.getValues();
+        assertEquals(basinIdStrs.get(0), "123");
     }
 
     @Test
