@@ -423,10 +423,13 @@ public class UMMGranuleFile {
         spatialExtent.put("HorizontalSpatialDomain", horizontalSpatialDomain);
 
         if (granule instanceof IsoGranule) {
-            String polygon = ((IsoGranule) granule).getPolygon();
-            if (polygon != "" && polygon != null) {
+            String polygonString = ((IsoGranule) granule).getPolygon();
+            if (!StringUtils.isEmpty(StringUtils.trim(polygonString))) {
                 // Export Polygon
-                addPolygon(geometry, polygon);
+                ArrayList<Coordinate> polygonCoordinates = UMMUtils.lineString2Coordinates(polygonString);
+                ArrayList<ArrayList<Coordinate>> polygonCoordinatesArrayList = new ArrayList<ArrayList<Coordinate>>(1);
+                polygonCoordinatesArrayList.add(polygonCoordinates);
+                addPolygons(geometry, polygonCoordinatesArrayList);
             }
             // Export Orbit
             // Commented out for now since UMM v1.5 only allows for either Geometry or Orbit not both
@@ -863,33 +866,6 @@ public class UMMGranuleFile {
         parameter.put("QAStats", qaStats);
 
         return parameter;
-    }
-
-    private void addPolygon(JSONObject geometry, String polygon) {
-        JSONArray polygons = new JSONArray();
-        geometry.put("GPolygons", polygons);
-
-        JSONObject gPolygon = new JSONObject();
-        JSONObject boundary = new JSONObject();
-        gPolygon.put("Boundary", boundary);
-        polygons.add(gPolygon);
-
-        JSONArray points = new JSONArray();
-        String[] polygonArray = polygon.split(" ");
-
-        for (int i = 0; i < polygonArray.length; i += 2) {
-            JSONObject point = new JSONObject();
-            String lon = polygonArray[i + 1];
-            String lat = polygonArray[i];
-            if (BoundingTools.allParsable(lon, lat)) {
-                point.put("Longitude", Double.parseDouble(lon));
-                point.put("Latitude", Double.parseDouble(lat));
-                points.add(point);
-            } else {
-                AdapterLogger.LogWarning("Unable to parse polygon, lon: " + lon + ", lat: " + lat);
-            }
-        }
-        boundary.put("Points", points);
     }
 
     /**
