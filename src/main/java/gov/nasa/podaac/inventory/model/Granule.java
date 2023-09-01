@@ -173,14 +173,6 @@ public class Granule {
 	public void setName(String name) {
 		this.name = name;
 	}
-	//officialName
-//	public String getOfficialName() {
-//		return officialName;
-//	}
-//
-//	public void setOfficialName(String name) {
-//		this.officialName = name;
-//	}
 	public String getRootPath() {
                 return rootPath;
         }

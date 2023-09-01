@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.DocumentBuilder;
@@ -477,8 +478,26 @@ public class MetadataFilesToEcho {
             ((IsoGranule) granule).setQAPercentOutOfBoundsData(Double.parseDouble(qaPercentOutOfBoundsData));
         }
 
-        ((IsoGranule) granule).setOrbit(xpath.evaluate(IsoMendsXPath.ORBIT, doc));
-        ((IsoGranule) granule).setSwotTrack(xpath.evaluate(IsoMendsXPath.SWOT_TRACK, doc));
+		/**
+		 * .first of all check if Orbit existed  If not, then
+		 * extract the footprint/polygon from nc.iso.xml file and store the posList into the "line" Character
+		 */
+		String orbitStr = xpath.evaluate(IsoMendsXPath.ORBIT, doc);
+		if(!StringUtils.isEmpty(orbitStr)) {
+			((IsoGranule) granule).setOrbit(xpath.evaluate(IsoMendsXPath.ORBIT, doc));
+		} else {
+			try {
+				String line = xpath.evaluate(IsoMendsXPath.LINE, doc);
+				if (line != null && !line.isEmpty()) {
+					granule.getGranuleCharacterSet().add(createGranuleCharacter(line,"line"));
+				}
+			} catch (XPathExpressionException e) {
+				// Ignore if unable to parse for footprint since it isn't required for ingest
+				AdapterLogger.LogWarning(this.className + " Not able to extract MENDS footprint: " + e);
+			}
+		}
+		//extract and store Track Pass string
+		((IsoGranule) granule).setSwotTrack(xpath.evaluate(IsoMendsXPath.SWOT_TRACK, doc));
 
         Source source = new Source();
         source.setSourceShortName(xpath.evaluate(IsoMendsXPath.PLATFORM, doc));
@@ -536,7 +555,7 @@ public class MetadataFilesToEcho {
         if (mgrsId != null && !mgrsId.equals("")) {
             // If MGRS_ID field is not null, set as additional attribute
             AdditionalAttributeType mgrsAttr = new AdditionalAttributeType("MGRS_TILE_ID", Collections.singletonList(mgrsId));
-            
+
             List<AdditionalAttributeType> additionalAttributeTypes = ((IsoGranule) granule).getAdditionalAttributeTypes();
             if (additionalAttributeTypes == null) {
                 additionalAttributeTypes = Collections.singletonList(mgrsAttr);
@@ -553,8 +572,44 @@ public class MetadataFilesToEcho {
             ((IsoGranule) granule).setAdditionalAttributeTypes(additionalAttributeTypes);
             ((IsoGranule) granule).setDynamicAttributeNameMapping(dynamicAttributeNameMapping);
         }
-
 		return  ((IsoGranule) granule);
+	}
+	public boolean isOrbitExisting(String orbitStr) {
+		if(StringUtils.isEmpty(StringUtils.trim(orbitStr))) {
+			return false;
+		} else{
+			try {
+				Pattern p = Pattern.compile("AscendingCrossing:\\s?(.*)\\s?StartLatitude:\\s?(.*)\\s?StartDirection:\\s?(.*)\\s?EndLatitude:\\s?(.*)\\s?EndDirection:\\s?(.*)");
+				Matcher m = p.matcher(orbitStr);
+				boolean foundOrbitalData = false;
+				foundOrbitalData = m.find();
+				String ascendingCrossingStr = StringUtils.trim(m.group(1));
+				String startLatitudeStr = StringUtils.trim(m.group(2));
+				String startDirectionStr = StringUtils.trim(m.group(3));
+				String endLatitudeStr = StringUtils.trim(m.group(4));
+				String endDirectionStr = StringUtils.trim(m.group(5));
+
+				/** to verify the Orbit string using as-tight-as-possible logic to make sure the orbitStr is parsable
+				 *  and not anyone of the item is "None"
+				 */
+				if (foundOrbitalData && BoundingTools.allParsable(ascendingCrossingStr, startLatitudeStr, endLatitudeStr) && (
+						!StringUtils.equalsIgnoreCase(ascendingCrossingStr, "None") &&
+								!StringUtils.equalsIgnoreCase(startLatitudeStr, "None") &&
+								!StringUtils.equalsIgnoreCase(startDirectionStr, "None") &&
+								!StringUtils.equalsIgnoreCase(endLatitudeStr, "None") &&
+								!StringUtils.equalsIgnoreCase(endDirectionStr, "None")
+				)) {
+					// only returning Orbit is found while the entire Orbit String check to be valid
+					return true;
+				} else {
+					return false;
+				}
+			} catch( java.lang.IllegalStateException | PatternSyntaxException  ex) {
+				AdapterLogger.LogWarning(this.className + " error while checking if there is Orbit string: " + ex);
+			}
+		}
+		// again, only return true when a very tight pattern is valid
+		return false;
 	}
 
 	public List<AdditionalAttributeType> appendAdditionalAttributes(JSONObject metaAdditionalAttributes, NodeList additionalAttributesBlock){

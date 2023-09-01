@@ -149,7 +149,9 @@ public class MetadataAggregatorLambda implements ITask {
 		MetadataFilesToEcho mtfe;
         boolean isIsoFile = (iso != null);
 
-        mtfe = new MetadataFilesToEcho(isIsoFile);
+		mtfe = new MetadataFilesToEcho(isIsoFile);
+		//set the name/granuleId
+		mtfe.getGranule().setName(granuleId);
         mtfe.setDatasetValues(collectionName, collectionVersion, rangeIs360, boundingBox, additionalAttributes);
         if (granules != null && granules.size() > 0) {
             mtfe.setGranuleFileSizeAndChecksum(granules);
@@ -181,10 +183,6 @@ public class MetadataAggregatorLambda implements ITask {
 				e.printStackTrace();
 			}
 		}
-
-		//set the name
-		mtfe.getGranule().setName(granuleId);
-
 
 		//write UMM-G to file
 		try {

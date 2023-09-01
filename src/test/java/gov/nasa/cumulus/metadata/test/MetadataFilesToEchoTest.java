@@ -373,6 +373,35 @@ public class MetadataFilesToEchoTest {
         assertEquals(tiles.get(6), "8R");
         List<AdditionalAttributeType> additionalAttributeTypes = isoGranule.getAdditionalAttributeTypes();
         assertEquals(additionalAttributeTypes.size(), 3);
+        /**
+         * Test the behavior of reading SWOT ISO MENDS Orbit and Footprint
+         */
+        file = new File(classLoader.getResource("SWOT_L2_HR_RiverAvg_487_SI_35_20230410T200018_20230411T195056_TGB0_01.zip.iso.xml").getFile());
+        cfgFile = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
+        mfte = new MetadataFilesToEcho(true);
+
+
+        mfte.readConfiguration(cfgFile.getAbsolutePath());
+        doc = mfte.makeDoc(file.getAbsolutePath());
+        xpath = mfte.makeXpath(doc);
+        isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
+        isoGranule.getOrbit();
+        Set<GranuleCharacter> granuleCharacters = isoGranule.getGranuleCharacterSet();
+        for (GranuleCharacter granuleCharacter : granuleCharacters) {
+            if (granuleCharacter.getDatasetElement().getElementDD().getShortName().equals("line")) {
+                assertTrue(StringUtils.equals("46.7666666666667 151.802777777778 51.353523932563 179.39615512424 51.3618572658963 179.44615512424 51.3673094007704 179.460468207465 51.3720831976997 179.470818074544 51.9544606526693 179.77399359809 51.962745836046 179.775655449761 65.0256 180.0 65.0243570963542 -179.993114725749 64.2422505696615 -173.124080403646 64.2416666666667 -173.0875 64.2589111328125 -172.942587619358 64.3993570963542 -172.234684583876 66.0076904296875 -169.718114556207 66.0260301378038 -169.70074496799 66.0760314941406 -169.659073554145 66.0902187771267 -169.657690429687 66.1322906494141 -169.675703599718 66.1409630669488 -169.684376017253 71.3826697455512 -175.542419433594 71.4159271240235 -175.726031833225 71.4173094007704 -175.740315416124 71.5993445502387 -178.950753445095 71.6086161295573 -179.125728691949 71.6076221042209 -179.174432712131 71.6005043877496 -179.364869689941 71.5840138753255 -179.63235405816 71.5756805419922 -179.756760321723 71.5339 180.0 71.5409488254123 179.982556491428 76.1909840901693 152.824263509115 76.7576266818576 149.457624986437 76.7590138753255 149.384906344944 76.2006429036458 138.826448059082 75.8756427341037 135.72644788954 75.8408372667101 135.68353644477 71.075 130.025 69.1791666666667 128.695833333333 69.1199666341146 128.666011216905 67.6083333333333 128.1375 67.59375 128.133802117242 66.4433797200521 128.049646674262 66.4350755479601 128.050353325738 66.4208333333333 128.054166666667 65.9953955756294 128.247048102485 55.5633509318034 135.546684095595 55.5125 135.604166666667 46.7844919840495 151.737613932292 46.7714508056641 151.764506530762 46.7672841389974 151.781173197428 46.7666666666667 151.802777777778",
+                        StringUtils.trim(granuleCharacter.getValue())));
+            }
+        }
+    }
+
+    @Test
+    public void testIsOrbitExisting() {
+        MetadataFilesToEcho mfte = new MetadataFilesToEcho(true);
+        assertFalse(mfte.isOrbitExisting(""));
+        assertFalse(mfte.isOrbitExisting(null));
+        assertTrue(mfte.isOrbitExisting("AscendingCrossing: 22.45 StartLatitude: -77.66 StartDirection: A EndLatitude: 77.66 EndDirection: A"));
+        assertFalse(mfte.isOrbitExisting("AscendingCrossing: 22.45 StartLatitude: -77.66 StartDirection: None EndLatitude: 77.66 EndDirection: A"));
     }
 
 
