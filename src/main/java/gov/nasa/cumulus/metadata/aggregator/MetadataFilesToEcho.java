@@ -580,10 +580,6 @@ public class MetadataFilesToEcho {
 			AdapterLogger.LogDebug(this.className + " Based on MENDsIsoXMLSpatialTypeEnum, processing FOOTPRINT");
 			try {
 				((IsoGranule) granule).setPolygon(xpath.evaluate(IsoMendsXPath.POLYGON, doc));
-				String line = xpath.evaluate(IsoMendsXPath.LINE, doc);
-				if (line != null && !line.isEmpty()) {
-					granule.getGranuleCharacterSet().add(createGranuleCharacter(line,"line"));
-				}
 			} catch (XPathExpressionException e) {
 				// Ignore if unable to parse for footprint since it isn't required for ingest
 				AdapterLogger.LogWarning(this.className + " Not able to extract MENDS footprint: " + e);
