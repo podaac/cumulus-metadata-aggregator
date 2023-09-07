@@ -7,12 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- **PODAAC-5770**
-  - selectively extract orbit, bbox, or footprint from iso.xml
 ### Deprecated
 ### Removed
 ### Fixed
-
+- **PODAAC-5770**
+  - selectively extract orbit, bbox, or footprint from iso.xml
 ### Security
 
 - 
