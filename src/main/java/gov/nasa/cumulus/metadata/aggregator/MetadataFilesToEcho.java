@@ -734,17 +734,23 @@ public class MetadataFilesToEcho {
 		 * This block of code supports multiple cycles.  In theory, during cycle transition, it is possible
 		 * a granule consists 2 cycles.  However, UMMG json schema does support one at the time.
 		 */
+		ArrayList<String> basinIdStrs = new ArrayList<>();
 		for(String cps : cyclePassStrs) {
 			try {
+				// Extract BasinID and the store into IsoGranule object
+				((IsoGranule)granule).setBasinIds(getBasinIds(cps));
 				trackType = createTrackType(cps, p_cycle);
 			} catch (Exception e) {
 				AdapterLogger.LogError(this.className + " Creating TrackType with exception: " + UMMUtils.getStackTraceAsString(e));
 				throw e;
 			}
-
 			UmmgPojoFactory ummgPojoFactory = UmmgPojoFactory.getInstance();
 			additionalAttributeTypes=
 					ummgPojoFactory.trackTypeToAdditionalAttributeTypes(trackType);
+			// Join array lists
+			additionalAttributeTypes.addAll(
+				ummgPojoFactory.basinIdsToAdditionalAttributeTypes(((IsoGranule)granule).getBasinIds()));
+
 		}
 		// It is possible after all the above processing, cycle is present but passes is not (no pass in passes array)
 		// That is, we shall NOT create trackType at all.  Otherwise, CMR will throw validation error
@@ -754,6 +760,19 @@ public class MetadataFilesToEcho {
 			((IsoGranule) granule).setAdditionalAttributeTypes(additionalAttributeTypes);
 		}
 		return (IsoGranule)granule;
+	}
+
+	public List<String> getBasinIds(String cyclePassStr) {
+		Pattern p_basinId = Pattern.compile("\\s*BASINID\\s*:\\s*\\d+\\s*?");
+		Matcher m_basinId = p_basinId.matcher(cyclePassStr);
+		ArrayList<String>basinIdStrs = new ArrayList<>();
+		while(m_basinId.find()) {
+			String basinIdStr = m_basinId.group();
+			AdapterLogger.LogInfo("BasinId:" + basinIdStr);
+			String tokens[] = basinIdStr.split(":");
+			basinIdStrs.add(StringUtils.trim(tokens[1]));
+		}
+		return basinIdStrs;
 	}
 
 	public TrackType createTrackType(String cyclePassTileStr, Pattern p_cycle) {
