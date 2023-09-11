@@ -594,7 +594,7 @@ public class MetadataFilesToEcho {
 						Double.parseDouble(northBoundingCoordinateStr),
 						Double.parseDouble(southBoundingCoordinateStr),
 						Double.parseDouble(eastBoundingCoordinateStr),
-						Double.parseDouble(westBoundingCoordinateStr);
+						Double.parseDouble(westBoundingCoordinateStr));
 			}
 		}
 		/**
