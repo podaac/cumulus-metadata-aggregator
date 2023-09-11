@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+### Deprecated
+### Removed
+### Fixed
+- **PODAAC-5770**
+  - selectively extract orbit, bbox, or footprint from iso.xml
+### Security
+
+-
 ## [8.4.0]
 ### Added
 - Update metadata aggregator to add description to image variables from image processor and test tig forge processor

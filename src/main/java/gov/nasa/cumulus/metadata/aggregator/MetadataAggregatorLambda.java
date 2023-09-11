@@ -11,12 +11,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 
+import gov.nasa.cumulus.metadata.aggregator.constant.MENDsIsoXMLSpatialTypeConstant;
 import gov.nasa.cumulus.metadata.aggregator.processor.DMRPPProcessor;
 import gov.nasa.cumulus.metadata.aggregator.processor.FootprintProcessor;
 import gov.nasa.cumulus.metadata.aggregator.processor.ImageProcessor;
+import gov.nasa.cumulus.metadata.state.MENDsIsoXMLSpatialTypeEnum;
 import gov.nasa.cumulus.metadata.state.WorkflowTypeEnum;
 import gov.nasa.cumulus.metadata.util.S3Utils;
 import org.apache.commons.io.FileUtils;
@@ -55,6 +58,10 @@ public class MetadataAggregatorLambda implements ITask {
 		 * this will help the logic in postIngestProcess function.
 		 */
 		this.setWorkFlowType((String) config.get("stateMachine"));
+		// This is a switch to determine, shall footprint, orbit or boundingbox shall be processed from iso.xml
+		// while ingesting swot collections
+		JSONArray isoXMLSpatialTypeJsonArray = (JSONArray) config.get("isoXMLSpatialType");
+		HashSet isoXMLSpatialTypeHashSet = createIsoXMLSpatialTypeSet(isoXMLSpatialTypeJsonArray);
 
 
 		String isoRegex = (String) config.get("isoRegex");
@@ -149,8 +156,8 @@ public class MetadataAggregatorLambda implements ITask {
 		MetadataFilesToEcho mtfe;
         boolean isIsoFile = (iso != null);
 
-        mtfe = new MetadataFilesToEcho(isIsoFile);
-        mtfe.setDatasetValues(collectionName, collectionVersion, rangeIs360, boundingBox, additionalAttributes);
+		mtfe = new MetadataFilesToEcho(isIsoFile, isoXMLSpatialTypeHashSet);
+		mtfe.setDatasetValues(collectionName, collectionVersion, rangeIs360, boundingBox, additionalAttributes);
         if (granules != null && granules.size() > 0) {
             mtfe.setGranuleFileSizeAndChecksum(granules);
         }
@@ -232,6 +239,32 @@ public class MetadataAggregatorLambda implements ITask {
 			s3Utils.delete(region, mpFileBucket, mpFileKey);
 		}
 		return returnable.toJSONString();
+	}
+	public HashSet<MENDsIsoXMLSpatialTypeEnum> createIsoXMLSpatialTypeSet(JSONArray isoXMLSpatialTypeConfigJSONArray) throws IllegalArgumentException{
+		HashSet<MENDsIsoXMLSpatialTypeEnum> isoSpatialTypes = new HashSet<>();
+		// if not containing isoXMLTypes, then return an empty HashSet
+		if(isoXMLSpatialTypeConfigJSONArray == null || isoXMLSpatialTypeConfigJSONArray.size()==0) {
+			return isoSpatialTypes;
+		}
+		isoXMLSpatialTypeConfigJSONArray.forEach(item -> {
+			String t = (String) item;
+			MENDsIsoXMLSpatialTypeEnum en = MENDsIsoXMLSpatialTypeEnum.getEnum(getIsoXMLSpatialTypeStr(t));
+			isoSpatialTypes.add(en);
+		});
+		AdapterLogger.LogDebug(this.className + " isoSpatialTypes HashSet: " + isoSpatialTypes);
+		return isoSpatialTypes;
+	}
+
+	public String getIsoXMLSpatialTypeStr(String token) {
+		final String trimmedToken = StringUtils.trim(token);
+		String s;
+		try {
+			s = MENDsIsoXMLSpatialTypeConstant.isoXMLSpatialTypeList.stream()
+					.filter(e -> StringUtils.equals(trimmedToken, e)).findFirst().get();
+		} catch (java.util.NoSuchElementException e) {
+			s = "";
+		}
+		return s;
 	}
 
 	/**

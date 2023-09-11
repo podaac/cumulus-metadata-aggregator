@@ -18,6 +18,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
 
 import gov.nasa.cumulus.metadata.aggregator.factory.UmmgPojoFactory;
+import gov.nasa.cumulus.metadata.state.MENDsIsoXMLSpatialTypeEnum;
 import gov.nasa.cumulus.metadata.umm.generated.AdditionalAttributeType;
 import gov.nasa.cumulus.metadata.umm.generated.TrackPassTileType;
 import gov.nasa.cumulus.metadata.umm.generated.TrackType;
@@ -62,6 +63,7 @@ public class MetadataFilesToEcho {
     boolean isIsoFile = false;
 	JSONObject additionalAttributes = null;
 	UmmgPojoFactory ummgPojoFactory = UmmgPojoFactory.getInstance();
+	HashSet<MENDsIsoXMLSpatialTypeEnum> isoXMLSpatialTypeEnumHashSet = new HashSet<>();
 
 	public MetadataFilesToEcho() {
 		this(false);
@@ -74,6 +76,15 @@ public class MetadataFilesToEcho {
 		else
 			this.granule = new UMMGranule();
 	}
+	public MetadataFilesToEcho(boolean isIso, HashSet inputIsoXMLSpatialTypeHashSet) {
+		this.isIsoFile = isIso;
+		if (isIsoFile)
+			this.granule = new IsoGranule();
+		else
+			this.granule = new UMMGranule();
+		this.isoXMLSpatialTypeEnumHashSet = inputIsoXMLSpatialTypeHashSet;
+	}
+
 
 	//this method reads the configuration file (per dataset) sent to this class (.cfg)
 	public void readConfiguration(String file) throws IOException, ParseException {
@@ -258,16 +269,11 @@ public class MetadataFilesToEcho {
 	 *
 	 */
 	public void setGranuleFileSizeAndChecksum(JSONArray input_granules) {
-
 		JSONArray files = (JSONArray)((JSONObject)input_granules.get(0)).get("files");
+		AdapterLogger.LogDebug(this.className + " setGranuleFileSizeAndChecksum files[]:" + files);
 
 		for(Object f: files){
 			JSONObject file = (JSONObject)f;
-			AdapterLogger.LogDebug(this.className + " UMM-G GranuleArchive filename:" + (String)file.get("fileName"));
-			AdapterLogger.LogDebug(this.className + " UMM-G GranuleArchive filesize:" + ((Double) file.get("size")).longValue());
-			AdapterLogger.LogDebug(this.className + " UMM-G GranuleArchive checksum:" + (String)file.get("checksum"));
-			AdapterLogger.LogDebug(this.className + " UMM-G GranuleArchive checksumType:" + (String)file.get("checksumType"));
-			AdapterLogger.LogDebug(this.className + " UMM-G GranuleArchive type:" + (String)file.get("type"));
 			UMMGranuleArchive uga = new UMMGranuleArchive();
 			uga.setName((String)file.get("fileName"));
 			uga.setFileSize(((Double) file.get("size")).longValue());
@@ -412,16 +418,8 @@ public class MetadataFilesToEcho {
     }
 
     public IsoGranule readIsoMendsMetadataFile(String s3Location, Document doc, XPath xpath) throws XPathExpressionException {
-
-        if (xpath.evaluate(IsoMendsXPath.NORTH_BOUNDING_COORDINATE, doc) != "") {
-            setGranuleBoundingBox(
-                    Double.parseDouble(xpath.evaluate(IsoMendsXPath.NORTH_BOUNDING_COORDINATE, doc)),
-                    Double.parseDouble(xpath.evaluate(IsoMendsXPath.SOUTH_BOUNDING_COORDINATE, doc)),
-                    Double.parseDouble(xpath.evaluate(IsoMendsXPath.EAST_BOUNDING_COORDINATE, doc)),
-                    Double.parseDouble(xpath.evaluate(IsoMendsXPath.WEST_BOUNDING_COORDINATE, doc)));
-        }
-        ((IsoGranule) granule).setPolygon(xpath.evaluate(IsoMendsXPath.POLYGON, doc));
-
+		/* read footprint, bounding box , orbit based on cumulus task_config field */
+		this.granule = readFootprintOrbitBBox(doc, xpath);
         NodeList nodes = (NodeList) xpath.evaluate(IsoMendsXPath.DATA_FILE, doc, XPathConstants.NODESET);
         for (int i = 0; i < nodes.getLength(); i++) {
             Element dataFile = (Element) nodes.item(i);
@@ -553,9 +551,41 @@ public class MetadataFilesToEcho {
             ((IsoGranule) granule).setAdditionalAttributeTypes(additionalAttributeTypes);
             ((IsoGranule) granule).setDynamicAttributeNameMapping(dynamicAttributeNameMapping);
         }
-
 		return  ((IsoGranule) granule);
 	}
+	public IsoGranule readFootprintOrbitBBox( Document doc, XPath xpath) throws XPathExpressionException{
+		if(this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.BBOX)) {
+			AdapterLogger.LogDebug(this.className + " Based on MENDsIsoXMLSpatialTypeEnum, processing BBOX");
+			if (xpath.evaluate(IsoMendsXPath.NORTH_BOUNDING_COORDINATE, doc) != "") {
+				setGranuleBoundingBox(
+						Double.parseDouble(xpath.evaluate(IsoMendsXPath.NORTH_BOUNDING_COORDINATE, doc)),
+						Double.parseDouble(xpath.evaluate(IsoMendsXPath.SOUTH_BOUNDING_COORDINATE, doc)),
+						Double.parseDouble(xpath.evaluate(IsoMendsXPath.EAST_BOUNDING_COORDINATE, doc)),
+						Double.parseDouble(xpath.evaluate(IsoMendsXPath.WEST_BOUNDING_COORDINATE, doc)));
+			}
+		}
+		/**
+		 * There shall be no more logic of "if there is orbit, then there shall be no footprint" anymore
+		 * this function will solely depends on cumulus collection config to determine the collection is
+		 * GEODETIC, CARTICIAN , ORBIT
+		 * if isoXMLSpatialTypeEnumHashSet contains FOOTPRINT, means, the collection is either GEODETIC or CARTICIAN
+		 */
+		if(this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.FOOTPRINT)) {
+			AdapterLogger.LogDebug(this.className + " Based on MENDsIsoXMLSpatialTypeEnum, processing FOOTPRINT");
+			try {
+				((IsoGranule) granule).setPolygon(xpath.evaluate(IsoMendsXPath.POLYGON, doc));
+			} catch (XPathExpressionException e) {
+				// Ignore if unable to parse for footprint since it isn't required for ingest
+				AdapterLogger.LogWarning(this.className + " Not able to extract MENDS footprint: " + e);
+			}
+		}
+		if(this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.ORBIT)) {
+			AdapterLogger.LogDebug(this.className + " Based on MENDsIsoXMLSpatialTypeEnum, processing ORBIT");
+			((IsoGranule) granule).setOrbit(xpath.evaluate(IsoMendsXPath.ORBIT, doc));
+		}
+		return ((IsoGranule) granule);
+	}
+
 
 	public List<AdditionalAttributeType> appendAdditionalAttributes(JSONObject metaAdditionalAttributes, NodeList additionalAttributesBlock){
 		/*
