@@ -439,15 +439,6 @@ public class MetadataFilesToEchoTest {
         }
     }
 
-    @Test
-    public void testIsOrbitExisting() {
-        MetadataFilesToEcho mfte = new MetadataFilesToEcho(true);
-        assertFalse(mfte.isOrbitExisting(""));
-        assertFalse(mfte.isOrbitExisting(null));
-        assertTrue(mfte.isOrbitExisting("AscendingCrossing: 22.45 StartLatitude: -77.66 StartDirection: A EndLatitude: 77.66 EndDirection: A"));
-        assertFalse(mfte.isOrbitExisting("AscendingCrossing: 22.45 StartLatitude: -77.66 StartDirection: None EndLatitude: 77.66 EndDirection: A"));
-    }
-
 
     @Test
     public void testReadIsoMendsMetadataFile_Pass_Cycle_LeadingZeros() throws IOException, ParseException, XPathExpressionException, ParserConfigurationException, SAXException{

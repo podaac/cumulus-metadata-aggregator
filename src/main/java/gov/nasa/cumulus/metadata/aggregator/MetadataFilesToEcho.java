@@ -561,13 +561,40 @@ public class MetadataFilesToEcho {
 
 	public IsoGranule readFootprintOrbitBBox( Document doc, XPath xpath) throws XPathExpressionException{
 		if(this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.BBOX)) {
+			String northBoundingCoordinateStr = "";
+			String southBoundingCoordinateStr="";
+			String eastBoundingCoordinateStr="";
+			String westBoundingCoordinateStr="";
+
+
 			AdapterLogger.LogDebug(this.className + " Based on MENDsIsoXMLSpatialTypeEnum, processing BBOX");
+			try {
+				northBoundingCoordinateStr = xpath.evaluate(IsoMendsXPath.NORTH_BOUNDING_COORDINATE, doc);
+			} catch (XPathExpressionException e) {
+				AdapterLogger.LogWarning(this.className + " Not able to extract MENDS NORTH_BOUNDING_COORDINATE: " + e);
+			}
+			try {
+				southBoundingCoordinateStr = xpath.evaluate(IsoMendsXPath.SOUTH_BOUNDING_COORDINATE, doc);
+			} catch (XPathExpressionException e) {
+				AdapterLogger.LogWarning(this.className + " Not able to extract MENDS SOUTH_BOUNDING_COORDINATE: " + e);
+			}
+			try {
+				eastBoundingCoordinateStr = xpath.evaluate(IsoMendsXPath.EAST_BOUNDING_COORDINATE, doc);
+			} catch (XPathExpressionException e) {
+				AdapterLogger.LogWarning(this.className + " Not able to extract MENDS EAST_BOUNDING_COORDINATE: " + e);
+			}
+			try {
+				westBoundingCoordinateStr = xpath.evaluate(IsoMendsXPath.WEST_BOUNDING_COORDINATE, doc);
+			} catch (XPathExpressionException e) {
+				AdapterLogger.LogWarning(this.className + " Not able to extract MENDS WEST_BOUNDING_COORDINATE: " + e);
+			}
+			// if any of the exception happened, shall we continue?
 			if (xpath.evaluate(IsoMendsXPath.NORTH_BOUNDING_COORDINATE, doc) != "") {
 				setGranuleBoundingBox(
-						Double.parseDouble(xpath.evaluate(IsoMendsXPath.NORTH_BOUNDING_COORDINATE, doc)),
-						Double.parseDouble(xpath.evaluate(IsoMendsXPath.SOUTH_BOUNDING_COORDINATE, doc)),
-						Double.parseDouble(xpath.evaluate(IsoMendsXPath.EAST_BOUNDING_COORDINATE, doc)),
-						Double.parseDouble(xpath.evaluate(IsoMendsXPath.WEST_BOUNDING_COORDINATE, doc)));
+						Double.parseDouble(northBoundingCoordinateStr),
+						Double.parseDouble(southBoundingCoordinateStr),
+						Double.parseDouble(eastBoundingCoordinateStr),
+						Double.parseDouble(westBoundingCoordinateStr);
 			}
 		}
 		/**
@@ -587,47 +614,13 @@ public class MetadataFilesToEcho {
 		}
 		if(this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.ORBIT)) {
 			AdapterLogger.LogDebug(this.className + " Based on MENDsIsoXMLSpatialTypeEnum, processing ORBIT");
-			((IsoGranule) granule).setOrbit(xpath.evaluate(IsoMendsXPath.ORBIT, doc));
-		}
-		return ((IsoGranule) granule);
-	}
-
-	public boolean isOrbitExisting(String orbitStr) {
-		if(StringUtils.isEmpty(StringUtils.trim(orbitStr))) {
-			return false;
-		} else{
 			try {
-				Pattern p = Pattern.compile("AscendingCrossing:\\s?(.*)\\s?StartLatitude:\\s?(.*)\\s?StartDirection:\\s?(.*)\\s?EndLatitude:\\s?(.*)\\s?EndDirection:\\s?(.*)");
-				Matcher m = p.matcher(orbitStr);
-				boolean foundOrbitalData = false;
-				foundOrbitalData = m.find();
-				String ascendingCrossingStr = StringUtils.trim(m.group(1));
-				String startLatitudeStr = StringUtils.trim(m.group(2));
-				String startDirectionStr = StringUtils.trim(m.group(3));
-				String endLatitudeStr = StringUtils.trim(m.group(4));
-				String endDirectionStr = StringUtils.trim(m.group(5));
-
-				/** to verify the Orbit string using as-tight-as-possible logic to make sure the orbitStr is parsable
-				 *  and not anyone of the item is "None"
-				 */
-				if (foundOrbitalData && BoundingTools.allParsable(ascendingCrossingStr, startLatitudeStr, endLatitudeStr) && (
-						!StringUtils.equalsIgnoreCase(ascendingCrossingStr, "None") &&
-								!StringUtils.equalsIgnoreCase(startLatitudeStr, "None") &&
-								!StringUtils.equalsIgnoreCase(startDirectionStr, "None") &&
-								!StringUtils.equalsIgnoreCase(endLatitudeStr, "None") &&
-								!StringUtils.equalsIgnoreCase(endDirectionStr, "None")
-				)) {
-					// only returning Orbit is found while the entire Orbit String check to be valid
-					return true;
-				} else {
-					return false;
-				}
-			} catch( java.lang.IllegalStateException | PatternSyntaxException  ex) {
-				AdapterLogger.LogWarning(this.className + " error while checking if there is Orbit string: " + ex);
+				((IsoGranule) granule).setOrbit(xpath.evaluate(IsoMendsXPath.ORBIT, doc));
+			} catch (XPathExpressionException e) {
+				AdapterLogger.LogWarning(this.className + " Not able to extract MENDS orbit: " + e);
 			}
 		}
-		// again, only return true when a very tight pattern is valid
-		return false;
+		return ((IsoGranule) granule);
 	}
 
 	public List<AdditionalAttributeType> appendAdditionalAttributes(JSONObject metaAdditionalAttributes, NodeList additionalAttributesBlock){
