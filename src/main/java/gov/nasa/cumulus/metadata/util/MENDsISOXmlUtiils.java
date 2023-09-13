@@ -1,8 +1,6 @@
 package gov.nasa.cumulus.metadata.util;
 
-import com.google.gson.internal.bind.ReflectiveTypeAdapterFactory;
 import cumulus_message_adapter.message_parser.AdapterLogger;
-import gov.nasa.cumulus.metadata.aggregator.IsoMendsXPath;
 import org.w3c.dom.Document;
 
 import javax.xml.xpath.XPath;
