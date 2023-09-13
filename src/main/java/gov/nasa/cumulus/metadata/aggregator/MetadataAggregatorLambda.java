@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 
-import gov.nasa.cumulus.metadata.aggregator.constant.MENDsIsoXMLSpatialTypeConstant;
 import gov.nasa.cumulus.metadata.aggregator.processor.DMRPPProcessor;
 import gov.nasa.cumulus.metadata.aggregator.processor.FootprintProcessor;
 import gov.nasa.cumulus.metadata.aggregator.processor.ImageProcessor;
@@ -258,7 +257,7 @@ public class MetadataAggregatorLambda implements ITask {
 		final String trimmedToken = StringUtils.trim(token);
 		String s;
 		try {
-			s = MENDsIsoXMLSpatialTypeConstant.isoXMLSpatialTypeList.stream()
+			s = MENDsIsoXMLSpatialTypeEnum.getEnumValuList().stream()
 					.filter(e -> StringUtils.equals(trimmedToken, e)).findFirst().get();
 		} catch (java.util.NoSuchElementException e) {
 			s = "";

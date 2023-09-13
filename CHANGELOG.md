@@ -9,16 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **PODAAC-5594**
   - Support BasinID
-- **PODAAC-5708**
-  - Add capability in order to extract swot nc.iso.xml footprint and divide over IDL
+- **PODAAC-5770**
+  - use meta.isoXMLSpatialType to configure the collection should process the combination of footprint, orbit and bbox
 - **PODAAC-5717**
   - Upgrade to UMMG 1.6.5
   - support empty Pass in Cycle/Pass/Tile string
 ### Deprecated
 ### Removed
 ### Fixed
-- **PODAAC-5770**
-  - selectively extract orbit, bbox, or footprint from iso.xml
 ### Security
 
 - 
