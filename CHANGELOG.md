@@ -18,8 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 ### Fixed
 - **PODAAC-5708**
-  - make sure position coordinates are in counter-clockwise order
-  - nc.iso.xml Polygon divide over IDL.
+  - .nc.iso.xml Polygon divided over IDL
 ### Security
 
 - 
