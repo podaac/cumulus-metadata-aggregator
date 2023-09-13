@@ -450,10 +450,13 @@ public class UMMGranuleFile {
             if(this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.FOOTPRINT)) {
                 AdapterLogger.LogDebug(this.className + "UMMGranuleFile.exportSpatial FOOTPRINT Processing");
                 String polygon = ((IsoGranule) granule).getPolygon();
-                if (polygon != "" && polygon != null) {
-                    // Export Polygon
-                    addPolygon(geometry, polygon);
-                }
+                AdapterLogger.LogInfo(this.className + " nc.iso.xml footprint processing ... ");
+                this.isLineFormattedPolygon = true;
+                geometry = line2Polygons(geometry,polygon);
+//                if (polygon != "" && polygon != null) {
+//                    // Export Polygon
+//                    addPolygon(geometry, polygon);
+//                }
             }
             if(this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.ORBIT)) {
                 AdapterLogger.LogDebug(this.className + "UMMGranuleFile.exportSpatial ORBIT Processing");
