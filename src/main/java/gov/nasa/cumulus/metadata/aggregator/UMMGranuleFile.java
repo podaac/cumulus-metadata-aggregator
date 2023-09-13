@@ -453,7 +453,6 @@ public class UMMGranuleFile {
                 AdapterLogger.LogInfo(this.className + " nc.iso.xml footprint processing ... ");
                 this.isLineFormattedPolygon = true;
                 geometry = line2Polygons(geometry,polygon);
-//                }
             }
             if(this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.ORBIT)) {
                 AdapterLogger.LogDebug(this.className + "UMMGranuleFile.exportSpatial ORBIT Processing");
