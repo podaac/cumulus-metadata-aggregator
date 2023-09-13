@@ -337,6 +337,8 @@ public class CMRLambdaRestClient extends CMRRestClient {
      */
     public boolean isUMMGSpatialValid(String provider, String granuleId, String strUMMG)
             throws URISyntaxException, IOException, ParseException {
+        AdapterLogger.LogInfo(this.className + " UMMG validation provider: "+ provider + " granuleId: " + granuleId +
+        " ummg: " + strUMMG);
         HttpResponse httpResponse = validateUMMG(provider, granuleId, strUMMG);
         int statusCode = httpResponse.getStatusLine().getStatusCode();
         InputStream inputStream = httpResponse.getEntity().getContent();

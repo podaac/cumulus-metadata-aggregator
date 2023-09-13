@@ -3,6 +3,7 @@ package gov.nasa.cumulus.metadata.umm.generated;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,6 +12,7 @@ import com.google.gson.annotations.SerializedName;
  * This entity holds the geometry representing the spatial coverage information of a granule.
  * 
  */
+@Generated("jsonschema2pojo")
 public class GeometryType {
 
     /**
@@ -41,28 +43,6 @@ public class GeometryType {
     @SerializedName("Lines")
     @Expose
     private Set<LineType> lines = new LinkedHashSet<LineType>();
-
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
-    public GeometryType() {
-    }
-
-    /**
-     * 
-     * @param boundingRectangles
-     * @param lines
-     * @param points
-     * @param gPolygons
-     */
-    public GeometryType(Set<PointType> points, Set<BoundingRectangleType> boundingRectangles, Set<GPolygonType> gPolygons, Set<LineType> lines) {
-        super();
-        this.points = points;
-        this.boundingRectangles = boundingRectangles;
-        this.gPolygons = gPolygons;
-        this.lines = lines;
-    }
 
     /**
      * The horizontal spatial coverage of a point.

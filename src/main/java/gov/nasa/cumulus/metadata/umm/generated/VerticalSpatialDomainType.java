@@ -3,6 +3,7 @@ package gov.nasa.cumulus.metadata.umm.generated;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,6 +12,7 @@ import com.google.gson.annotations.SerializedName;
  * This entity contains the type and value for the granule's vertical spatial domain.
  * 
  */
+@Generated("jsonschema2pojo")
 public class VerticalSpatialDomainType {
 
     @SerializedName("Type")
@@ -44,30 +46,6 @@ public class VerticalSpatialDomainType {
     @SerializedName("Unit")
     @Expose
     private VerticalSpatialDomainType.Unit unit;
-
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
-    public VerticalSpatialDomainType() {
-    }
-
-    /**
-     * 
-     * @param minimumValue
-     * @param unit
-     * @param type
-     * @param value
-     * @param maximumValue
-     */
-    public VerticalSpatialDomainType(VerticalSpatialDomainType.VerticalSpatialDomainTypeEnum type, String value, String minimumValue, String maximumValue, VerticalSpatialDomainType.Unit unit) {
-        super();
-        this.type = type;
-        this.value = value;
-        this.minimumValue = minimumValue;
-        this.maximumValue = maximumValue;
-        this.unit = unit;
-    }
 
     public VerticalSpatialDomainType.VerticalSpatialDomainTypeEnum getType() {
         return type;
@@ -201,6 +179,7 @@ public class VerticalSpatialDomainType {
      * Describes the unit of the vertical extent value.
      * 
      */
+    @Generated("jsonschema2pojo")
     public enum Unit {
 
         @SerializedName("Fathoms")
@@ -232,7 +211,7 @@ public class VerticalSpatialDomainType {
             }
         }
 
-        private Unit(String value) {
+        Unit(String value) {
             this.value = value;
         }
 
@@ -256,6 +235,7 @@ public class VerticalSpatialDomainType {
 
     }
 
+    @Generated("jsonschema2pojo")
     public enum VerticalSpatialDomainTypeEnum {
 
         @SerializedName("Atmosphere Layer")
@@ -275,7 +255,7 @@ public class VerticalSpatialDomainType {
             }
         }
 
-        private VerticalSpatialDomainTypeEnum(String value) {
+        VerticalSpatialDomainTypeEnum(String value) {
             this.value = value;
         }
 

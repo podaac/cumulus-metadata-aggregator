@@ -17,6 +17,7 @@ public class UMMGranule extends Granule {
     /**
      * A generated type which represents the pass and associate Tiles under Track
      */
+    private List<String> basinIds;
     private List<AdditionalAttributeType> additionalAttributeTypes;
     private Integer orbitNumber;
     private Integer startOrbit;
@@ -68,6 +69,14 @@ public class UMMGranule extends Granule {
 
     public void setTrackType(TrackType trackType) {
         this.trackType = trackType;
+    }
+
+    public List<String> getBasinIds() {
+        return basinIds;
+    }
+
+    public void setBasinIds(List<String> basinIds) {
+        this.basinIds = basinIds;
     }
 
     public List<AdditionalAttributeType> getAdditionalAttributeTypes() {

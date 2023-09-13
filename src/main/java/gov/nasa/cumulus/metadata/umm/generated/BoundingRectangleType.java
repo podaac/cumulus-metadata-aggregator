@@ -1,6 +1,7 @@
 
 package gov.nasa.cumulus.metadata.umm.generated;
 
+import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,6 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * This entity holds the horizontal spatial coverage of a bounding box.
  * 
  */
+@Generated("jsonschema2pojo")
 public class BoundingRectangleType {
 
     /**
@@ -43,28 +45,6 @@ public class BoundingRectangleType {
     @SerializedName("SouthBoundingCoordinate")
     @Expose
     private Double southBoundingCoordinate;
-
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
-    public BoundingRectangleType() {
-    }
-
-    /**
-     * 
-     * @param eastBoundingCoordinate
-     * @param northBoundingCoordinate
-     * @param southBoundingCoordinate
-     * @param westBoundingCoordinate
-     */
-    public BoundingRectangleType(Double westBoundingCoordinate, Double northBoundingCoordinate, Double eastBoundingCoordinate, Double southBoundingCoordinate) {
-        super();
-        this.westBoundingCoordinate = westBoundingCoordinate;
-        this.northBoundingCoordinate = northBoundingCoordinate;
-        this.eastBoundingCoordinate = eastBoundingCoordinate;
-        this.southBoundingCoordinate = southBoundingCoordinate;
-    }
 
     /**
      * The longitude value of a spatially referenced point, in degrees. Longitude values range from -180 to 180.

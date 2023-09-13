@@ -94,7 +94,7 @@ public class UMMTest {
             fail("Did not find exactly one Insert and one Update field in ProviderDates");
         }
         assertNotNull(umm.get("MetadataSpecification"));
-        testMetadataSpec(umm, "1.6.3");
+        testMetadataSpec(umm, "1.6.5");
         // These tests are based on testCollection.config, and will need
         // to be changed if the test resource changes.
         JSONObject cr = (JSONObject)umm.get("CollectionReference");

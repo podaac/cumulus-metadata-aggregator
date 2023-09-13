@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import cumulus_message_adapter.message_parser.AdapterLogger;
 import gov.nasa.cumulus.metadata.aggregator.*;
 
 import gov.nasa.cumulus.metadata.umm.adapter.UMMGCollectionAdapter;
@@ -20,6 +21,8 @@ import gov.nasa.cumulus.metadata.umm.generated.AdditionalAttributeType;
 import gov.nasa.cumulus.metadata.umm.generated.TrackPassTileType;
 import gov.nasa.cumulus.metadata.umm.generated.TrackType;
 
+import gov.nasa.podaac.inventory.model.GranuleCharacter;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -321,7 +324,47 @@ public class MetadataFilesToEchoTest {
         List<String> tileValues = additionalAttributeType.getValues();  //7F, 8F, 9F, 10F
         assertEquals(tileValues.get(0), "7F");
         assertEquals(tileValues.get(3), "10F");
+        /**
+         * Following section test empty pass. Ex. Cycle: 001, Pass: []
+         */
+        input = "Cycle: 001, Pass: []";
+        isoGranule = mfte.createIsoCyclePassTile(input);
+        trackType = isoGranule.getTrackType();
+        assertEquals(trackType.getCycle(), new Integer("1"));
 
+        /**
+         * Cycle: 483 Pass: [10, Tiles: 72-84R 111-111R 72-84L 110-111L]
+         */
+        input = "Cycle: 483 Pass: [10, Tiles: 72-84R 111-111R 72-84L 110-111L]";
+        isoGranule = mfte.createIsoCyclePassTile(input);
+        trackType = isoGranule.getTrackType();
+        assertEquals(trackType.getCycle(), new Integer("483"));
+
+        List<TrackPassTileType> passes = trackType.getPasses();
+        tiles = passes.get(0).getTiles();
+        assertEquals(tiles.size(), 29);
+        assertEquals(tiles.get(0), "72R");
+        assertEquals(tiles.get(28), "111L");
+
+        input = "Cycle: 406, Pass: [40, Tiles: 4-5L 4-5R] [41, Tiles: 6R 6L], BasinID: 123";
+        isoGranule = mfte.createIsoCyclePassTile(input);
+        trackType = isoGranule.getTrackType();
+        assertEquals(trackType.getCycle(), new Integer("406"));
+
+        passes = trackType.getPasses();
+        tiles = passes.get(0).getTiles();
+        assertEquals(tiles.size(), 4);
+        assertEquals(tiles.get(0), "4L");
+        assertEquals(tiles.get(1), "5L");
+        tiles = passes.get(1).getTiles();
+        assertEquals(tiles.size(), 2);
+        assertEquals(tiles.get(0), "6R");
+        assertEquals(tiles.get(1), "6L");
+        additionalAttributeTypes = isoGranule.getAdditionalAttributeTypes();
+        additionalAttributeType = additionalAttributeTypes.get(2);
+        assertEquals(additionalAttributeType.getName(), "BasinID");
+        List<String> basinIdStrs = additionalAttributeType.getValues();
+        assertEquals(basinIdStrs.get(0), "123");
     }
 
     @Test
@@ -373,6 +416,27 @@ public class MetadataFilesToEchoTest {
         assertEquals(tiles.get(6), "8R");
         List<AdditionalAttributeType> additionalAttributeTypes = isoGranule.getAdditionalAttributeTypes();
         assertEquals(additionalAttributeTypes.size(), 3);
+
+        /**
+         * Test the behavior of reading SWOT ISO MENDS Orbit and Footprint
+         */
+        file = new File(classLoader.getResource("SWOT_L2_HR_RiverAvg_487_SI_35_20230410T200018_20230411T195056_TGB0_01.zip.iso.xml").getFile());
+        cfgFile = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
+        mfte = new MetadataFilesToEcho(true);
+
+
+        mfte.readConfiguration(cfgFile.getAbsolutePath());
+        doc = mfte.makeDoc(file.getAbsolutePath());
+        xpath = mfte.makeXpath(doc);
+        isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
+        isoGranule.getOrbit();
+        Set<GranuleCharacter> granuleCharacters = isoGranule.getGranuleCharacterSet();
+        for (GranuleCharacter granuleCharacter : granuleCharacters) {
+            if (granuleCharacter.getDatasetElement().getElementDD().getShortName().equals("line")) {
+                assertTrue(StringUtils.equals("46.7666666666667 151.802777777778 51.353523932563 179.39615512424 51.3618572658963 179.44615512424 51.3673094007704 179.460468207465 51.3720831976997 179.470818074544 51.9544606526693 179.77399359809 51.962745836046 179.775655449761 65.0256 180.0 65.0243570963542 -179.993114725749 64.2422505696615 -173.124080403646 64.2416666666667 -173.0875 64.2589111328125 -172.942587619358 64.3993570963542 -172.234684583876 66.0076904296875 -169.718114556207 66.0260301378038 -169.70074496799 66.0760314941406 -169.659073554145 66.0902187771267 -169.657690429687 66.1322906494141 -169.675703599718 66.1409630669488 -169.684376017253 71.3826697455512 -175.542419433594 71.4159271240235 -175.726031833225 71.4173094007704 -175.740315416124 71.5993445502387 -178.950753445095 71.6086161295573 -179.125728691949 71.6076221042209 -179.174432712131 71.6005043877496 -179.364869689941 71.5840138753255 -179.63235405816 71.5756805419922 -179.756760321723 71.5339 180.0 71.5409488254123 179.982556491428 76.1909840901693 152.824263509115 76.7576266818576 149.457624986437 76.7590138753255 149.384906344944 76.2006429036458 138.826448059082 75.8756427341037 135.72644788954 75.8408372667101 135.68353644477 71.075 130.025 69.1791666666667 128.695833333333 69.1199666341146 128.666011216905 67.6083333333333 128.1375 67.59375 128.133802117242 66.4433797200521 128.049646674262 66.4350755479601 128.050353325738 66.4208333333333 128.054166666667 65.9953955756294 128.247048102485 55.5633509318034 135.546684095595 55.5125 135.604166666667 46.7844919840495 151.737613932292 46.7714508056641 151.764506530762 46.7672841389974 151.781173197428 46.7666666666667 151.802777777778",
+                        StringUtils.trim(granuleCharacter.getValue())));
+            }
+        }
     }
 
 
