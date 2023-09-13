@@ -25,6 +25,7 @@ import gov.nasa.cumulus.metadata.umm.generated.TrackPassTileType;
 import gov.nasa.cumulus.metadata.umm.generated.TrackType;
 import gov.nasa.cumulus.metadata.util.BoundingTools;
 import gov.nasa.cumulus.metadata.util.JSONUtils;
+import gov.nasa.cumulus.metadata.util.MENDsISOXmlUtiils;
 import gov.nasa.podaac.inventory.model.Granule;
 import gov.nasa.podaac.inventory.model.GranuleCharacter;
 import gov.nasa.podaac.inventory.model.DatasetElement;
@@ -418,90 +419,96 @@ public class MetadataFilesToEcho {
         }
     }
 
-    public IsoGranule readIsoMendsMetadataFile(String s3Location, Document doc, XPath xpath)
-			throws XPathExpressionException {
-		/* read footprint, bounding box , orbit based on cumulus task_config field */
-		this.granule = readFootprintOrbitBBox(doc, xpath);
-        NodeList nodes = (NodeList) xpath.evaluate(IsoMendsXPath.DATA_FILE, doc, XPathConstants.NODESET);
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Element dataFile = (Element) nodes.item(i);
+	public IsoGranule readIsoMendsMetadataFile(String s3Location, Document doc, XPath xpath) throws XPathExpressionException {
+		if (MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.NORTH_BOUNDING_COORDINATE, "IsoMendsXPath.NORTH_BOUNDING_COORDINATE")!= "") {
+			setGranuleBoundingBox(
+					Double.parseDouble(MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.NORTH_BOUNDING_COORDINATE, "IsoMendsXPath.NORTH_BOUNDING_COORDINATE")),
+					Double.parseDouble(MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.SOUTH_BOUNDING_COORDINATE, "IsoMendsXPath.SOUTH_BOUNDING_COORDINATE")),
+					Double.parseDouble(MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.EAST_BOUNDING_COORDINATE, "IsoMendsXPath.EAST_BOUNDING_COORDINATE")),
+					Double.parseDouble(MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.WEST_BOUNDING_COORDINATE, "IsoMendsXPath.WEST_BOUNDING_COORDINATE")));
+		}
+		((IsoGranule) granule).setPolygon(MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.POLYGON, "IsoMendsXPath.POLYGON"));
 
-            String description = xpath.evaluate(IsoMendsXPath.DATA_FILE_FILE_DESCRIPTION, dataFile);
-            Pattern p = Pattern.compile("Size:\\s(.*)\\sSizeUnit:\\s(.*)\\sChecksumValue:\\s(.*)\\sChecksumAlgorithm:\\s(.*)\\sDescription:\\s(.*)");
-            Matcher m = p.matcher(description);
-            if (m.find()) {
-                String type = m.group(5);
-                if (type.equals("Science data file") || type.equals("ISO/Archive metadata file")
-                        || type.equals("Quicklook Image of the Science data file")) {
-                    String fileFormat = xpath.evaluate(IsoMendsXPath.DATA_FILE_FILE_FORMAT, dataFile);
-                    if (type.equals("Science data file")) {
-                        granule.setDataFormat(fileFormat);
-                    }
+		NodeList nodes = (NodeList) xpath.evaluate(IsoMendsXPath.DATA_FILE, doc, XPathConstants.NODESET);
+		for (int i = 0; i < nodes.getLength(); i++) {
+			Element dataFile = (Element) nodes.item(i);
 
-                    IsoGranuleArchive ga = new IsoGranuleArchive();
-                    ga.setType(fileFormat);
-                    ga.setFileSize(Long.parseLong(m.group(1)));
-                    ga.setSizeUnit(m.group(2));
-                    ga.setName(xpath.evaluate(IsoMendsXPath.DATA_FILE_FILE_NAME, dataFile));
-                    ga.setMimeType(xpath.evaluate(IsoMendsXPath.DATA_FILE_FILE_MIME_TYPE, dataFile));
-                    ga.setChecksum(m.group(3));
-                    ga.setChecksumAlgorithm(m.group(4));
-                    granule.add(ga);
-                }
-            }
-        }
+			String description = xpath.evaluate(IsoMendsXPath.DATA_FILE_FILE_DESCRIPTION, dataFile);
+			Pattern p = Pattern.compile("Size:\\s(.*)\\sSizeUnit:\\s(.*)\\sChecksumValue:\\s(.*)\\sChecksumAlgorithm:\\s(.*)\\sDescription:\\s(.*)");
+			Matcher m = p.matcher(description);
+			if (m.find()) {
+				String type = m.group(5);
+				if (type.equals("Science data file") || type.equals("ISO/Archive metadata file")
+						|| type.equals("Quicklook Image of the Science data file")) {
+					String fileFormat = xpath.evaluate(IsoMendsXPath.DATA_FILE_FILE_FORMAT, dataFile);
+					if (type.equals("Science data file")) {
+						granule.setDataFormat(fileFormat);
+					}
 
-        ((IsoGranule) granule).setProducerGranuleId(xpath.evaluate(IsoMendsXPath.PRODUCER_GRANULE_ID, doc));
-        ((IsoGranule) granule).setCrid(xpath.evaluate(IsoMendsXPath.CRID, doc));
+					IsoGranuleArchive ga = new IsoGranuleArchive();
+					ga.setType(fileFormat);
+					ga.setFileSize(Long.parseLong(m.group(1)));
+					ga.setSizeUnit(m.group(2));
+					ga.setName(xpath.evaluate(IsoMendsXPath.DATA_FILE_FILE_NAME, dataFile));
+					ga.setMimeType(xpath.evaluate(IsoMendsXPath.DATA_FILE_FILE_MIME_TYPE, dataFile));
+					ga.setChecksum(m.group(3));
+					ga.setChecksumAlgorithm(m.group(4));
+					granule.add(ga);
+				}
+			}
+		}
 
-        NodeList identifiers = (NodeList) xpath.evaluate(IsoMendsXPath.IDENTIFIERS, doc, XPathConstants.NODESET);
-        for (int i = 0; i < identifiers.getLength(); i++) {
-            Element identifier = (Element) identifiers.item(i);
-            String identifierDescription = xpath.evaluate(IsoMendsXPath.IDENTIFIER_DESCRIPTION, identifier);
-            ((IsoGranule) granule).addIdentifier(identifierDescription.substring(identifierDescription.indexOf(" ") + 1), xpath.evaluate(IsoMendsXPath.IDENTIFIER_CODE, identifier));
-        }
+		((IsoGranule) granule).setProducerGranuleId(MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.PRODUCER_GRANULE_ID, "IsoMendsXPath.PRODUCER_GRANULE_ID"));
+		((IsoGranule) granule).setCrid(MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.CRID, "IsoMendsXPath.CRID"));
 
-        String reprocessingPlanned = xpath.evaluate(IsoMendsXPath.REPROCESSING_PLANNED, doc);
-        ((IsoGranule) granule).setReprocessingPlanned(reprocessingPlanned.substring(reprocessingPlanned.indexOf(" ") + 1));
+		NodeList identifiers = (NodeList) xpath.evaluate(IsoMendsXPath.IDENTIFIERS, doc, XPathConstants.NODESET);
+		for (int i = 0; i < identifiers.getLength(); i++) {
+			Element identifier = (Element) identifiers.item(i);
+			String identifierDescription = xpath.evaluate(IsoMendsXPath.IDENTIFIER_DESCRIPTION, identifier);
+			((IsoGranule) granule).addIdentifier(identifierDescription.substring(identifierDescription.indexOf(" ") + 1), xpath.evaluate(IsoMendsXPath.IDENTIFIER_CODE, identifier));
+		}
 
-        String reprocessingActual = xpath.evaluate(IsoMendsXPath.REPROCESSING_ACTUAL, doc);
-        ((IsoGranule) granule).setReprocessingActual(reprocessingActual.substring(reprocessingActual.indexOf(" ") + 1));
+		String reprocessingPlanned = MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.REPROCESSING_PLANNED, "IsoMendsXPath.REPROCESSING_PLANNED");
+		((IsoGranule) granule).setReprocessingPlanned(reprocessingPlanned.substring(reprocessingPlanned.indexOf(" ") + 1));
 
-        ((IsoGranule) granule).setParameterName(xpath.evaluate(IsoMendsXPath.PARAMETER_NAME, doc));
-        String qaPercentMissingData = xpath.evaluate(IsoMendsXPath.QA_PERCENT_MISSING_DATA, doc);
-        if (qaPercentMissingData != "" && BoundingTools.isParseable(qaPercentMissingData)) {
-            ((IsoGranule) granule).setQAPercentMissingData(Double.parseDouble(qaPercentMissingData));
-        }
-        String qaPercentOutOfBoundsData = xpath.evaluate(IsoMendsXPath.QA_PERCENT_OUT_OF_BOUNDS_DATA, doc);
-        if (qaPercentOutOfBoundsData != "" && BoundingTools.isParseable(qaPercentOutOfBoundsData)) {
-            ((IsoGranule) granule).setQAPercentOutOfBoundsData(Double.parseDouble(qaPercentOutOfBoundsData));
-        }
+		String reprocessingActual = xpath.evaluate(IsoMendsXPath.REPROCESSING_ACTUAL, doc);
+		((IsoGranule) granule).setReprocessingActual(reprocessingActual.substring(reprocessingActual.indexOf(" ") + 1));
 
-		//extract and store Track Pass string
-        ((IsoGranule) granule).setSwotTrack(xpath.evaluate(IsoMendsXPath.SWOT_TRACK, doc));
+		((IsoGranule) granule).setParameterName(MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.PARAMETER_NAME, "IsoMendsXPath.PARAMETER_NAME"));
+		String qaPercentMissingData = MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.QA_PERCENT_MISSING_DATA, "IsoMendsXPath.QA_PERCENT_MISSING_DATA");
+		if (qaPercentMissingData != "" && BoundingTools.isParseable(qaPercentMissingData)) {
+			((IsoGranule) granule).setQAPercentMissingData(Double.parseDouble(qaPercentMissingData));
+		}
+		String qaPercentOutOfBoundsData = MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.QA_PERCENT_OUT_OF_BOUNDS_DATA, "IsoMendsXPath.QA_PERCENT_OUT_OF_BOUNDS_DATA");
+		if (qaPercentOutOfBoundsData != "" && BoundingTools.isParseable(qaPercentOutOfBoundsData)) {
+			((IsoGranule) granule).setQAPercentOutOfBoundsData(Double.parseDouble(qaPercentOutOfBoundsData));
+		}
 
-        Source source = new Source();
-        source.setSourceShortName(xpath.evaluate(IsoMendsXPath.PLATFORM, doc));
+		((IsoGranule) granule).setOrbit(MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.ORBIT, "IsoMendsXPath.ORBIT"));
+		((IsoGranule) granule).setSwotTrack(MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.SWOT_TRACK, "IsoMendsXPath.SWOT_TRACK"));
 
-        Sensor sensor = new Sensor();
-        sensor.setSensorShortName(xpath.evaluate(IsoMendsXPath.INSTRUMENT, doc));
+		Source source = new Source();
+		source.setSourceShortName(MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.PLATFORM, "IsoMendsXPath.PLATFORM"));
 
-        DatasetSource datasetSource = new DatasetSource();
-        DatasetSource.DatasetSourcePK datasetSourcePK = new DatasetSource.DatasetSourcePK();
-        datasetSourcePK.setSource(source);
-        datasetSourcePK.setSensor(sensor);
-        datasetSource.setDatasetSourcePK(datasetSourcePK);
+		Sensor sensor = new Sensor();
+		sensor.setSensorShortName(MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.INSTRUMENT, "IsoMendsXPath.INSTRUMENT"));
 
-        dataset.add(datasetSource);
+		DatasetSource datasetSource = new DatasetSource();
+		DatasetSource.DatasetSourcePK datasetSourcePK = new DatasetSource.DatasetSourcePK();
+		datasetSourcePK.setSource(source);
+		datasetSourcePK.setSensor(sensor);
+		datasetSource.setDatasetSourcePK(datasetSourcePK);
 
-        NodeList inputGranules = (NodeList) xpath.evaluate(IsoMendsXPath.GRANULE_INPUT, doc, XPathConstants.NODESET);
-        for (int i = 0; i < inputGranules.getLength(); i++) {
-            ((IsoGranule) granule).addInputGranule(inputGranules.item(i).getTextContent().trim());
-        }
+		dataset.add(datasetSource);
 
-        ((IsoGranule) granule).setPGEVersionClass(xpath.evaluate(IsoMendsXPath.PGE_VERSION_CLASS, doc));
+		NodeList inputGranules = (NodeList) xpath.evaluate(IsoMendsXPath.GRANULE_INPUT, doc, XPathConstants.NODESET);
+		for (int i = 0; i < inputGranules.getLength(); i++) {
+			((IsoGranule) granule).addInputGranule(inputGranules.item(i).getTextContent().trim());
+		}
+
+		((IsoGranule) granule).setPGEVersionClass(MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.PGE_VERSION_CLASS, "IsoMendsXPath.PGE_VERSION_CLASS"));
 		// Process ISO cycle, pass and tile
-		String  cyclePassTileSceneStr =StringUtils.trim(xpath.evaluate(IsoMendsXPath.CYCLE_PASS_TILE_SCENE, doc));
+		String  cyclePassTileSceneStr =StringUtils.trim(MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.CYCLE_PASS_TILE_SCENE, "IsoMendsXPath.CYCLE_PASS_TILE_SCENE"));
 		if(!StringUtils.isBlank(cyclePassTileSceneStr)) {
 			try {
 				createIsoCyclePassTile(cyclePassTileSceneStr);
@@ -530,97 +537,32 @@ public class MetadataFilesToEcho {
 			additionalAttributes.remove("publishAll");
 			((IsoGranule) granule).setDynamicAttributeNameMapping(additionalAttributes);
 		}
-		
-					
-        String mgrsId = xpath.evaluate(IsoMendsXPath.MGRS_ID, doc);
-        if (mgrsId != null && !mgrsId.equals("")) {
-            // If MGRS_ID field is not null, set as additional attribute
-			AdditionalAttributeType mgrsAttr = new AdditionalAttributeType();
-			mgrsAttr.setName("MGRS_TILE_ID");
-			mgrsAttr.setValues(Collections.singletonList(mgrsId));
 
-            List<AdditionalAttributeType> additionalAttributeTypes = ((IsoGranule) granule).getAdditionalAttributeTypes();
-            if (additionalAttributeTypes == null) {
-                additionalAttributeTypes = Collections.singletonList(mgrsAttr);
-            } else {
-                additionalAttributeTypes.add(mgrsAttr);
-            }
-            
-            JSONObject dynamicAttributeNameMapping = ((IsoGranule) granule).getDynamicAttributeNameMapping();
-            if (dynamicAttributeNameMapping == null) {
-                ((IsoGranule) granule).setDynamicAttributeNameMapping(additionalAttributes);
-            } else {
-                dynamicAttributeNameMapping.put("MGRS_TILE_ID", Collections.singletonList(mgrsId));
-            }
-            ((IsoGranule) granule).setAdditionalAttributeTypes(additionalAttributeTypes);
-            ((IsoGranule) granule).setDynamicAttributeNameMapping(dynamicAttributeNameMapping);
-        }
+
+		String mgrsId = MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.MGRS_ID, "IsoMendsXPath.MGRS_ID");
+		if (mgrsId != null && !mgrsId.equals("")) {
+			// If MGRS_ID field is not null, set as additional attribute
+			AdditionalAttributeType mgrsAttr = new AdditionalAttributeType();
+			mgrsAttr.setName("MGRS_TILE_ID");mgrsAttr.setValues( Collections.singletonList(mgrsId));
+
+			List<AdditionalAttributeType> additionalAttributeTypes = ((IsoGranule) granule).getAdditionalAttributeTypes();
+			if (additionalAttributeTypes == null) {
+				additionalAttributeTypes = Collections.singletonList(mgrsAttr);
+			} else {
+				additionalAttributeTypes.add(mgrsAttr);
+			}
+
+			JSONObject dynamicAttributeNameMapping = ((IsoGranule) granule).getDynamicAttributeNameMapping();
+			if (dynamicAttributeNameMapping == null) {
+				((IsoGranule) granule).setDynamicAttributeNameMapping(additionalAttributes);
+			} else {
+				dynamicAttributeNameMapping.put("MGRS_TILE_ID", Collections.singletonList(mgrsId));
+			}
+			((IsoGranule) granule).setAdditionalAttributeTypes(additionalAttributeTypes);
+			((IsoGranule) granule).setDynamicAttributeNameMapping(dynamicAttributeNameMapping);
+		}
 
 		return  ((IsoGranule) granule);
-	}
-
-	public IsoGranule readFootprintOrbitBBox( Document doc, XPath xpath) throws XPathExpressionException{
-		if(this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.BBOX)) {
-			String northBoundingCoordinateStr = "";
-			String southBoundingCoordinateStr="";
-			String eastBoundingCoordinateStr="";
-			String westBoundingCoordinateStr="";
-
-
-			AdapterLogger.LogDebug(this.className + " Based on MENDsIsoXMLSpatialTypeEnum, processing BBOX");
-			try {
-				northBoundingCoordinateStr = xpath.evaluate(IsoMendsXPath.NORTH_BOUNDING_COORDINATE, doc);
-			} catch (XPathExpressionException e) {
-				AdapterLogger.LogWarning(this.className + " Not able to extract MENDS NORTH_BOUNDING_COORDINATE: " + e);
-			}
-			try {
-				southBoundingCoordinateStr = xpath.evaluate(IsoMendsXPath.SOUTH_BOUNDING_COORDINATE, doc);
-			} catch (XPathExpressionException e) {
-				AdapterLogger.LogWarning(this.className + " Not able to extract MENDS SOUTH_BOUNDING_COORDINATE: " + e);
-			}
-			try {
-				eastBoundingCoordinateStr = xpath.evaluate(IsoMendsXPath.EAST_BOUNDING_COORDINATE, doc);
-			} catch (XPathExpressionException e) {
-				AdapterLogger.LogWarning(this.className + " Not able to extract MENDS EAST_BOUNDING_COORDINATE: " + e);
-			}
-			try {
-				westBoundingCoordinateStr = xpath.evaluate(IsoMendsXPath.WEST_BOUNDING_COORDINATE, doc);
-			} catch (XPathExpressionException e) {
-				AdapterLogger.LogWarning(this.className + " Not able to extract MENDS WEST_BOUNDING_COORDINATE: " + e);
-			}
-			// if any of the exception happened, shall we continue?
-			if (xpath.evaluate(IsoMendsXPath.NORTH_BOUNDING_COORDINATE, doc) != "") {
-				setGranuleBoundingBox(
-						Double.parseDouble(northBoundingCoordinateStr),
-						Double.parseDouble(southBoundingCoordinateStr),
-						Double.parseDouble(eastBoundingCoordinateStr),
-						Double.parseDouble(westBoundingCoordinateStr));
-			}
-		}
-		/**
-		 * There shall be no more logic of "if there is orbit, then there shall be no footprint" anymore
-		 * this function will solely depends on cumulus collection config to determine the collection is
-		 * GEODETIC, CARTICIAN , ORBIT
-		 * if isoXMLSpatialTypeEnumHashSet contains FOOTPRINT, means, the collection is either GEODETIC or CARTICIAN
-		 */
-		if(this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.FOOTPRINT)) {
-			AdapterLogger.LogDebug(this.className + " Based on MENDsIsoXMLSpatialTypeEnum, processing FOOTPRINT");
-			try {
-				((IsoGranule) granule).setPolygon(xpath.evaluate(IsoMendsXPath.POLYGON, doc));
-			} catch (XPathExpressionException e) {
-				// Ignore if unable to parse for footprint since it isn't required for ingest
-				AdapterLogger.LogWarning(this.className + " Not able to extract MENDS footprint: " + e);
-			}
-		}
-		if(this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.ORBIT)) {
-			AdapterLogger.LogDebug(this.className + " Based on MENDsIsoXMLSpatialTypeEnum, processing ORBIT");
-			try {
-				((IsoGranule) granule).setOrbit(xpath.evaluate(IsoMendsXPath.ORBIT, doc));
-			} catch (XPathExpressionException e) {
-				AdapterLogger.LogWarning(this.className + " Not able to extract MENDS orbit: " + e);
-			}
-		}
-		return ((IsoGranule) granule);
 	}
 
 	public List<AdditionalAttributeType> appendAdditionalAttributes(JSONObject metaAdditionalAttributes, NodeList additionalAttributesBlock){
