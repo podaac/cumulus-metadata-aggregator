@@ -79,7 +79,7 @@ public class DatasetVersion implements Serializable {
 	}
 	public void setVersionDate(Date versionDate) {
 		this.versionDate = versionDate;
-		this.versionDateLong = new Long(versionDate.getTime());
+		this.versionDateLong = versionDate.getTime();
 	}
 	
 	public Long getVersionDateLong() {

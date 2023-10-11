@@ -3,7 +3,7 @@ package gov.nasa.cumulus.metadata.umm.generated;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-import javax.annotation.Generated;
+import javax.annotation.processing.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

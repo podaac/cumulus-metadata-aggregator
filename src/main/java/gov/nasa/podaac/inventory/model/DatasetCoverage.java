@@ -147,7 +147,7 @@ public class DatasetCoverage implements Serializable {
 	 */
 	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
-		this.startTimeLong = new Long(startTime.getTime());
+		this.startTimeLong = startTime.getTime();
 	}
 	/**
 	 * @return the stopTime
@@ -160,7 +160,7 @@ public class DatasetCoverage implements Serializable {
 	 */
 	public void setStopTime(Date stopTime) {
 		this.stopTime = stopTime;
-		this.stopTimeLong = new Long(stopTime.getTime());
+		this.stopTimeLong = stopTime.getTime();
 	}
 	
 	public Long getStartTimeLong() {
