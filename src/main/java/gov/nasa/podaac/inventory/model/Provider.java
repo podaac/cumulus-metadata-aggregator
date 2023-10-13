@@ -26,7 +26,7 @@ public class Provider implements Serializable {
 		return providerId;
 	}
 	public void setProviderId(Integer providerId) {
-		this.providerId = new Integer(providerId);
+		this.providerId = providerId;
 	}
 	public String getShortName() {
 		return shortName;

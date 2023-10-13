@@ -95,7 +95,7 @@ public class DatasetCitation implements Serializable {
 	 */
 	public void setReleaseDate(Date releaseDate) {
 		this.releaseDate = releaseDate;
-		this.releaseDateLong = new Long(releaseDate.getTime());
+		this.releaseDateLong = releaseDate.getTime();
 	}
 	
 	public Long getReleaseDateLong() {
