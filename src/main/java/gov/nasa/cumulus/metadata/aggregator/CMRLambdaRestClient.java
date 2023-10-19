@@ -261,7 +261,6 @@ public class CMRLambdaRestClient extends CMRRestClient {
         }
         String localTokenFilePath = s3Utils.download(this.region, this.tknBucket, this.tknFilePath,
                 Paths.get(this.workingDir, "token.json").toString());
-        AdapterLogger.LogInfo(this.className + " downloaded token file to local:" + localTokenFilePath);
         JSONObject json = null;
         try (FileReader reader = new FileReader(String.valueOf(localTokenFilePath))) {
             json = (JSONObject) parser.parse(reader);
@@ -302,7 +301,6 @@ public class CMRLambdaRestClient extends CMRRestClient {
         request.setHeader("Content-Type", content_type);
         // Send the request
         HttpResponse response = httpClient.execute(request);
-        request.releaseConnection();
         return response;
     }
 

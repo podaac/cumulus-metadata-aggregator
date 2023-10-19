@@ -291,7 +291,6 @@ public class MetadataFilesToEcho {
 			}
 			granule.getGranuleArchiveSet().add(uga);
 		}
-		AdapterLogger.LogInfo(this.className + " GranuleArchive HashSet Size:" + granule.getGranuleArchiveSet().size());
 		AdapterLogger.LogInfo(this.className + " GranuleArchive HashSet:" + granule.getGranuleArchiveSet());
 	}
 
@@ -324,12 +323,12 @@ public class MetadataFilesToEcho {
         // if we get here, we have the bare minimum fields already populated,
         // so try and parse the rest of the granule metadata...
         try {
+			((IsoGranule) this.granule).setIsoType(isoType);
             if (isoType == IsoType.MENDS) {
                 AdapterLogger.LogInfo("Found MENDS file");
                 readIsoMendsMetadataFile(s3Location, doc, xpath);
             } else if (isoType == IsoType.SMAP) {
                 AdapterLogger.LogInfo("Found SMAP file");
-				((IsoGranule) this.granule).setIsoType(isoType);
                 readIsoSmapMetadataFile(s3Location, doc, xpath);
             } else {
                 AdapterLogger.LogWarning(isoType.name() + " didn't match any expected ISO type, skipping optional " +

@@ -24,7 +24,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -231,7 +230,7 @@ public class UMMGranuleFile {
     private JSONObject UMMGPostProcessing(JSONObject granuleJson)
     throws ParseException, IOException, URISyntaxException{
         // remove GPolygon in case the polygon came from line formatted xml and spatial validation failed
-        AdapterLogger.LogDebug(this.className + " final UMMG json:" + granuleJson.toJSONString());
+        AdapterLogger.LogDebug(this.className + " final UMMG json for UMMGPostProcessing:" + granuleJson.toJSONString());
         boolean shouldAppendRelatedUrl = isMissingRelatedUrls(granuleJson);
         if(shouldAppendRelatedUrl) {
             granuleJson = appendFakeRelatedUrl(granuleJson);
@@ -329,10 +328,10 @@ public class UMMGranuleFile {
         dataGranule.put("ArchiveAndDistributionInformation", archiveArray);
 
         Set<GranuleArchive> archiveSet = granule.getGranuleArchiveSet();
+        AdapterLogger.LogInfo(this.className + " Granule archiveSet: " + archiveSet);
         for (GranuleArchive archive : archiveSet) {
             JSONObject archiveJson = new JSONObject();
             archiveJson.put("Name", archive.getName());
-            AdapterLogger.LogInfo(this.className + " Granule Archive Name: " + archive.getName());
             JSONObject checksum = new JSONObject();
             if (archive instanceof IsoGranuleArchive) {
                 checksum.put("Value", archive.getChecksum());
@@ -433,15 +432,54 @@ public class UMMGranuleFile {
         return shouldAddBBx;
     }
 
+    private JSONObject appendISOTrack(JSONObject horizontalSpatialDomain) {
+        if (((IsoGranule) granule).getSwotTrack() != "") {
+            JSONObject track = new JSONObject();
+            horizontalSpatialDomain.put("Track", track);
+            Pattern trackPattern = Pattern.compile("Cycle:\\s(.*)\\sPass:\\s(.*)\\sTile:\\s(.*)");
+            Matcher trackMatcher = trackPattern.matcher(((IsoGranule) granule).getSwotTrack());
+            if (trackMatcher.find()) {
+                track.put("Cycle", Integer.parseInt(trackMatcher.group(1)));
+                JSONArray passes = new JSONArray();
+                track.put("Passes", passes);
+
+                String passString = trackMatcher.group(2);
+                if (passString.contains("-")) {
+                    String[] passNumbers = passString.split("-");
+                    int beginPass = Integer.parseInt(passNumbers[0]);
+                    int endPass = Integer.parseInt(passNumbers[1]);
+                    for (int i = beginPass; i <= endPass; i++) {
+                        JSONObject pass = new JSONObject();
+                        pass.put("Pass", i);
+                        pass.put("Tiles", parseTrackTiles(trackMatcher.group(3)));
+                        passes.add(pass);
+                    }
+                } else {
+                    JSONObject pass = new JSONObject();
+                    pass.put("Pass", Integer.parseInt(trackMatcher.group(2)));
+                    pass.put("Tiles", parseTrackTiles(trackMatcher.group(3)));
+                    passes.add(pass);
+                }
+            }
+        }
+        return horizontalSpatialDomain;
+    }
+
     private JSONObject exportSpatial() throws ParseException{
         JSONObject spatialExtent = new JSONObject();
         JSONObject geometry = new JSONObject();
         JSONObject horizontalSpatialDomain = new JSONObject();
         Boolean foundOrbitalData = false;
-        boolean isoBBoxAlreadyProcessed = false;
+        boolean geometryAlreadyProcessed = false;
         spatialExtent.put("HorizontalSpatialDomain", horizontalSpatialDomain);
 
-        if (granule instanceof IsoGranule) {
+        /**
+         * if isoXmlSpatialType is configured in cumulus collection configuration and the code is processing IsoGranule
+         */
+        if (granule instanceof IsoGranule &&
+                (this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.FOOTPRINT) ||
+                this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.BBOX) ||
+                        this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.ORBIT))) {
             /**
              * Export Footprint, Orbit or Bounding Box
              * UMM v1.5 only allows for either Geometry or Orbit not both.  Only process orbit if the orbitString stored
@@ -450,7 +488,7 @@ public class UMMGranuleFile {
             if(this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.FOOTPRINT)) {
                 AdapterLogger.LogDebug(this.className + "UMMGranuleFile.exportSpatial FOOTPRINT Processing");
                 String polygon = ((IsoGranule) granule).getPolygon();
-                AdapterLogger.LogInfo(this.className + " nc.iso.xml footprint processing ... ");
+                geometryAlreadyProcessed = true;
                 this.isLineFormattedPolygon = true;
                 geometry = line2Polygons(geometry,polygon);
             }
@@ -475,49 +513,22 @@ public class UMMGranuleFile {
             if(this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.BBOX)) {
                 // Extract the stored IsoGranule bounding box and put into SpatialExtent
                 AdapterLogger.LogDebug(this.className + "UMMGranuleFile.exportSpatial BBOX Processing");
-                isoBBoxAlreadyProcessed = true;
+                geometryAlreadyProcessed = true;
                 horizontalSpatialDomain = this.appendBoundingRectangles(geometry, horizontalSpatialDomain);
             }
-            // Export track
-            if (((IsoGranule) granule).getSwotTrack() != "") {
-                JSONObject track = new JSONObject();
-                horizontalSpatialDomain.put("Track", track);
-                Pattern trackPattern = Pattern.compile("Cycle:\\s(.*)\\sPass:\\s(.*)\\sTile:\\s(.*)");
-                Matcher trackMatcher = trackPattern.matcher(((IsoGranule) granule).getSwotTrack());
-                if (trackMatcher.find()) {
-                    track.put("Cycle", Integer.parseInt(trackMatcher.group(1)));
-                    JSONArray passes = new JSONArray();
-                    track.put("Passes", passes);
-
-                    String passString = trackMatcher.group(2);
-                    if (passString.contains("-")) {
-                        String[] passNumbers = passString.split("-");
-                        int beginPass = Integer.parseInt(passNumbers[0]);
-                        int endPass = Integer.parseInt(passNumbers[1]);
-                        for (int i = beginPass; i <= endPass; i++) {
-                            JSONObject pass = new JSONObject();
-                            pass.put("Pass", i);
-                            pass.put("Tiles", parseTrackTiles(trackMatcher.group(3)));
-                            passes.add(pass);
-                        }
-                    } else {
-                        JSONObject pass = new JSONObject();
-                        pass.put("Pass", Integer.parseInt(trackMatcher.group(2)));
-                        pass.put("Tiles", parseTrackTiles(trackMatcher.group(3)));
-                        passes.add(pass);
-                    }
-                }
-            }
+            // Commented out Export track
+            horizontalSpatialDomain.put("Geometry", geometry);
+            horizontalSpatialDomain = appendISOTrack(horizontalSpatialDomain);
         } // end of processing IsoGranule
 
         // We can only include orbital or bounding-box data, not both
-        // if iso Bounding Box already processed in logic above, then don't enter this block
-        if (foundOrbitalData == false && !isoBBoxAlreadyProcessed) {
+        // if geometry already processed in logic above (which includes the case of either footprint or bbox
+        // , then don't enter this block
+        if (foundOrbitalData == false && !geometryAlreadyProcessed) {
 
             horizontalSpatialDomain.put("Geometry", geometry);
 
             JSONArray boundingRectangles = new JSONArray();
-            geometry.put("BoundingRectangles", boundingRectangles);
 
             double north = 0, south = 0, east = 0, west = 0;
             if(granule !=null && granule instanceof  gov.nasa.cumulus.metadata.aggregator.UMMGranule) {
@@ -580,6 +591,7 @@ public class UMMGranuleFile {
             // If we get here, it means we have valid values for spatial data, so continue
             // with the spatial extent export.
             if (rangeIs360 && shouldAddBBx(granule)) {
+                AdapterLogger.LogInfo("Entered shouldAddBBx 1");
                 BigDecimal bdeast = BoundingTools.convertBoundingVal(est, true);
                 BigDecimal bdwest = BoundingTools.convertBoundingVal(wst, true);
 
@@ -595,6 +607,7 @@ public class UMMGranuleFile {
                     boundingRectangles.add(createBoundingBoxJson(nrth, sth, BoundingTools.convertBoundingVal(est, true), BigDecimal.valueOf(-180)));
                 }
             } else if (shouldAddBBx(granule)){
+                AdapterLogger.LogInfo("Entered shouldAddBBx 2");
                 if (est.doubleValue() >= wst.doubleValue()) {
                     boundingRectangles.add(createBoundingBoxJson(nrth, sth, est, wst));
                 } else {
@@ -608,6 +621,9 @@ public class UMMGranuleFile {
                         boundingRectangles.add(createBoundingBoxJson(nrth, sth, est, BigDecimal.valueOf(-180)));
                     }
                 }
+            }
+            if(boundingRectangles.size() >0) {
+                geometry.put("BoundingRectangles", boundingRectangles);
             }
         }
 
@@ -733,7 +749,7 @@ public class UMMGranuleFile {
                 }
                 if (dividedSize == 3) {
                     // reconstruct 2 polygons divided over IDL
-                    AdapterLogger.LogInfo(this.className + " Divided to 3 GEOs, connect 1st and 3rd to polygon");
+                    AdapterLogger.LogInfo(this.className + " Divided to 3 GEOs, connecting 1st and 3rd to polygon");
                     ArrayList<Coordinate> polygon1 = UMMUtils.reconstructPolygonsOver2Lines(
                             (ArrayList<Coordinate>) splittedGeos.get(0), (ArrayList<Coordinate>) splittedGeos.get(2));
                     ArrayList<ArrayList<Coordinate>> polygons = new ArrayList<>();
@@ -777,7 +793,6 @@ public class UMMGranuleFile {
             Polygon polygon = geometryFactory.createPolygon(geo.stream().toArray(Coordinate[]::new));
             AdapterLogger.LogInfo(this.className + " Polygon is valid: " + polygon.isValid());
             AdapterLogger.LogInfo(this.className + " Polygon WKT: " + UMMUtils.getWKT(polygon));
-            AdapterLogger.LogInfo(this.className + " ------------------------------------------");
             List<Coordinate> counterClockwiseCoordinates = Arrays.asList(
                     UMMUtils.ensureOrientation(CGAlgorithms.COUNTERCLOCKWISE, geo.toArray(new Coordinate[geo.size()]))
                     );
@@ -801,7 +816,6 @@ public class UMMGranuleFile {
                 // If any polygon is not valid, create a global bounding box and exit
                 AdapterLogger.LogInfo(this.className + " Polygon is NOT valid: " + polygon);
                 AdapterLogger.LogInfo(this.className + " Polygon WKT: " + UMMUtils.getWKT(polygon));
-                AdapterLogger.LogInfo(this.className + " ------------------------------------------");
                 geometry.remove("GPolygons");
                 geometry = addGlobalBoundingBox2Geometry(geometry);
                 break;
