@@ -6,5 +6,5 @@ public class Constants {
         public static final String START_ORBIT = "startorbit";
         public static final String END_ORBIT = "endorbit";
     }
-    public static final String UMMG_VERSION = "1.6.3";
+    public static final String UMMG_VERSION = "1.6.5";
 }

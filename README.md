@@ -54,8 +54,9 @@ gradle -x test build
     ** -r  --constructors-required-only : generate constructor for required field only
     ** -R   remove old output 
  ```aidl
-  jsonschema2pojo -s ./UMM-G1.6.3.json --target java-gen -p gov.nasa.cumulus.metadata.umm.model  -a GSON -r -fdt true -R
-  jsonschema2pojo -s ./UMM-G1.6.3.json --target java-gen -p gov.nasa.cumulus.metadata.umm.model  -a GSON -fdt 
+  
+  jsonschema2pojo -s ./ummg165.json --target java-gen -p gov.nasa.cumulus.metadata.umm.generated -a GSON -fdt -r -R
+  jsonschema2pojo -s ./ummg165.json --target java-gen -p gov.nasa.cumulus.metadata.umm.generated  -a GSON -fdt 
   
   jsonshcema2pojo maven plugin is also configured within the pom.xml file
   mvn compile    // call plugin goal to generate pojo classes

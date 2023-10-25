@@ -3,6 +3,7 @@ package gov.nasa.cumulus.metadata.umm.generated;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,6 +12,7 @@ import com.google.gson.annotations.SerializedName;
  * This entity stores orbital coverage information of the granule. This coverage is an alternative way of expressing granule spatial coverage. This information supports orbital backtrack searching on a granule.
  * 
  */
+@Generated("jsonschema2pojo")
 public class OrbitType {
 
     /**
@@ -53,30 +55,6 @@ public class OrbitType {
     @SerializedName("EndDirection")
     @Expose
     private OrbitType.OrbitDirectionTypeEnum endDirection;
-
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
-    public OrbitType() {
-    }
-
-    /**
-     * 
-     * @param startLatitude
-     * @param ascendingCrossing
-     * @param endDirection
-     * @param startDirection
-     * @param endLatitude
-     */
-    public OrbitType(Double ascendingCrossing, Double startLatitude, OrbitType.OrbitDirectionTypeEnum startDirection, Double endLatitude, OrbitType.OrbitDirectionTypeEnum endDirection) {
-        super();
-        this.ascendingCrossing = ascendingCrossing;
-        this.startLatitude = startLatitude;
-        this.startDirection = startDirection;
-        this.endLatitude = endLatitude;
-        this.endDirection = endDirection;
-    }
 
     /**
      * The longitude value of a spatially referenced point, in degrees. Longitude values range from -180 to 180.
@@ -228,6 +206,7 @@ public class OrbitType {
      * Orbit start and end direction. A for ascending orbit and D for descending.
      * 
      */
+    @Generated("jsonschema2pojo")
     public enum OrbitDirectionTypeEnum {
 
         @SerializedName("A")
@@ -243,7 +222,7 @@ public class OrbitType {
             }
         }
 
-        private OrbitDirectionTypeEnum(String value) {
+        OrbitDirectionTypeEnum(String value) {
             this.value = value;
         }
 

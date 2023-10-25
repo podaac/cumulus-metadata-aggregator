@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.algorithm.CGAlgorithms;
 import cumulus_message_adapter.message_parser.AdapterLogger;
+import gov.nasa.cumulus.metadata.state.MENDsIsoXMLSpatialTypeEnum;
 import gov.nasa.cumulus.metadata.umm.adapter.UMMGCollectionAdapter;
 import gov.nasa.cumulus.metadata.umm.adapter.UMMGListAdapter;
 import gov.nasa.cumulus.metadata.umm.adapter.UMMGMapAdapter;
@@ -56,11 +57,18 @@ public class UMMGranuleFile {
      * if processed the footprint through S6 manifest xml's <lilne></lilne> tag
      */
     boolean isLineFormattedPolygon = false;
+    HashSet<MENDsIsoXMLSpatialTypeEnum> isoXMLSpatialTypeEnumHashSet = new HashSet<>();
 
     public UMMGranuleFile(Granule granule, Dataset dataset, boolean rangeIs360) {
+        this(granule, dataset,rangeIs360, new HashSet<MENDsIsoXMLSpatialTypeEnum>() );
+    }
+
+    public UMMGranuleFile(Granule granule, Dataset dataset, boolean rangeIs360,
+                          HashSet<MENDsIsoXMLSpatialTypeEnum> inputIsoXMLSpatialTypeEnumHashSet) {
         this.granule = granule;
         this.dataset = dataset;
         this.rangeIs360 = rangeIs360;
+        this.isoXMLSpatialTypeEnumHashSet =inputIsoXMLSpatialTypeEnumHashSet;
     }
 
     public JSONObject defineGranule()
@@ -200,6 +208,7 @@ public class UMMGranuleFile {
          * Only when having gone through S6A Line to Polygon processing, then call UMMGPostProcessing.
          */
         if(this.isLineFormattedPolygon) {
+            AdapterLogger.LogInfo(this.className + " Start post processing of UMMG by posting UMMG to CMR. If failed, put GBBox into UMMG");
             granuleJson = UMMGPostProcessing(granuleJson);
         }
 
@@ -396,10 +405,19 @@ public class UMMGranuleFile {
         JSONObject range = new JSONObject();
         range.put("BeginningDateTime", TimeConversion.convertDate(granule.getStartTime()).toString());
         range.put("EndingDateTime", TimeConversion.convertDate(granule.getStopTime()).toString());
+
         temporal.put("RangeDateTime", range);
         return temporal;
     }
 
+    /**
+     * PODAAC-4713
+     * SMAP collection going through LP DAAC should:
+     * create GPolygon of posList appears in iso.xml
+     * UMMG should not include bounding box if GPolygon appeared under SpatialExtent
+     * @param granule
+     * @return
+     */
     private boolean shouldAddBBx(Granule granule) {
         boolean shouldAddBBx = false;
         if(granule !=null && granule instanceof  gov.nasa.cumulus.metadata.aggregator.UMMGranule) {
@@ -420,29 +438,46 @@ public class UMMGranuleFile {
         JSONObject geometry = new JSONObject();
         JSONObject horizontalSpatialDomain = new JSONObject();
         Boolean foundOrbitalData = false;
+        boolean isoBBoxAlreadyProcessed = false;
         spatialExtent.put("HorizontalSpatialDomain", horizontalSpatialDomain);
 
         if (granule instanceof IsoGranule) {
-            String polygon = ((IsoGranule) granule).getPolygon();
-            if (polygon != "" && polygon != null) {
-                // Export Polygon
-                addPolygon(geometry, polygon);
+            /**
+             * Export Footprint, Orbit or Bounding Box
+             * UMM v1.5 only allows for either Geometry or Orbit not both.  Only process orbit if the orbitString stored
+             * (during MetatdataFilesToEcho.readIsoxxxx()) is not empty or null
+             */
+            if(this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.FOOTPRINT)) {
+                AdapterLogger.LogDebug(this.className + "UMMGranuleFile.exportSpatial FOOTPRINT Processing");
+                String polygon = ((IsoGranule) granule).getPolygon();
+                AdapterLogger.LogInfo(this.className + " nc.iso.xml footprint processing ... ");
+                this.isLineFormattedPolygon = true;
+                geometry = line2Polygons(geometry,polygon);
             }
-            // Export Orbit
-            // Commented out for now since UMM v1.5 only allows for either Geometry or Orbit not both
-            JSONObject orbit = new JSONObject();
-            horizontalSpatialDomain.put("Orbit", orbit);
-            Pattern p = Pattern.compile("AscendingCrossing:\\s?(.*)\\s?StartLatitude:\\s?(.*)\\s?StartDirection:\\s?(.*)\\s?EndLatitude:\\s?(.*)\\s?EndDirection:\\s?(.*)");
-            Matcher m = p.matcher(((IsoGranule) granule).getOrbit());
-            foundOrbitalData = m.find();
-            if (foundOrbitalData && BoundingTools.allParsable(m.group(1), m.group(2), m.group(4))) {
-                orbit.put("AscendingCrossing", UMMUtils.longitudeTypeNormalizer(Double.parseDouble(m.group(1))));
-                orbit.put("StartLatitude", Double.parseDouble(m.group(2)));
-                orbit.put("StartDirection", m.group(3).trim());
-                orbit.put("EndLatitude", Double.parseDouble(m.group(4)));
-                orbit.put("EndDirection", m.group(5).trim());
+            if(this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.ORBIT)) {
+                AdapterLogger.LogDebug(this.className + "UMMGranuleFile.exportSpatial ORBIT Processing");
+                String orbitStr = ((IsoGranule) granule).getOrbit();
+                if (!StringUtils.isEmpty(orbitStr)) {
+                    JSONObject orbit = new JSONObject();
+                    horizontalSpatialDomain.put("Orbit", orbit);
+                    Pattern p = Pattern.compile("AscendingCrossing:\\s?(.*)\\s?StartLatitude:\\s?(.*)\\s?StartDirection:\\s?(.*)\\s?EndLatitude:\\s?(.*)\\s?EndDirection:\\s?(.*)");
+                    Matcher m = p.matcher(orbitStr);
+                    foundOrbitalData = m.find();
+                    if (foundOrbitalData && BoundingTools.allParsable(m.group(1), m.group(2), m.group(4))) {
+                        orbit.put("AscendingCrossing", UMMUtils.longitudeTypeNormalizer(Double.parseDouble(m.group(1))));
+                        orbit.put("StartLatitude", Double.parseDouble(m.group(2)));
+                        orbit.put("StartDirection", m.group(3).trim());
+                        orbit.put("EndLatitude", Double.parseDouble(m.group(4)));
+                        orbit.put("EndDirection", m.group(5).trim());
+                    }
+                }
             }
-
+            if(this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.BBOX)) {
+                // Extract the stored IsoGranule bounding box and put into SpatialExtent
+                AdapterLogger.LogDebug(this.className + "UMMGranuleFile.exportSpatial BBOX Processing");
+                isoBBoxAlreadyProcessed = true;
+                horizontalSpatialDomain = this.appendBoundingRectangles(geometry, horizontalSpatialDomain);
+            }
             // Export track
             if (((IsoGranule) granule).getSwotTrack() != "") {
                 JSONObject track = new JSONObject();
@@ -473,10 +508,11 @@ public class UMMGranuleFile {
                     }
                 }
             }
-        }
+        } // end of processing IsoGranule
 
         // We can only include orbital or bounding-box data, not both
-        if (foundOrbitalData == false) {
+        // if iso Bounding Box already processed in logic above, then don't enter this block
+        if (foundOrbitalData == false && !isoBBoxAlreadyProcessed) {
 
             horizontalSpatialDomain.put("Geometry", geometry);
 
@@ -516,7 +552,7 @@ public class UMMGranuleFile {
 
             // first, check to see if any of the spatial values are bad/invalid
             if (BoundingTools.coordsInvalid(north, south, east, west)) {
-                log.warn("Bounding coordinates invalid: \'North: " + north +
+                AdapterLogger.LogWarning("Bounding coordinates invalid: \'North: " + north +
                         ", \'South: " + south +
                         ", \'West: " + west +
                         ", \'East: " + east +
@@ -584,17 +620,43 @@ public class UMMGranuleFile {
                 horizontalSpatialDomain.put("Track", createUMMGTrack((UMMGranule) granule));
             }
         }
-
-        // Export footprint if it exists
-
+        // this block of code process Sentinal6 iso.xml polygon which is stored within
+        // granule.getGranuleCharacterSet().add(createGranuleCharacter(line,"line"))
+        // This is NOT swot iso.xml which stores everything within IsoGranule pojo
         Set<GranuleCharacter> granuleCharacters = granule.getGranuleCharacterSet();
         for (GranuleCharacter granuleCharacter : granuleCharacters) {
             if (granuleCharacter.getDatasetElement().getElementDD().getShortName().equals("line")) {
+                AdapterLogger.LogInfo(this.className + " Start processing line2Polygons : " + granuleCharacter.getValue() );
+                this.isLineFormattedPolygon = true;
                 geometry = line2Polygons(geometry,granuleCharacter.getValue());
                 break;
             }
         }
         return spatialExtent;
+    }
+
+    public JSONObject appendBoundingRectangles (JSONObject geometry, JSONObject horizontalSpatialDomain) {
+        double north = 0, south = 0, east = 0, west = 0;
+        east = ((IsoGranule) granule).getBbxEasternLongitude() != null ?
+                ((IsoGranule) granule).getBbxEasternLongitude() : 0;
+        west = ((IsoGranule) granule).getBbxWesternLongitude() != null?
+                ((IsoGranule) granule).getBbxWesternLongitude() : 0;
+        north = ((IsoGranule) granule).getBbxNorthernLatitude() != null?
+                ((IsoGranule) granule).getBbxNorthernLatitude() : 0;
+        south = ((IsoGranule) granule).getBbxSouthernLatitude() != null?
+                ((IsoGranule) granule).getBbxSouthernLatitude() : 0;
+        if(BoundingTools.coordsInvalid(north, south, east, west)) {
+            west = -180.0;
+            east = -179.0;
+            north = -89.0;
+            south = -90.0;
+        }
+        horizontalSpatialDomain.put("Geometry", geometry);
+        JSONArray boundingRectangles = new JSONArray();
+        geometry.put("BoundingRectangles", boundingRectangles);
+        boundingRectangles.add(createBoundingBoxJson(new BigDecimal(north), new BigDecimal(south),
+                new BigDecimal(east), new BigDecimal(west)));
+        return horizontalSpatialDomain;
     }
 
     public JSONObject createUMMGTrack(UMMGranule ummGranule) throws ParseException {

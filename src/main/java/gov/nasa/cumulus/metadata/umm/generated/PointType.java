@@ -1,6 +1,7 @@
 
 package gov.nasa.cumulus.metadata.umm.generated;
 
+import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,6 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * The longitude and latitude values of a spatially referenced point in degrees.
  * 
  */
+@Generated("jsonschema2pojo")
 public class PointType {
 
     /**
@@ -27,24 +29,6 @@ public class PointType {
     @SerializedName("Latitude")
     @Expose
     private Double latitude;
-
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
-    public PointType() {
-    }
-
-    /**
-     * 
-     * @param latitude
-     * @param longitude
-     */
-    public PointType(Double longitude, Double latitude) {
-        super();
-        this.longitude = longitude;
-        this.latitude = latitude;
-    }
 
     /**
      * The longitude value of a spatially referenced point, in degrees. Longitude values range from -180 to 180.

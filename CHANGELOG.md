@@ -5,8 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.5.0]
+### Added
+- **PODAAC-5594**
+  - Support BasinID
+- **PODAAC-5770**
+  - use meta.isoXMLSpatialType to configure the collection should process the combination of footprint, orbit and bbox
+- **PODAAC-5717**
+  - Upgrade to UMMG 1.6.5
+  - support empty Pass in Cycle/Pass/Tile string
+### Deprecated
+### Removed
+### Fixed
+- **PODAAC-5708**
+  - .nc.iso.xml Polygon divided over IDL
+### Security
+
+- 
 ## [8.4.0]
 ### Added
+- Update metadata aggregator to add description to image variables from image processor and test tig forge processor
 ### Deprecated
 ### Removed
 ### Fixed

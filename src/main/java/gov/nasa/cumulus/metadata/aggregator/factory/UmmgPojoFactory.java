@@ -1,5 +1,6 @@
 package gov.nasa.cumulus.metadata.aggregator.factory;
 
+import gov.nasa.cumulus.metadata.aggregator.IsoGranule;
 import gov.nasa.cumulus.metadata.umm.generated.AdditionalAttributeType;
 import gov.nasa.cumulus.metadata.umm.generated.TrackPassTileType;
 import gov.nasa.cumulus.metadata.umm.generated.TrackType;
@@ -47,7 +48,8 @@ public class UmmgPojoFactory {
         return trackType;
     }
 
-    public List<AdditionalAttributeType> trackTypeToAdditionalAttributeTypes(TrackType trackType) {
+    public List<AdditionalAttributeType> trackTypeToAdditionalAttributeTypes(
+            TrackType trackType) {
         List<TrackPassTileType> trackPassTileTypes = trackType.getPasses();
         trackPassTileTypes = trackPassTileTypes.stream().filter(trackPassTileType ->
                 trackPassTileType.getPass()!=null
@@ -62,5 +64,18 @@ public class UmmgPojoFactory {
             additionalAttributeTypes.add(additionalAttributeType);
         });
         return additionalAttributeTypes;
+    }
+
+    public List<AdditionalAttributeType> basinIdsToAdditionalAttributeTypes(
+            List<String> basinIdStrs) {
+        ArrayList<AdditionalAttributeType> additionalAttributeTypes = new ArrayList<>();
+        if(basinIdStrs!=null && basinIdStrs.size() >0) {
+            AdditionalAttributeType additionalAttributeType = new AdditionalAttributeType();
+            additionalAttributeType.setName("BasinID");
+            additionalAttributeType.setValues(basinIdStrs);
+            additionalAttributeTypes.add(additionalAttributeType);
+        }
+        return (additionalAttributeTypes);
+
     }
 }
