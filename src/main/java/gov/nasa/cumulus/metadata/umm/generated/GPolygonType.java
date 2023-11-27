@@ -1,7 +1,6 @@
 
 package gov.nasa.cumulus.metadata.umm.generated;
 
-import javax.annotation.processing.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,7 +9,6 @@ import com.google.gson.annotations.SerializedName;
  * A GPolygon specifies an area on the earth represented by a main boundary with optional boundaries for regions excluded from the main boundary.
  * 
  */
-@Generated("jsonschema2pojo")
 public class GPolygonType {
 
     /**
