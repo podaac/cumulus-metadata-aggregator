@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **PODAAC-5876**
   - Update to use CMA 2.0.0, thus allowing 2.0.3 layer for lambda
   - Update build to use java 11
+  - To generate java 11 compatible UMMG schema POJOs, jsonschema2pojo shall make use of command line parameter: --target-version 1.11 
 ### Deprecated
 ### Removed
 ### Fixed
