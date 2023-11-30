@@ -3,7 +3,6 @@ package gov.nasa.cumulus.metadata.umm.generated;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.processing.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,7 +11,6 @@ import com.google.gson.annotations.SerializedName;
  * This entity holds all types of online URL associated with the granule such as guide document or ordering site etc.
  * 
  */
-@Generated("jsonschema2pojo")
 public class RelatedUrlType {
 
     /**
@@ -257,7 +255,6 @@ public class RelatedUrlType {
      * The unit of the file size.
      * 
      */
-    @Generated("jsonschema2pojo")
     public enum FileSizeUnitEnum {
 
         @SerializedName("KB")
@@ -305,7 +302,6 @@ public class RelatedUrlType {
 
     }
 
-    @Generated("jsonschema2pojo")
     public enum MimeTypeEnum {
 
         @SerializedName("application/json")
@@ -397,7 +393,6 @@ public class RelatedUrlType {
 
     }
 
-    @Generated("jsonschema2pojo")
     public enum RelatedUrlSubTypeEnum {
 
         @SerializedName("MOBILE APP")
@@ -569,7 +564,6 @@ public class RelatedUrlType {
 
     }
 
-    @Generated("jsonschema2pojo")
     public enum RelatedUrlTypeEnum {
 
         @SerializedName("DOWNLOAD SOFTWARE")

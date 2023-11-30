@@ -3,7 +3,6 @@ package gov.nasa.cumulus.metadata.umm.generated;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.processing.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,7 +11,6 @@ import com.google.gson.annotations.SerializedName;
  * This entity stores orbital coverage information of the granule. This coverage is an alternative way of expressing granule spatial coverage. This information supports orbital backtrack searching on a granule.
  * 
  */
-@Generated("jsonschema2pojo")
 public class OrbitType {
 
     /**
@@ -206,7 +204,6 @@ public class OrbitType {
      * Orbit start and end direction. A for ascending orbit and D for descending.
      * 
      */
-    @Generated("jsonschema2pojo")
     public enum OrbitDirectionTypeEnum {
 
         @SerializedName("A")

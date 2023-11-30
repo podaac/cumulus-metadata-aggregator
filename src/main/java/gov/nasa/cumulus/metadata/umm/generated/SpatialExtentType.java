@@ -3,7 +3,6 @@ package gov.nasa.cumulus.metadata.umm.generated;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-import javax.annotation.processing.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,7 +11,6 @@ import com.google.gson.annotations.SerializedName;
  * This class contains attributes which describe the spatial extent of a granule. Spatial Extent includes any or all of Granule Localities, Horizontal Spatial Domain, and Vertical Spatial Domain.
  * 
  */
-@Generated("jsonschema2pojo")
 public class SpatialExtentType {
 
     /**
