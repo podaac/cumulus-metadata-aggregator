@@ -324,12 +324,12 @@ public class MetadataFilesToEcho {
         // if we get here, we have the bare minimum fields already populated,
         // so try and parse the rest of the granule metadata...
         try {
+			((IsoGranule) this.granule).setIsoType(isoType);
             if (isoType == IsoType.MENDS) {
                 AdapterLogger.LogInfo("Found MENDS file");
                 readIsoMendsMetadataFile(s3Location, doc, xpath);
             } else if (isoType == IsoType.SMAP) {
                 AdapterLogger.LogInfo("Found SMAP file");
-				((IsoGranule) this.granule).setIsoType(isoType);
                 readIsoSmapMetadataFile(s3Location, doc, xpath);
             } else {
                 AdapterLogger.LogWarning(isoType.name() + " didn't match any expected ISO type, skipping optional " +
@@ -486,7 +486,7 @@ public class MetadataFilesToEcho {
 
 		((IsoGranule) granule).setOrbit(MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.ORBIT, "IsoMendsXPath.ORBIT"));
 		((IsoGranule) granule).setSwotTrack(MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.SWOT_TRACK, "IsoMendsXPath.SWOT_TRACK"));
-
+		AdapterLogger.LogDebug("1 SWOT track is set as" + ((IsoGranule) granule).getSwotTrack());
 		Source source = new Source();
 		source.setSourceShortName(MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.PLATFORM, "IsoMendsXPath.PLATFORM"));
 
@@ -511,7 +511,7 @@ public class MetadataFilesToEcho {
 		String  cyclePassTileSceneStr =StringUtils.trim(MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.CYCLE_PASS_TILE_SCENE, "IsoMendsXPath.CYCLE_PASS_TILE_SCENE"));
 		if(!StringUtils.isBlank(cyclePassTileSceneStr)) {
 			try {
-				createIsoCyclePassTile(cyclePassTileSceneStr);
+				granule = createIsoCyclePassTile(cyclePassTileSceneStr);
 			} catch (Exception e) {
 				// Since TrackType which contains Cycle Pass Tile and Scenes is not a required field
 				// we catch exception with printStackTrace to know the exact line throwing error
@@ -818,6 +818,7 @@ public class MetadataFilesToEcho {
         ((IsoGranule) granule).setOrbit(xpath.evaluate(IsoSmapXPath.ORBIT, doc));
 
         ((IsoGranule) granule).setSwotTrack(xpath.evaluate(IsoSmapXPath.SWOT_TRACK, doc));
+		AdapterLogger.LogDebug("2 SWOT track is set as" + ((IsoGranule) granule).getSwotTrack());
 		((IsoGranule) granule).setPolygon(xpath.evaluate(IsoSmapXPath.POLYGON, doc));
 
         Source source = new Source();

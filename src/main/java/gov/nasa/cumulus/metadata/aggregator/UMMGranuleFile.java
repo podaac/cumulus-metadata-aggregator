@@ -420,7 +420,10 @@ public class UMMGranuleFile {
      */
     private boolean shouldAddBBx(Granule granule) {
         boolean shouldAddBBx = false;
-        if(granule !=null && granule instanceof  gov.nasa.cumulus.metadata.aggregator.UMMGranule) {
+        if(granule.getIsoType() == null) {
+            AdapterLogger.LogInfo(this.className + " shouldAddBBx detect UMMGranule Object");
+        }
+        if(granule !=null && granule.getIsoType() == null) {
             shouldAddBBx = true;
         }
         // if the granule object is IsoGranule type and it is SMAP mission, then we check if polygon was added.
@@ -430,6 +433,7 @@ public class UMMGranuleFile {
         &&  StringUtils.isNotEmpty(((IsoGranule) granule).getPolygon())) {
                 shouldAddBBx = false;
         }
+        AdapterLogger.LogInfo(this.className + " shouldAddBBx:" + shouldAddBBx);
         return shouldAddBBx;
     }
 
@@ -440,6 +444,7 @@ public class UMMGranuleFile {
         Boolean foundOrbitalData = false;
         boolean isoBBoxAlreadyProcessed = false;
         spatialExtent.put("HorizontalSpatialDomain", horizontalSpatialDomain);
+        boolean isIsoXMLSpatialProcessed = false;
 
         if (granule instanceof IsoGranule) {
             /**
@@ -448,13 +453,16 @@ public class UMMGranuleFile {
              * (during MetatdataFilesToEcho.readIsoxxxx()) is not empty or null
              */
             if(this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.FOOTPRINT)) {
+                isIsoXMLSpatialProcessed =true;
                 AdapterLogger.LogDebug(this.className + "UMMGranuleFile.exportSpatial FOOTPRINT Processing");
                 String polygon = ((IsoGranule) granule).getPolygon();
                 AdapterLogger.LogInfo(this.className + " nc.iso.xml footprint processing ... ");
                 this.isLineFormattedPolygon = true;
                 geometry = line2Polygons(geometry,polygon);
+                horizontalSpatialDomain.put("Geometry", geometry);
             }
             if(this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.ORBIT)) {
+                isIsoXMLSpatialProcessed =true;
                 AdapterLogger.LogDebug(this.className + "UMMGranuleFile.exportSpatial ORBIT Processing");
                 String orbitStr = ((IsoGranule) granule).getOrbit();
                 if (!StringUtils.isEmpty(orbitStr)) {
@@ -473,18 +481,21 @@ public class UMMGranuleFile {
                 }
             }
             if(this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.BBOX)) {
+                isIsoXMLSpatialProcessed =true;
                 // Extract the stored IsoGranule bounding box and put into SpatialExtent
                 AdapterLogger.LogDebug(this.className + "UMMGranuleFile.exportSpatial BBOX Processing");
                 isoBBoxAlreadyProcessed = true;
                 horizontalSpatialDomain = this.appendBoundingRectangles(geometry, horizontalSpatialDomain);
             }
             // Export track
-            if (((IsoGranule) granule).getSwotTrack() != "") {
+            AdapterLogger.LogDebug(this.className + "Swot track string" + ((IsoGranule) granule).getSwotTrack());
+            if (((IsoGranule) granule).getSwotTrack() != "" && granule.getIsoType() == IsoType.SMAP) {
                 JSONObject track = new JSONObject();
                 horizontalSpatialDomain.put("Track", track);
                 Pattern trackPattern = Pattern.compile("Cycle:\\s(.*)\\sPass:\\s(.*)\\sTile:\\s(.*)");
                 Matcher trackMatcher = trackPattern.matcher(((IsoGranule) granule).getSwotTrack());
                 if (trackMatcher.find()) {
+                    AdapterLogger.LogDebug("SWOT track found cycle");
                     track.put("Cycle", Integer.parseInt(trackMatcher.group(1)));
                     JSONArray passes = new JSONArray();
                     track.put("Passes", passes);
@@ -510,17 +521,18 @@ public class UMMGranuleFile {
             }
         } // end of processing IsoGranule
 
+        AdapterLogger.LogInfo(this.className + " granule isoType:" + granule.getIsoType());
         // We can only include orbital or bounding-box data, not both
         // if iso Bounding Box already processed in logic above, then don't enter this block
         if (foundOrbitalData == false && !isoBBoxAlreadyProcessed) {
-
+            AdapterLogger.LogInfo(this.className + " Second block");
             horizontalSpatialDomain.put("Geometry", geometry);
 
             JSONArray boundingRectangles = new JSONArray();
-            geometry.put("BoundingRectangles", boundingRectangles);
 
             double north = 0, south = 0, east = 0, west = 0;
-            if(granule !=null && granule instanceof  gov.nasa.cumulus.metadata.aggregator.UMMGranule) {
+            if(granule !=null &&  granule.getIsoType() == null) {
+                AdapterLogger.LogInfo(this.className + " Unexpected block");
                 east = ((UMMGranule) granule).getBbxEasternLongitude() != null ?
                         ((UMMGranule) granule).getBbxEasternLongitude() : 0;
                 west = ((UMMGranule) granule).getBbxWesternLongitude() != null?
@@ -530,6 +542,7 @@ public class UMMGranuleFile {
                 south = ((UMMGranule) granule).getBbxSouthernLatitude() != null?
                         ((UMMGranule) granule).getBbxSouthernLatitude() : 0;
             } else {
+                AdapterLogger.LogInfo(this.className + " BBX Else");
                 Set<GranuleReal> grs = granule.getGranuleRealSet();
 
                 for (GranuleReal gr : grs) {
@@ -565,7 +578,7 @@ public class UMMGranuleFile {
                 // and make sure we turn off the rangeIs360 flag
                 this.rangeIs360 = false;
             }
-
+            AdapterLogger.LogInfo(this.className + " BBX BigDecimal Processing");
             BigDecimal nrth = new BigDecimal(north);
             BigDecimal sth = new BigDecimal(south);
             nrth = nrth.setScale(3, RoundingMode.HALF_UP);
@@ -609,10 +622,14 @@ public class UMMGranuleFile {
                     }
                 }
             }
+
+            if (boundingRectangles.size() > 0) {
+                geometry.put("BoundingRectangles", boundingRectangles);
+            }
         }
 
         // Export track if cycle and pass exists
-        if (granule instanceof UMMGranule) {
+        if (granule.getIsoType() == IsoType.MENDS) {
             /**
              * Track include cycle and passes(array).
              */
