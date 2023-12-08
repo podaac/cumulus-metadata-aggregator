@@ -23,6 +23,7 @@ public class TrackType {
     private Integer cycle;
     /**
      * A pass number identifies a subset of a granule's spatial extent. This element holds a list of pass numbers and their tiles that exist in the granule. It will allow a user to search by pass number and its tiles that are contained with in a cycle number.  While trying to keep this generic for all to use, this comes from a SWOT requirement where a pass represents a 1/2 orbit. This element will then hold a list of 1/2 orbits and their tiles that together represent the granule's spatial extent.
+     * (Required)
      * 
      */
     @SerializedName("Passes")
@@ -49,6 +50,7 @@ public class TrackType {
 
     /**
      * A pass number identifies a subset of a granule's spatial extent. This element holds a list of pass numbers and their tiles that exist in the granule. It will allow a user to search by pass number and its tiles that are contained with in a cycle number.  While trying to keep this generic for all to use, this comes from a SWOT requirement where a pass represents a 1/2 orbit. This element will then hold a list of 1/2 orbits and their tiles that together represent the granule's spatial extent.
+     * (Required)
      * 
      */
     public List<TrackPassTileType> getPasses() {
@@ -57,6 +59,7 @@ public class TrackType {
 
     /**
      * A pass number identifies a subset of a granule's spatial extent. This element holds a list of pass numbers and their tiles that exist in the granule. It will allow a user to search by pass number and its tiles that are contained with in a cycle number.  While trying to keep this generic for all to use, this comes from a SWOT requirement where a pass represents a 1/2 orbit. This element will then hold a list of 1/2 orbits and their tiles that together represent the granule's spatial extent.
+     * (Required)
      * 
      */
     public void setPasses(List<TrackPassTileType> passes) {

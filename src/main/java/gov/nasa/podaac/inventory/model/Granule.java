@@ -4,6 +4,7 @@
 package gov.nasa.podaac.inventory.model;
 
 
+import gov.nasa.cumulus.metadata.aggregator.IsoType;
 import gov.nasa.podaac.inventory.api.Constant.GranuleStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -63,6 +64,8 @@ public class Granule {
     private Set<GranuleMetaHistory> metaHistorySet = new HashSet<GranuleMetaHistory>();
     private Set<GranuleContact> granuleContactSet = new HashSet<GranuleContact>();
 	private Dataset dataset;
+
+	private IsoType isoType;
 	
 	private static Log log = LogFactory.getLog(Granule.class);
 
@@ -847,7 +850,14 @@ public class Granule {
 			}
 		}
 	}
-	
+
+	public IsoType getIsoType() {
+		return isoType;
+	}
+
+	public void setIsoType(IsoType isoType) {
+		this.isoType = isoType;
+	}
 	
     
 }
