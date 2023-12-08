@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.DocumentBuilder;
@@ -486,7 +485,6 @@ public class MetadataFilesToEcho {
 
 		((IsoGranule) granule).setOrbit(MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.ORBIT, "IsoMendsXPath.ORBIT"));
 		((IsoGranule) granule).setSwotTrack(MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.SWOT_TRACK, "IsoMendsXPath.SWOT_TRACK"));
-		AdapterLogger.LogDebug("1 SWOT track is set as" + ((IsoGranule) granule).getSwotTrack());
 		Source source = new Source();
 		source.setSourceShortName(MENDsISOXmlUtiils.extractXPathValueSwallowException(doc, xpath, IsoMendsXPath.PLATFORM, "IsoMendsXPath.PLATFORM"));
 
@@ -818,7 +816,6 @@ public class MetadataFilesToEcho {
         ((IsoGranule) granule).setOrbit(xpath.evaluate(IsoSmapXPath.ORBIT, doc));
 
         ((IsoGranule) granule).setSwotTrack(xpath.evaluate(IsoSmapXPath.SWOT_TRACK, doc));
-		AdapterLogger.LogDebug("2 SWOT track is set as" + ((IsoGranule) granule).getSwotTrack());
 		((IsoGranule) granule).setPolygon(xpath.evaluate(IsoSmapXPath.POLYGON, doc));
 
         Source source = new Source();
