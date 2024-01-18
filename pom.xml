@@ -44,7 +44,7 @@
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-s3</artifactId>
-      <version>1.12.544</version>
+      <version>1.12.639</version>
     </dependency>
     <!-- For AWS Secret Manager -->
     <dependency>
