@@ -9,22 +9,22 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * This entity holds all types of online URL associated with the granule such as guide document or ordering site etc.
- * 
+ *
  */
 public class RelatedUrlType {
 
     /**
      * The URL for the relevant resource.
      * (Required)
-     * 
+     *
      */
     @SerializedName("URL")
     @Expose
     private String url;
     /**
-     * 
+     *
      * (Required)
-     * 
+     *
      */
     @SerializedName("Type")
     @Expose
@@ -34,14 +34,14 @@ public class RelatedUrlType {
     private RelatedUrlType.RelatedUrlSubTypeEnum subtype;
     /**
      * Description of the web page at this URL.
-     * 
+     *
      */
     @SerializedName("Description")
     @Expose
     private String description;
     /**
      * The format that granule data confirms to. While the value is listed as open to any text, CMR requires that it confirm to one of the values on the GranuleDataFormat values in the Keyword Management System: https://gcmd.earthdata.nasa.gov/kms/concepts/concept_scheme/GranuleDataFormat
-     * 
+     *
      */
     @SerializedName("Format")
     @Expose
@@ -51,14 +51,14 @@ public class RelatedUrlType {
     private RelatedUrlType.MimeTypeEnum mimeType;
     /**
      * The size of the resource.
-     * 
+     *
      */
     @SerializedName("Size")
     @Expose
     private Double size;
     /**
      * The unit of the file size.
-     * 
+     *
      */
     @SerializedName("SizeUnit")
     @Expose
@@ -67,7 +67,7 @@ public class RelatedUrlType {
     /**
      * The URL for the relevant resource.
      * (Required)
-     * 
+     *
      */
     public String getUrl() {
         return url;
@@ -76,25 +76,25 @@ public class RelatedUrlType {
     /**
      * The URL for the relevant resource.
      * (Required)
-     * 
+     *
      */
     public void setUrl(String url) {
         this.url = url;
     }
 
     /**
-     * 
+     *
      * (Required)
-     * 
+     *
      */
     public RelatedUrlType.RelatedUrlTypeEnum getType() {
         return type;
     }
 
     /**
-     * 
+     *
      * (Required)
-     * 
+     *
      */
     public void setType(RelatedUrlType.RelatedUrlTypeEnum type) {
         this.type = type;
@@ -110,7 +110,7 @@ public class RelatedUrlType {
 
     /**
      * Description of the web page at this URL.
-     * 
+     *
      */
     public String getDescription() {
         return description;
@@ -118,7 +118,7 @@ public class RelatedUrlType {
 
     /**
      * Description of the web page at this URL.
-     * 
+     *
      */
     public void setDescription(String description) {
         this.description = description;
@@ -126,7 +126,7 @@ public class RelatedUrlType {
 
     /**
      * The format that granule data confirms to. While the value is listed as open to any text, CMR requires that it confirm to one of the values on the GranuleDataFormat values in the Keyword Management System: https://gcmd.earthdata.nasa.gov/kms/concepts/concept_scheme/GranuleDataFormat
-     * 
+     *
      */
     public String getFormat() {
         return format;
@@ -134,7 +134,7 @@ public class RelatedUrlType {
 
     /**
      * The format that granule data confirms to. While the value is listed as open to any text, CMR requires that it confirm to one of the values on the GranuleDataFormat values in the Keyword Management System: https://gcmd.earthdata.nasa.gov/kms/concepts/concept_scheme/GranuleDataFormat
-     * 
+     *
      */
     public void setFormat(String format) {
         this.format = format;
@@ -150,7 +150,7 @@ public class RelatedUrlType {
 
     /**
      * The size of the resource.
-     * 
+     *
      */
     public Double getSize() {
         return size;
@@ -158,7 +158,7 @@ public class RelatedUrlType {
 
     /**
      * The size of the resource.
-     * 
+     *
      */
     public void setSize(Double size) {
         this.size = size;
@@ -166,7 +166,7 @@ public class RelatedUrlType {
 
     /**
      * The unit of the file size.
-     * 
+     *
      */
     public RelatedUrlType.FileSizeUnitEnum getSizeUnit() {
         return sizeUnit;
@@ -174,7 +174,7 @@ public class RelatedUrlType {
 
     /**
      * The unit of the file size.
-     * 
+     *
      */
     public void setSizeUnit(RelatedUrlType.FileSizeUnitEnum sizeUnit) {
         this.sizeUnit = sizeUnit;
@@ -253,7 +253,7 @@ public class RelatedUrlType {
 
     /**
      * The unit of the file size.
-     * 
+     *
      */
     public enum FileSizeUnitEnum {
 

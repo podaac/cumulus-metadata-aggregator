@@ -185,7 +185,9 @@
           <targetPackage>gov.nasa.cumulus.metadata.umm.generated</targetPackage>
           <sourceType>jsonschema</sourceType>
           <annotationStyle>GSON</annotationStyle>
-          <includeConstructors>true</includeConstructors>
+          <includeConstructors>false</includeConstructors>
+          <targetVersion>11</targetVersion>
+          <includeGeneratedAnnotation>false</includeGeneratedAnnotation>
           <formatDateTimes>true</formatDateTimes>
           <formatDates>true</formatDates>
           <formatDateTimes>true</formatDateTimes>
