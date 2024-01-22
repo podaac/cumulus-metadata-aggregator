@@ -191,8 +191,6 @@ public class CMRRestClient {
         } else {
             logHttpResponse(response, HttpOp.SEND);
         }
-        // close the connection
-        request.releaseConnection();
     }
 
     public void closeScrollSession(String scrollJson) throws IOException {

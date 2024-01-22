@@ -14,7 +14,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>gov.nasa.podaac</groupId>
   <artifactId>cumulus-metadata-aggregator</artifactId>
-  <version>8.6.0-alpha.3-SNAPSHOT</version>
+  <version>8.6.0-alpha.4-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Metadata-Aggregator</name>
@@ -185,7 +185,9 @@
           <targetPackage>gov.nasa.cumulus.metadata.umm.generated</targetPackage>
           <sourceType>jsonschema</sourceType>
           <annotationStyle>GSON</annotationStyle>
-          <includeConstructors>true</includeConstructors>
+          <includeConstructors>false</includeConstructors>
+          <targetVersion>11</targetVersion>
+          <includeGeneratedAnnotation>false</includeGeneratedAnnotation>
           <formatDateTimes>true</formatDateTimes>
           <formatDates>true</formatDates>
           <formatDateTimes>true</formatDateTimes>

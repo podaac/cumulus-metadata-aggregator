@@ -76,7 +76,6 @@ public class CMRLambdaRestClient extends CMRRestClient {
         this.echoHost = cmrHost;
         URIBuilder uriBuilder = new URIBuilder(tknHost);
         this.tokenHost = uriBuilder.setPath(uriBuilder.getPath() + "/gettoken").build().normalize().toString();
-        AdapterLogger.LogInfo(this.className + " final token url:" + this.tokenHost);
         this.validHost = this.tokenHost.replaceAll("gettoken", "validate");
         this.region = region;
         this.tknBucket = tknBucket;
@@ -105,7 +104,6 @@ public class CMRLambdaRestClient extends CMRRestClient {
         JSONObject jsonTkn = readToken();
         long fileTime = getTokenStartTime(jsonTkn);
         if (jsonTkn == null || sessionExpired(fileTime, runTime)) {
-            AdapterLogger.LogDebug(this.className + " Generating new NAMS token...");
             try {
                 this.token = buildToken(runTime);
             } catch (Exception e) {
@@ -113,7 +111,6 @@ public class CMRLambdaRestClient extends CMRRestClient {
                 throw new IOException("Could not retrieve token..." + e);
             }
         } else {
-            AdapterLogger.LogDebug(this.className + " Session active, using saved token");
             this.token = (String) jsonTkn.get("token");
         }
         return this.token;
@@ -261,7 +258,6 @@ public class CMRLambdaRestClient extends CMRRestClient {
         }
         String localTokenFilePath = s3Utils.download(this.region, this.tknBucket, this.tknFilePath,
                 Paths.get(this.workingDir, "token.json").toString());
-        AdapterLogger.LogInfo(this.className + " downloaded token file to local:" + localTokenFilePath);
         JSONObject json = null;
         try (FileReader reader = new FileReader(String.valueOf(localTokenFilePath))) {
             json = (JSONObject) parser.parse(reader);
@@ -278,7 +274,6 @@ public class CMRLambdaRestClient extends CMRRestClient {
         JSONObject json = new JSONObject();
         json.put("authTime", timeStamp);
         json.put("token", token);
-        AdapterLogger.LogDebug(this.className + " Writing new token to file");
         Path localTknFilePath = Files.write(Paths.get(this.workingDir, "token.json"),
                 json.toString().getBytes());
         s3Utils.upload(region, this.tknBucket, this.tknFilePath, new File(localTknFilePath.toString()) );
@@ -302,7 +297,6 @@ public class CMRLambdaRestClient extends CMRRestClient {
         request.setHeader("Content-Type", content_type);
         // Send the request
         HttpResponse response = httpClient.execute(request);
-        request.releaseConnection();
         return response;
     }
 
@@ -314,7 +308,6 @@ public class CMRLambdaRestClient extends CMRRestClient {
             String validateUMMGUri = uriBuilder.setPath(uriBuilder.getPath() + "/ingest/providers/"
                     + provider +"/validate/granule/" + granuleId)
                     .build().normalize().toString();
-            AdapterLogger.LogDebug("validateUri:" + validateUMMGUri);
             HttpEntity httpEntity = new StringEntity(strUMMG, "utf-8");
             HttpResponse httpResponse = send(validateUMMGUri, httpEntity);
             return httpResponse;

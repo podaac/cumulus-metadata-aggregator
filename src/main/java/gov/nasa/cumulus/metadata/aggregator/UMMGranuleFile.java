@@ -420,7 +420,8 @@ public class UMMGranuleFile {
      */
     private boolean shouldAddBBx(Granule granule) {
         boolean shouldAddBBx = false;
-        if(granule !=null && granule instanceof  gov.nasa.cumulus.metadata.aggregator.UMMGranule) {
+
+        if(granule !=null && granule.getIsoType() == null) {
             shouldAddBBx = true;
         }
         // if the granule object is IsoGranule type and it is SMAP mission, then we check if polygon was added.
@@ -430,6 +431,7 @@ public class UMMGranuleFile {
         &&  StringUtils.isNotEmpty(((IsoGranule) granule).getPolygon())) {
                 shouldAddBBx = false;
         }
+        AdapterLogger.LogInfo(this.className + " shouldAddBBx:" + shouldAddBBx);
         return shouldAddBBx;
     }
 
@@ -453,6 +455,7 @@ public class UMMGranuleFile {
                 AdapterLogger.LogInfo(this.className + " nc.iso.xml footprint processing ... ");
                 this.isLineFormattedPolygon = true;
                 geometry = line2Polygons(geometry,polygon);
+                horizontalSpatialDomain.put("Geometry", geometry);
             }
             if(this.isoXMLSpatialTypeEnumHashSet.contains(MENDsIsoXMLSpatialTypeEnum.ORBIT)) {
                 AdapterLogger.LogDebug(this.className + "UMMGranuleFile.exportSpatial ORBIT Processing");
@@ -478,13 +481,18 @@ public class UMMGranuleFile {
                 isoBBoxAlreadyProcessed = true;
                 horizontalSpatialDomain = this.appendBoundingRectangles(geometry, horizontalSpatialDomain);
             }
-            // Export track
-            if (((IsoGranule) granule).getSwotTrack() != "") {
+            // Export track for isoXML SMAP
+            // look into : IsoSmapXPath.SWOT_TRACK and how we use it to grab and store coordinate string to granule's
+            // swotTrack string.  We also store swotTrack to MENDs granule and IsoXPath.SWOT_TRACK and IsoMendsXPath.CYCLE_PASS_TILE_SCENE
+            // these 2 values are being used to "extrac" cycle pass string from eith MENDs or SMAP. However, smap cycle and pass
+            // are being processed below
+            if (((IsoGranule) granule).getSwotTrack() != "" && granule.getIsoType() == IsoType.SMAP) {
                 JSONObject track = new JSONObject();
                 horizontalSpatialDomain.put("Track", track);
                 Pattern trackPattern = Pattern.compile("Cycle:\\s(.*)\\sPass:\\s(.*)\\sTile:\\s(.*)");
                 Matcher trackMatcher = trackPattern.matcher(((IsoGranule) granule).getSwotTrack());
                 if (trackMatcher.find()) {
+                    AdapterLogger.LogDebug("SWOT track found cycle");
                     track.put("Cycle", Integer.parseInt(trackMatcher.group(1)));
                     JSONArray passes = new JSONArray();
                     track.put("Passes", passes);
@@ -510,17 +518,15 @@ public class UMMGranuleFile {
             }
         } // end of processing IsoGranule
 
+        // following is a large block code to deal with None IsoXML (MENDs or SMAP) bounding box
         // We can only include orbital or bounding-box data, not both
         // if iso Bounding Box already processed in logic above, then don't enter this block
         if (foundOrbitalData == false && !isoBBoxAlreadyProcessed) {
-
             horizontalSpatialDomain.put("Geometry", geometry);
-
             JSONArray boundingRectangles = new JSONArray();
-            geometry.put("BoundingRectangles", boundingRectangles);
 
             double north = 0, south = 0, east = 0, west = 0;
-            if(granule !=null && granule instanceof  gov.nasa.cumulus.metadata.aggregator.UMMGranule) {
+            if(granule !=null &&  granule.getIsoType() == null) {
                 east = ((UMMGranule) granule).getBbxEasternLongitude() != null ?
                         ((UMMGranule) granule).getBbxEasternLongitude() : 0;
                 west = ((UMMGranule) granule).getBbxWesternLongitude() != null?
@@ -565,7 +571,6 @@ public class UMMGranuleFile {
                 // and make sure we turn off the rangeIs360 flag
                 this.rangeIs360 = false;
             }
-
             BigDecimal nrth = new BigDecimal(north);
             BigDecimal sth = new BigDecimal(south);
             nrth = nrth.setScale(3, RoundingMode.HALF_UP);
@@ -609,9 +614,17 @@ public class UMMGranuleFile {
                     }
                 }
             }
-        }
 
-        // Export track if cycle and pass exists
+            if (boundingRectangles.size() > 0) {
+                geometry.put("BoundingRectangles", boundingRectangles);
+            }
+        }
+        // Export TrackType
+        // MENDS  : ISO
+        // Or Non-iso track : such as MODIS_A and Sentinel-6
+        // for instance, iso MENDS and Sentinel-6 and MODIS_A are having TrackType created within MetadataFilesToEcho class
+        // if cycle and pass exists. MENDs is taking adavangate of UMMG generated pojo : TrackType
+        // which is stored within the UMMGranule
         if (granule instanceof UMMGranule) {
             /**
              * Track include cycle and passes(array).
