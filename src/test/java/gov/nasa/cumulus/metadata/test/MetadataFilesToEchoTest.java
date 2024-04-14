@@ -2,18 +2,25 @@ package gov.nasa.cumulus.metadata.test;
 
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import cumulus_message_adapter.message_parser.AdapterLogger;
 import gov.nasa.cumulus.metadata.aggregator.*;
 
+import gov.nasa.cumulus.metadata.state.MENDsIsoXMLSpatialTypeEnum;
 import gov.nasa.cumulus.metadata.umm.adapter.UMMGCollectionAdapter;
 import gov.nasa.cumulus.metadata.umm.adapter.UMMGListAdapter;
 import gov.nasa.cumulus.metadata.umm.adapter.UMMGMapAdapter;
@@ -21,19 +28,26 @@ import gov.nasa.cumulus.metadata.umm.generated.AdditionalAttributeType;
 import gov.nasa.cumulus.metadata.umm.generated.TrackPassTileType;
 import gov.nasa.cumulus.metadata.umm.generated.TrackType;
 
+import gov.nasa.cumulus.metadata.util.JSONUtils;
 import gov.nasa.podaac.inventory.model.GranuleCharacter;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.junit.Test;
-import org.w3c.dom.Document;
+import org.mockito.MockedStatic;
 import org.xml.sax.SAXException;
+import org.mockito.Mockito;
+import org.w3c.dom.Document;
+
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.Collection;
@@ -467,7 +481,7 @@ public class MetadataFilesToEchoTest {
     }
     
         @Test
-    public void testReadSwotArchoveMetadataFile_Pass_Cycle_LeadingZeros() throws IOException, ParseException, XPathExpressionException, ParserConfigurationException, SAXException{
+    public void testReadSwotArchiveMetadataFile_Pass_Cycle_LeadingZeros() throws IOException, ParseException, XPathExpressionException, ParserConfigurationException, SAXException{
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("SWOT_INT_KCAL_Dyn_403_008_20230117T150452_20230117T155629_PIA0_01.archive.xml").getFile());
         File cfgFile = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
@@ -968,5 +982,166 @@ public class MetadataFilesToEchoTest {
         assert -123.029 == east;
         assert 44.506 == south;
         assert 44.697 == north;
+    }
+    @Test
+    public void testSWOTCreateJsonSWOTIsoXMLSpatialType() throws IOException, ParseException, XPathExpressionException, ParserConfigurationException, SAXException, URISyntaxException {
+        // Create isoXmlSpatial Hashtable which contains footprint, orbit then passed the hashtable to MetadataFilesToEcho contructor
+        MetadataAggregatorLambda lambda = new MetadataAggregatorLambda();
+        org.json.simple.JSONArray array = new JSONArray();
+        array.add("footprint");
+        array.add("orbit");
+        array.add("bbox");
+
+        //HashSet<MENDsIsoXMLSpatialTypeEnum> h = lambda.createIsoXMLSpatialTypeSet("[footprint,orbit]");
+        HashSet<MENDsIsoXMLSpatialTypeEnum> h = lambda.createIsoXMLSpatialTypeSet(array);
+        assertTrue(h.contains(MENDsIsoXMLSpatialTypeEnum.FOOTPRINT));
+        assertTrue(h.contains(MENDsIsoXMLSpatialTypeEnum.ORBIT));
+        assertTrue(h.contains(MENDsIsoXMLSpatialTypeEnum.BBOX));
+        assertFalse(h.contains(MENDsIsoXMLSpatialTypeEnum.NONE));
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("swotIsoXMLSpatialTypeTestData/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01.nc.iso.xml").getFile());
+
+        // constructor to set isIso =true and the isoXmlSpatialHashtable
+        MetadataFilesToEcho mfte = new MetadataFilesToEcho(true, h);
+        mfte.getGranule().setName("SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01");
+        File cfgFile = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
+        mfte.readConfiguration(cfgFile.getAbsolutePath());
+        mfte.readIsoMetadataFile(file.getAbsolutePath(), "s3://fake_bucket/fake_dir/fake.nc.iso.xml");
+        //////  Star Mocking code of isSpatialValid
+        UMMGranuleFile mockedUMMGranuleFile = Mockito.mock(UMMGranuleFile.class);
+        Mockito.spy(mockedUMMGranuleFile);
+        Mockito.doReturn(true)
+                .when(mockedUMMGranuleFile)
+                .isSpatialValid(any());
+        CMRLambdaRestClient mockedEchoLambdaRestClient= Mockito.mock(CMRLambdaRestClient.class);
+        Mockito.doReturn(true)
+                .when(mockedEchoLambdaRestClient)
+                .isUMMGSpatialValid(any(), any(), any());
+
+        MockedStatic<CMRRestClientProvider> mockedECHORestClientProvider = mockStatic(CMRRestClientProvider.class);
+        when(CMRRestClientProvider.getLambdaRestClient()).thenReturn(mockedEchoLambdaRestClient);
+        //////  END Mocking code of isSpatialValid
+
+        JSONObject granule = mfte.createJson();
+        JSONArray polygonPoints =((JSONArray)((JSONObject) ((JSONObject)((JSONArray)((JSONObject)((JSONObject)((JSONObject)granule
+                .get("SpatialExtent"))
+                .get("HorizontalSpatialDomain"))
+                .get("Geometry"))
+                .get("GPolygons")).get(0)).get("Boundary")).get("Points"));
+        Double latitude=(Double)((JSONObject)polygonPoints.get(0)).get("Latitude");
+        Double longitude=(Double)((JSONObject)polygonPoints.get(0)).get("Longitude");
+        assert latitude.doubleValue() ==-77.089598228;
+        assert longitude.doubleValue() == -121.56652283899999;
+
+        latitude=(Double)((JSONObject)polygonPoints.get(27)).get("Latitude");
+        longitude=(Double)((JSONObject)polygonPoints.get(27)).get("Longitude");
+        assert latitude.doubleValue()==56.734470077;
+        assert longitude.doubleValue()==-21.668558564000023;
+
+        latitude=(Double)((JSONObject)polygonPoints.get(64)).get("Latitude");
+        longitude=(Double)((JSONObject)polygonPoints.get(64)).get("Longitude");
+        assert latitude.doubleValue()==-77.089598228;
+        assert longitude.doubleValue()== -121.56652283899999;
+
+        JSONObject orbit = ((JSONObject)((JSONObject)((JSONObject)granule
+                .get("SpatialExtent"))
+                .get("HorizontalSpatialDomain"))
+                .get("Orbit"));
+        assert ((Double)orbit.get("StartLatitude"))==-77.66;  //-77.66
+        assert ((Double)orbit.get("EndLatitude"))==77.66;// -> {Double@5567} 77.66
+        assert ((Double)orbit.get("AscendingCrossing"))==-38.05; //-> {Double@5569} -38.05
+        assertTrue(StringUtils.equals((String)orbit.get("StartDirection"), "A")); //-> A
+        assertTrue(StringUtils.equals((String)orbit.get("EndDirection"), "A")); //EndDirection -> A
+
+
+        JSONObject bbox = (JSONObject)((JSONArray)((JSONObject)((JSONObject)((JSONObject)granule
+                .get("SpatialExtent"))
+                .get("HorizontalSpatialDomain"))
+                .get("Geometry"))
+                .get("BoundingRectangles")).get(0);
+        assert ((BigDecimal)bbox.get("WestBoundingCoordinate")).compareTo(new BigDecimal("-121.76947499999999990905052982270717620849609375")) ==0;
+        assert ((BigDecimal)bbox.get("SouthBoundingCoordinate")).compareTo(new BigDecimal("-78.271941999999995687176124192774295806884765625"))==0;
+        assert ((BigDecimal)bbox.get("EastBoundingCoordinate")).compareTo(new BigDecimal("45.675058000000035463017411530017852783203125"))==0;
+        assert ((BigDecimal)bbox.get("NorthBoundingCoordinate")).compareTo(new BigDecimal("78.272067999999990206561051309108734130859375"))==0;
+
+        // Make use of google Gson
+        Gson gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
+                .registerTypeHierarchyAdapter(Collection.class, new UMMGCollectionAdapter())
+                .registerTypeHierarchyAdapter(List.class, new UMMGListAdapter())
+                .registerTypeHierarchyAdapter(Map.class, new UMMGMapAdapter())
+                .create();
+        String jsonStr = gsonBuilder.toJson(granule);
+        File preSavedJsonFile = new File(classLoader.getResource("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_footprintOrbitBBox.json").getFile());
+        String readInJsonStr = FileUtils.readFileToString(preSavedJsonFile, StandardCharsets.UTF_8);
+        JsonObject readInjsonObject = JsonParser.parseString(readInJsonStr)
+                .getAsJsonObject();
+        // use GSson JsonParser.parseReader instead of paseString to bypass hidden character conversion issue
+        JsonObject granuleJsonObj = JsonParser.parseReader(new FileReader(preSavedJsonFile))
+                .getAsJsonObject();
+        readInjsonObject.equals(granuleJsonObj);
+        assert readInjsonObject.hashCode() == granuleJsonObj.hashCode();
+
+        /**
+         * Test isoXMLSpatial:[footprint]
+         */
+        clearVariables4IsoXMLSpatialTest(array, h, granule);  // clear variables first
+        array.add("footprint");
+        h = lambda.createIsoXMLSpatialTypeSet(array);
+        assertTrue(h.contains(MENDsIsoXMLSpatialTypeEnum.FOOTPRINT));
+        assertFalse(h.contains(MENDsIsoXMLSpatialTypeEnum.ORBIT));
+        assertFalse(h.contains(MENDsIsoXMLSpatialTypeEnum.BBOX));
+        assertFalse(h.contains(MENDsIsoXMLSpatialTypeEnum.NONE));
+        mfte = new MetadataFilesToEcho(true, h);
+        mfte.getGranule().setName("SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01");
+        cfgFile = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
+        mfte.readConfiguration(cfgFile.getAbsolutePath());
+        mfte.readIsoMetadataFile(file.getAbsolutePath(), "s3://fake_bucket/fake_dir/fake.nc.iso.xml");
+        granule = mfte.createJson();
+        polygonPoints =((JSONArray)((JSONObject) ((JSONObject)((JSONArray)((JSONObject)((JSONObject)((JSONObject)granule
+                .get("SpatialExtent"))
+                .get("HorizontalSpatialDomain"))
+                .get("Geometry"))
+                .get("GPolygons")).get(0)).get("Boundary")).get("Points"));
+        latitude=(Double)((JSONObject)polygonPoints.get(0)).get("Latitude");
+        longitude=(Double)((JSONObject)polygonPoints.get(0)).get("Longitude");
+        assert latitude.doubleValue() ==-77.089598228;
+        assert longitude.doubleValue() == -121.56652283899999;
+
+        latitude=(Double)((JSONObject)polygonPoints.get(27)).get("Latitude");
+        longitude=(Double)((JSONObject)polygonPoints.get(27)).get("Longitude");
+        assert latitude.doubleValue()==56.734470077;
+        assert longitude.doubleValue()==-21.668558564000023;
+
+        latitude=(Double)((JSONObject)polygonPoints.get(64)).get("Latitude");
+        longitude=(Double)((JSONObject)polygonPoints.get(64)).get("Longitude");
+        assert latitude.doubleValue()==-77.089598228;
+        assert longitude.doubleValue()== -121.56652283899999;
+
+        orbit = ((JSONObject)((JSONObject)((JSONObject)granule
+                .get("SpatialExtent"))
+                .get("HorizontalSpatialDomain"))
+                .get("Orbit"));
+        assert orbit==null;
+
+        bbox = (JSONObject) (((JSONObject)((JSONObject)((JSONObject) granule
+                .get("SpatialExtent"))
+                .get("HorizontalSpatialDomain"))
+                .get("Geometry"))
+                .get("BoundingRectangles"));
+        assert bbox == null;
+
+//        bbox = (JSONArray)((JSONObject)((JSONObject)((JSONObject)granule
+//                .get("SpatialExtent"))
+//                .get("HorizontalSpatialDomain"))
+//                .get("Geometry"))
+//                .get("BoundingRectangles"));
+
+    }
+
+    private void clearVariables4IsoXMLSpatialTest(JSONArray isoXMLSpatialArray, HashSet isoXMLSpatialHashSet, JSONObject granule) {
+        isoXMLSpatialArray.clear();
+        isoXMLSpatialHashSet.clear();
+        granule.clear();
     }
 }
