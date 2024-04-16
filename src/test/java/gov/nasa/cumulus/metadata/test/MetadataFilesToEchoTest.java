@@ -1081,19 +1081,6 @@ public class MetadataFilesToEchoTest {
 
         // verify the pre-saved ummg.json file is equal to the granule json just built
         assertTrue(compareFileWithGranuleJson("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_footprintOrbitBBox.json", granule));
-//        File preSavedJsonFile = new File(classLoader.getResource("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_footprintOrbitBBox.json").getFile());
-//        String readInJsonStr = FileUtils.readFileToString(preSavedJsonFile, StandardCharsets.UTF_8);
-//
-//        JSONParser parser = new JSONParser();
-//        JSONObject readInJsonObj = (JSONObject) parser.parse(readInJsonStr);
-//        // remove ProviderDates structure because it always has most current datetime
-//        // the ProviderDates saved in file is different than the provider dates generated on the fly
-//        granule.remove("ProviderDates");
-//        readInJsonObj.remove("ProviderDates");
-//        // Use jackson ObjectMapper to convert string to JSONObject for comparison.
-//        // the org.simple.json and google gson library does not work well with comparison when some field has NUMBER type
-//        ObjectMapper mapper = new ObjectMapper();
-//        assertEquals(mapper.readTree(readInJsonObj.toJSONString()), mapper.readTree(granule.toJSONString()));
         /**
          * Test isoXMLSpatial:[footprint]
          */
@@ -1143,15 +1130,7 @@ public class MetadataFilesToEchoTest {
                 .get("BoundingRectangles"));
         assert bbox == null;
         // load pre-saved file and perform json comparison
-        preSavedJsonFile = new File(classLoader.getResource("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_footprint.json").getFile());
-        readInJsonStr = FileUtils.readFileToString(preSavedJsonFile, StandardCharsets.UTF_8);
-        readInJsonObj = (JSONObject) parser.parse(readInJsonStr);
-        // remove ProviderDates structure because it always has most current datetime
-        // the ProviderDates saved in file is different than the provider dates generated on the fly
-        granule.remove("ProviderDates");
-        readInJsonObj.remove("ProviderDates");
-        assertEquals(mapper.readTree(readInJsonObj.toJSONString()), mapper.readTree(granule.toJSONString()));
-
+        assertTrue(compareFileWithGranuleJson("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_footprint.json", granule));
         /**
          * Test isoXMLSpatial:[bbox]
          */
@@ -1191,14 +1170,7 @@ public class MetadataFilesToEchoTest {
         assert ((BigDecimal)bbox.get("EastBoundingCoordinate")).compareTo(new BigDecimal("45.675058000000035463017411530017852783203125"))==0;
         assert ((BigDecimal)bbox.get("NorthBoundingCoordinate")).compareTo(new BigDecimal("78.272067999999990206561051309108734130859375"))==0;
         // load pre-saved file and perform json comparison
-        preSavedJsonFile = new File(classLoader.getResource("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_bbox.json").getFile());
-        readInJsonStr = FileUtils.readFileToString(preSavedJsonFile, StandardCharsets.UTF_8);
-        readInJsonObj = (JSONObject) parser.parse(readInJsonStr);
-        // remove ProviderDates structure because it always has most current datetime
-        // the ProviderDates saved in file is different than the provider dates generated on the fly
-        granule.remove("ProviderDates");
-        readInJsonObj.remove("ProviderDates");
-        assertEquals(mapper.readTree(readInJsonObj.toJSONString()), mapper.readTree(granule.toJSONString()));
+        assertTrue(compareFileWithGranuleJson("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_bbox.json", granule));
         /**
          * Test isoXMLSpatial:[orbit]
          */
@@ -1237,14 +1209,7 @@ public class MetadataFilesToEchoTest {
                 .get("Geometry")));
         assert bbox == null;
         // load pre-saved file and perform json comparison
-        preSavedJsonFile = new File(classLoader.getResource("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_orbit.json").getFile());
-        readInJsonStr = FileUtils.readFileToString(preSavedJsonFile, StandardCharsets.UTF_8);
-        readInJsonObj = (JSONObject) parser.parse(readInJsonStr);
-        // remove ProviderDates structure because it always has most current datetime
-        // the ProviderDates saved in file is different than the provider dates generated on the fly
-        granule.remove("ProviderDates");
-        readInJsonObj.remove("ProviderDates");
-        assertEquals(mapper.readTree(readInJsonObj.toJSONString()), mapper.readTree(granule.toJSONString()));
+        assertTrue(compareFileWithGranuleJson("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_orbit.json", granule));
     }
     @Test
     public void test_Example() throws IOException, ParseException {
