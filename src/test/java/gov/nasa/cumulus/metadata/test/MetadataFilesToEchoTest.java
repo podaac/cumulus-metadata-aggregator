@@ -7,17 +7,13 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import cumulus_message_adapter.message_parser.AdapterLogger;
 import gov.nasa.cumulus.metadata.aggregator.*;
 
 import gov.nasa.cumulus.metadata.state.MENDsIsoXMLSpatialTypeEnum;
@@ -28,7 +24,6 @@ import gov.nasa.cumulus.metadata.umm.generated.AdditionalAttributeType;
 import gov.nasa.cumulus.metadata.umm.generated.TrackPassTileType;
 import gov.nasa.cumulus.metadata.umm.generated.TrackType;
 
-import gov.nasa.cumulus.metadata.util.JSONUtils;
 import gov.nasa.podaac.inventory.model.GranuleCharacter;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -1054,7 +1049,6 @@ public class MetadataFilesToEchoTest {
         assertTrue(StringUtils.equals((String)orbit.get("StartDirection"), "A")); //-> A
         assertTrue(StringUtils.equals((String)orbit.get("EndDirection"), "A")); //EndDirection -> A
 
-
         JSONObject bbox = (JSONObject)((JSONArray)((JSONObject)((JSONObject)((JSONObject)granule
                 .get("SpatialExtent"))
                 .get("HorizontalSpatialDomain"))
@@ -1064,24 +1058,20 @@ public class MetadataFilesToEchoTest {
         assert ((BigDecimal)bbox.get("SouthBoundingCoordinate")).compareTo(new BigDecimal("-78.271941999999995687176124192774295806884765625"))==0;
         assert ((BigDecimal)bbox.get("EastBoundingCoordinate")).compareTo(new BigDecimal("45.675058000000035463017411530017852783203125"))==0;
         assert ((BigDecimal)bbox.get("NorthBoundingCoordinate")).compareTo(new BigDecimal("78.272067999999990206561051309108734130859375"))==0;
-
-        // Make use of google Gson
-        Gson gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
-                .registerTypeHierarchyAdapter(Collection.class, new UMMGCollectionAdapter())
-                .registerTypeHierarchyAdapter(List.class, new UMMGListAdapter())
-                .registerTypeHierarchyAdapter(Map.class, new UMMGMapAdapter())
-                .create();
-        String jsonStr = gsonBuilder.toJson(granule);
+        // verify the pre-saved ummg.json file is equal to the granule json just built
         File preSavedJsonFile = new File(classLoader.getResource("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_footprintOrbitBBox.json").getFile());
         String readInJsonStr = FileUtils.readFileToString(preSavedJsonFile, StandardCharsets.UTF_8);
-        JsonObject readInjsonObject = JsonParser.parseString(readInJsonStr)
-                .getAsJsonObject();
-        // use GSson JsonParser.parseReader instead of paseString to bypass hidden character conversion issue
-        JsonObject granuleJsonObj = JsonParser.parseReader(new FileReader(preSavedJsonFile))
-                .getAsJsonObject();
-        readInjsonObject.equals(granuleJsonObj);
-        assert readInjsonObject.hashCode() == granuleJsonObj.hashCode();
 
+        JSONParser parser = new JSONParser();
+        JSONObject readInJsonObj = (JSONObject) parser.parse(readInJsonStr);
+        // remove ProviderDates structure because it always has most current datetime
+        // the ProviderDates saved in file is different than the provider dates generated on the fly
+        granule.remove("ProviderDates");
+        readInJsonObj.remove("ProviderDates");
+        // Use jackson ObjectMapper to convert string to JSONObject for comparison.
+        // the org.simple.json and google gson library does not work well with comparison when some field has NUMBER type
+        ObjectMapper mapper = new ObjectMapper();
+        assertEquals(mapper.readTree(readInJsonObj.toJSONString()), mapper.readTree(granule.toJSONString()));
         /**
          * Test isoXMLSpatial:[footprint]
          */
@@ -1130,13 +1120,163 @@ public class MetadataFilesToEchoTest {
                 .get("Geometry"))
                 .get("BoundingRectangles"));
         assert bbox == null;
+        // load pre-saved file and perform json comparison
+        preSavedJsonFile = new File(classLoader.getResource("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_footprint.json").getFile());
+        readInJsonStr = FileUtils.readFileToString(preSavedJsonFile, StandardCharsets.UTF_8);
+        readInJsonObj = (JSONObject) parser.parse(readInJsonStr);
+        // remove ProviderDates structure because it always has most current datetime
+        // the ProviderDates saved in file is different than the provider dates generated on the fly
+        granule.remove("ProviderDates");
+        readInJsonObj.remove("ProviderDates");
+        assertEquals(mapper.readTree(readInJsonObj.toJSONString()), mapper.readTree(granule.toJSONString()));
 
-//        bbox = (JSONArray)((JSONObject)((JSONObject)((JSONObject)granule
-//                .get("SpatialExtent"))
-//                .get("HorizontalSpatialDomain"))
-//                .get("Geometry"))
-//                .get("BoundingRectangles"));
+        /**
+         * Test isoXMLSpatial:[bbox]
+         */
+        clearVariables4IsoXMLSpatialTest(array, h, granule);  // clear variables first
+        array.add("bbox");
+        h = lambda.createIsoXMLSpatialTypeSet(array);
+        assertFalse(h.contains(MENDsIsoXMLSpatialTypeEnum.FOOTPRINT));
+        assertFalse(h.contains(MENDsIsoXMLSpatialTypeEnum.ORBIT));
+        assertTrue(h.contains(MENDsIsoXMLSpatialTypeEnum.BBOX));
+        assertFalse(h.contains(MENDsIsoXMLSpatialTypeEnum.NONE));
+        mfte = new MetadataFilesToEcho(true, h);
+        mfte.getGranule().setName("SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01");
+        cfgFile = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
+        mfte.readConfiguration(cfgFile.getAbsolutePath());
+        mfte.readIsoMetadataFile(file.getAbsolutePath(), "s3://fake_bucket/fake_dir/fake.nc.iso.xml");
+        granule = mfte.createJson();
+        JSONArray GPolygons = (JSONArray)((JSONObject)((JSONObject)((JSONObject)granule
+                .get("SpatialExtent"))
+                .get("HorizontalSpatialDomain"))
+                .get("Geometry"))
+                .get("GPolygons");
+        assert GPolygons ==null;
 
+        orbit = ((JSONObject)((JSONObject)((JSONObject)granule
+                .get("SpatialExtent"))
+                .get("HorizontalSpatialDomain"))
+                .get("Orbit"));
+        assert orbit==null;
+
+        bbox = (JSONObject)((JSONArray)((JSONObject)((JSONObject)((JSONObject)granule
+                .get("SpatialExtent"))
+                .get("HorizontalSpatialDomain"))
+                .get("Geometry"))
+                .get("BoundingRectangles")).get(0);
+        assert ((BigDecimal)bbox.get("WestBoundingCoordinate")).compareTo(new BigDecimal("-121.76947499999999990905052982270717620849609375")) ==0;
+        assert ((BigDecimal)bbox.get("SouthBoundingCoordinate")).compareTo(new BigDecimal("-78.271941999999995687176124192774295806884765625"))==0;
+        assert ((BigDecimal)bbox.get("EastBoundingCoordinate")).compareTo(new BigDecimal("45.675058000000035463017411530017852783203125"))==0;
+        assert ((BigDecimal)bbox.get("NorthBoundingCoordinate")).compareTo(new BigDecimal("78.272067999999990206561051309108734130859375"))==0;
+        // load pre-saved file and perform json comparison
+        preSavedJsonFile = new File(classLoader.getResource("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_bbox.json").getFile());
+        readInJsonStr = FileUtils.readFileToString(preSavedJsonFile, StandardCharsets.UTF_8);
+        readInJsonObj = (JSONObject) parser.parse(readInJsonStr);
+        // remove ProviderDates structure because it always has most current datetime
+        // the ProviderDates saved in file is different than the provider dates generated on the fly
+        granule.remove("ProviderDates");
+        readInJsonObj.remove("ProviderDates");
+        assertEquals(mapper.readTree(readInJsonObj.toJSONString()), mapper.readTree(granule.toJSONString()));
+        /**
+         * Test isoXMLSpatial:[orbit]
+         */
+        clearVariables4IsoXMLSpatialTest(array, h, granule);  // clear variables first
+        array.add("orbit");
+        h = lambda.createIsoXMLSpatialTypeSet(array);
+        assertFalse(h.contains(MENDsIsoXMLSpatialTypeEnum.FOOTPRINT));
+        assertTrue(h.contains(MENDsIsoXMLSpatialTypeEnum.ORBIT));
+        assertFalse(h.contains(MENDsIsoXMLSpatialTypeEnum.BBOX));
+        assertFalse(h.contains(MENDsIsoXMLSpatialTypeEnum.NONE));
+        mfte = new MetadataFilesToEcho(true, h);
+        mfte.getGranule().setName("SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01");
+        cfgFile = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
+        mfte.readConfiguration(cfgFile.getAbsolutePath());
+        mfte.readIsoMetadataFile(file.getAbsolutePath(), "s3://fake_bucket/fake_dir/fake.nc.iso.xml");
+        granule = mfte.createJson();
+        JSONObject geometry = ((JSONObject)((JSONObject)((JSONObject)granule
+                .get("SpatialExtent"))
+                .get("HorizontalSpatialDomain"))
+                .get("Geometry"));
+        assert geometry ==null;
+
+        orbit = ((JSONObject)((JSONObject)((JSONObject)granule
+                .get("SpatialExtent"))
+                .get("HorizontalSpatialDomain"))
+                .get("Orbit"));
+        assert ((Double)orbit.get("StartLatitude"))==-77.66;  //-77.66
+        assert ((Double)orbit.get("EndLatitude"))==77.66;// -> {Double@5567} 77.66
+        assert ((Double)orbit.get("AscendingCrossing"))==-38.05; //-> {Double@5569} -38.05
+        assertTrue(StringUtils.equals((String)orbit.get("StartDirection"), "A")); //-> A
+        assertTrue(StringUtils.equals((String)orbit.get("EndDirection"), "A")); //EndDirection -> A
+        // No Geometry object since there is neither footprint nor bbox
+        bbox = (((JSONObject)((JSONObject)((JSONObject) granule
+                .get("SpatialExtent"))
+                .get("HorizontalSpatialDomain"))
+                .get("Geometry")));
+        assert bbox == null;
+        mfte.writeJson("/tmp/orbit_only.josn", granule.toJSONString());
+        // load pre-saved file and perform json comparison
+        preSavedJsonFile = new File(classLoader.getResource("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_orbit.json").getFile());
+        readInJsonStr = FileUtils.readFileToString(preSavedJsonFile, StandardCharsets.UTF_8);
+        readInJsonObj = (JSONObject) parser.parse(readInJsonStr);
+        // remove ProviderDates structure because it always has most current datetime
+        // the ProviderDates saved in file is different than the provider dates generated on the fly
+        granule.remove("ProviderDates");
+        readInJsonObj.remove("ProviderDates");
+        assertEquals(mapper.readTree(readInJsonObj.toJSONString()), mapper.readTree(granule.toJSONString()));
+    }
+    @Test
+    public void test_Example() throws IOException, ParseException {
+        // Create a sample JSONObject
+        JSONObject obj = new JSONObject();
+        obj.put("name", "John Doe");
+        obj.put("age", 30);
+        obj.put("city", "New York");
+
+        // Write JSONObject to f
+
+        FileUtils.writeStringToFile(new File("/tmp/tmp.json"), obj.toJSONString(), StandardCharsets.UTF_8);
+
+        // Read JSONObject from file
+        String readInStr = FileUtils.readFileToString(new File("/tmp/tmp.json"), StandardCharsets.UTF_8);
+        JSONParser parser = new JSONParser();
+        JSONObject loadedObj = (JSONObject) parser.parse(readInStr);
+
+        // Compare original and loaded JSONObject
+        assert obj.hashCode() == loadedObj.hashCode();
+        boolean isEqual = obj.equals(loadedObj);
+        System.out.println("Objects are equal? " + isEqual);
+        compareJson(obj, loadedObj);
+    }
+
+    public void compareJson(JSONObject obj1, JSONObject obj2) {
+        // Check for different keys
+        for (Object key : obj1.keySet()) {
+            if (!obj2.containsKey(key)) {
+                System.out.println("Unequal field: " + key + " (missing in object2)");
+            }
+        }
+
+        for (Object key : obj2.keySet()) {
+            if (!obj1.containsKey(key)) {
+                System.out.println("Unequal field: " + key + " (missing in object1)");
+            }
+        }
+
+        // Compare values for existing keys
+        for (Object key : obj1.keySet()) {
+            Object value1 = obj1.get(key);
+            Object value2 = obj2.get(key);
+
+            if (value1 instanceof JSONObject && value2 instanceof JSONObject) {
+                // Recursive comparison for nested objects
+                compareJson((JSONObject) value1, (JSONObject) value2);
+            } else if (value1 instanceof JSONArray && value2 instanceof JSONArray) {
+                // Handle JSONArray comparison if needed (implement your logic)
+            } else if (!value1.equals(value2)) {
+                System.out.println("Unequal field: " + key + ", value1: " + value1 + ", value2: " + value2);
+            }
+        }
     }
 
     private void clearVariables4IsoXMLSpatialTest(JSONArray isoXMLSpatialArray, HashSet isoXMLSpatialHashSet, JSONObject granule) {
