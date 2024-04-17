@@ -500,7 +500,6 @@ public class MetadataFilesToEchoTest {
 
     @Test
     public void testReadIsoMendsMetadataFileAdditionalFields_publishAll() throws ParseException, IOException, URISyntaxException, XPathExpressionException, ParserConfigurationException, SAXException {
-
         // Simple "publishAll" is true
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0.iso.xml").getFile());
@@ -515,13 +514,21 @@ public class MetadataFilesToEchoTest {
         doc = mfte.makeDoc(file.getAbsolutePath());
         xpath = mfte.makeXpath(doc);
         IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
+        // use a unrelated .mp file to patch required field so mfte.createJson() would work.
+        File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
+        try {
+            mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+        mfte.getGranule().setName("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0");
+        JSONObject granuleJson = mfte.createJson();
         // Verify the values here:
         // Confirm additional attributes has been filled
         List<AdditionalAttributeType> aat = isoGranule.getAdditionalAttributeTypes();
         assertEquals(aat.size(), 11);
-
         List<String> keys = aat.stream().map(AdditionalAttributeType::getName).collect(Collectors.toList());
-
         List<String> checkForKey = Arrays.asList("HlsDataset",
                 "SensorProductID",
                 "Accode",
@@ -534,12 +541,12 @@ public class MetadataFilesToEchoTest {
                 "PercentCloudCover",
                 "MGRS_TILE_ID"
         );
-
         if(!checkForKey.equals(keys)){
             fail(String.format("List mismatch:\n" +
                     Arrays.toString(keys.toArray()) + "\n" +
                     Arrays.toString(checkForKey.toArray())));
         }
+        compareFileWithGranuleJson("ummgResults/additionalAttributes/OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0_publishAll.json", granuleJson);
     }
     
     /**
@@ -650,7 +657,6 @@ public class MetadataFilesToEchoTest {
 
     @Test
     public void testReadIsoMendsMetadataFileAdditionalFields_publishSpecific() throws ParseException, IOException, URISyntaxException {
-
         // PublishAll is false and publish list is filled in
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0.iso.xml").getFile());
@@ -677,7 +683,6 @@ public class MetadataFilesToEchoTest {
             mfte.getGranule().setName("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0");
             granuleJson = mfte.createJson();
             // Verify the values here:
-
             // Confirm additional attributes has been filled
             List<AdditionalAttributeType> aat = isoGranule.getAdditionalAttributeTypes();
             assertEquals(aat.size(), 2);
@@ -701,9 +706,7 @@ public class MetadataFilesToEchoTest {
 
     @Test
     public void testReadIsoMendsMetadataFileAdditionalFields_publishAllWithSpecific() throws ParseException, IOException, URISyntaxException {
-
         // This case is when publishAll is True but somehow a publish list is set also; just publish all then
-
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0.iso.xml").getFile());
         File cfgFile = new File(classLoader.getResource("OPERA_L3_DSWX-HLS_PROVISIONAL_V0_test_4.cmr.cfg").getFile());
@@ -711,6 +714,7 @@ public class MetadataFilesToEchoTest {
 
         Document doc = null;
         XPath xpath = null;
+        JSONObject granuleJson = null;
         try {
             mfte.readConfiguration(cfgFile.getAbsolutePath());
             doc = mfte.makeDoc(file.getAbsolutePath());
@@ -724,9 +728,8 @@ public class MetadataFilesToEchoTest {
                 e.printStackTrace();
                 fail();
             }
-
+            granuleJson = mfte.createJson();
             // Verify the values here:
-
             // Confirm additional attributes has been filled
             List<AdditionalAttributeType> aat = isoGranule.getAdditionalAttributeTypes();
             assertEquals(aat.size(), 11);
@@ -756,13 +759,13 @@ public class MetadataFilesToEchoTest {
             e.printStackTrace();
             fail();
         }
+        compareFileWithGranuleJson("ummgResults/additionalAttributes/OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0_publishAllWithSpecific.json", granuleJson);
     }
 
     @Test
     public void testReadIsoMendsMetadataFileAdditionalFields_publishAllEmptyCatchError() throws ParseException, IOException, URISyntaxException {
 
         // This case is when publishAll key doesn't exist, should throw exception
-
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0.iso.xml").getFile());
         File cfgFile = new File(classLoader.getResource("OPERA_L3_DSWX-HLS_PROVISIONAL_V0_test_5.cmr.cfg").getFile());
@@ -786,7 +789,6 @@ public class MetadataFilesToEchoTest {
     public void testReadIsoMendsMetadataFileAdditionalFields_publishAllEmptyCatchError_2() throws ParseException, IOException, URISyntaxException {
 
         // This case is when publishAll key doesn't exist, should throw exception
-
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0.iso.xml").getFile());
         File cfgFile = new File(classLoader.getResource("OPERA_L3_DSWX-HLS_PROVISIONAL_V0_test_6.cmr.cfg").getFile());
@@ -808,9 +810,7 @@ public class MetadataFilesToEchoTest {
 
     @Test
     public void testReadIsoMendsMetadataFileAdditionalFields_publishAllEmptyCatchError_3() throws ParseException, IOException, URISyntaxException {
-
         // This case is when publishAll key doesn't exist, should throw exception
-
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0.iso.xml").getFile());
         File cfgFile = new File(classLoader.getResource("OPERA_L3_DSWX-HLS_PROVISIONAL_V0_test_7.cmr.cfg").getFile());
@@ -835,11 +835,10 @@ public class MetadataFilesToEchoTest {
         } catch (Exception e) {
             fail("Some issue when creating mfte");
         }
-
+        JSONObject granule = null;
         try{
             mfte.getGranule().setName("some_random_granule_name");
-
-            JSONObject granule = mfte.createJson();
+            granule = mfte.createJson();
             Gson gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
                     .registerTypeHierarchyAdapter(Collection.class, new UMMGCollectionAdapter())
                     .registerTypeHierarchyAdapter(List.class, new UMMGListAdapter())
@@ -849,13 +848,13 @@ public class MetadataFilesToEchoTest {
         } catch (Exception e){
             fail("Issue when generating JSON");
         }
+        compareFileWithGranuleJson("ummgResults/additionalAttributes/OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0_publishAllEmptyCatchError_3.json", granule);
     }
 
     @Test
     public void testReadIsoMendsMetadataFileAdditionalFields_appendFieldToJSON_String() throws ParseException, IOException, URISyntaxException {
 
         // publish all is set to true and having a dedicated field added to JSON (CloudCover (JSON) mapped to PercentCloudCover (XML))
-
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0.iso.xml").getFile());
         File cfgFile = new File(classLoader.getResource("OPERA_L3_DSWX-HLS_PROVISIONAL_V0_test_8.cmr.cfg").getFile());
@@ -863,6 +862,7 @@ public class MetadataFilesToEchoTest {
 
         Document doc = null;
         XPath xpath = null;
+        JSONObject granuleJson = null;
         try {
             mfte.readConfiguration(cfgFile.getAbsolutePath());
             doc = mfte.makeDoc(file.getAbsolutePath());
@@ -876,9 +876,8 @@ public class MetadataFilesToEchoTest {
                 e.printStackTrace();
                 fail();
             }
-
+            granuleJson = mfte.createJson();
             // Verify the values here:
-
             // Confirm additional attributes has been filled
             List<AdditionalAttributeType> aat = isoGranule.getAdditionalAttributeTypes();
             assertEquals(aat.size(), 2);
@@ -924,6 +923,7 @@ public class MetadataFilesToEchoTest {
             e.printStackTrace();
             fail();
         }
+        compareFileWithGranuleJson("ummgResults/additionalAttributes/OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0_appendFieldToJSON_String.json", granuleJson);
     }
     
     @Test
