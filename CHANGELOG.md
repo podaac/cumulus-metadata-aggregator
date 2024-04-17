@@ -17,7 +17,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - SWOT archive.xml
   - .mp
   - SWOT CalVal XML
-  - SMAP .iso.xml
   - Does/does not cross the IDL
 ### Deprecated
 ### Removed
