@@ -449,7 +449,6 @@ public class UMMTest {
 		String granuleId ="S6A_P4_2__LR_STD__ST_022_132_20210619T002429_20210619T012042_F02";
 
 		JSONObject umm = parseXfduManifest(testFile, testConfigFile, granuleId);
-
 		//SpatialExtent
 		JSONObject hsd = (JSONObject) ((JSONObject) umm.get("SpatialExtent" )).get("HorizontalSpatialDomain" );
 
@@ -487,6 +486,8 @@ public class UMMTest {
 		lastPoint = (JSONObject) pnts.get(29);
 		assertEquals(Double.valueOf(56.013938), ((Double) lastPoint.get("Latitude" )));
 		assertEquals(Double.valueOf(-171.655155), ((Double) lastPoint.get("Longitude" )));
+
+		assertTrue(UnitTestUtil.compareFileWithGranuleJson("ummgResults/sentinel6/S6A_P4_2__LR_STD__ST_022_132_20210619T002429_20210619T012042_F02_overIde.json",umm));
 	}
 
 	@Test
@@ -499,7 +500,6 @@ public class UMMTest {
 		String granuleId ="S6A_P4_2__LR_STD__ST_022_132_20210619T002429_20210619T012042_F02";
 
 		JSONObject umm = parseXfduManifest(testFile, testConfigFile, granuleId);
-
 		//SpatialExtent
 		JSONObject hsd = (JSONObject) ((JSONObject) umm.get("SpatialExtent" )).get("HorizontalSpatialDomain" );
 		JSONArray boundingCoordinates = (JSONArray) ((JSONObject)hsd.get("Geometry")).get("BoundingRectangles");
@@ -524,6 +524,10 @@ public class UMMTest {
 
 		JSONObject umm = parseXfduManifest(testFile, testConfigFile, granuleId);
 
+		MetadataFilesToEcho mfte =  new MetadataFilesToEcho(true);
+		mfte.writeJson("/tmp/notOverIDL.json", umm.toJSONString());
+
+
 		//SpatialExtent
 		JSONObject hsd = (JSONObject) ((JSONObject) umm.get("SpatialExtent" )).get("HorizontalSpatialDomain" );
 
@@ -545,6 +549,7 @@ public class UMMTest {
 		JSONObject lastPoint = (JSONObject) pnts.get(31);
 		assertEquals(Double.valueOf(-62.663981), ((Double) lastPoint.get("Latitude" )));
 		assertEquals(Double.valueOf(2.525361), ((Double) lastPoint.get("Longitude" )));
+		assertTrue(UnitTestUtil.compareFileWithGranuleJson("ummgResults/sentinel6/S6A_P4_2__LR_STD__ST_022_131_20210618T232816_20210619T002429_F02_notOverIDL.json", umm));
 	}
 
 	@Test
