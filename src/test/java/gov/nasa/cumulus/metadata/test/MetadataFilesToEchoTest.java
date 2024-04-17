@@ -141,7 +141,7 @@ public class MetadataFilesToEchoTest {
         JSONObject granule = mfte.createJson();
         System.out.println(granule.toJSONString());
         assertEquals("20170408033000-JPL-L2P_GHRSST-SSTskin-MODIS_T-N-v02.0-fv01.0", granule.get("GranuleUR"));
-        compareFileWithGranuleJson("ummgResults/from_mp_file/20170408033000-JPL-L2P_GHRSST-SSTskin-MODIS_T-N-v02.0-fv01.0.json", granuleJson);
+        assertTrue(UnitTestUtil.compareFileWithGranuleJson("ummgResults/from_mp_file/20170408033000-JPL-L2P_GHRSST-SSTskin-MODIS_T-N-v02.0-fv01.0.json", granuleJson));
     }
 
     @Test
@@ -177,7 +177,7 @@ public class MetadataFilesToEchoTest {
         JSONArray orbitArray = (JSONArray) granule.get("OrbitCalculatedSpatialDomains");
         Integer orbitNumber = (Integer) ((JSONObject) orbitArray.get(0)).get("OrbitNumber");
         assertEquals(orbitNumber, new Integer(870));
-        compareFileWithGranuleJson("ummgResults/from_mp_file/RSS_SMAP_SSS_L2C_r00870_20150401T004312_2015091_FNL_V04.0.json", granuleJson);
+        assertTrue(UnitTestUtil.compareFileWithGranuleJson("ummgResults/from_mp_file/RSS_SMAP_SSS_L2C_r00870_20150401T004312_2015091_FNL_V04.0.json", granuleJson));
     }
 
     @Test
@@ -199,7 +199,7 @@ public class MetadataFilesToEchoTest {
         Integer endOrbit = (Integer) ((JSONObject) orbitArray.get(0)).get("EndOrbitNumber");
         assertEquals(beginOrbit, new Integer("870"));
         assertEquals(endOrbit, new Integer("1308"));
-        compareFileWithGranuleJson("ummgResults/from_mp_file/RSS_smap_SSS_L3_monthly_2015_04_FNL_v04.0_OrbitStartEnd.json", granule);
+        assertTrue(UnitTestUtil.compareFileWithGranuleJson("ummgResults/from_mp_file/RSS_smap_SSS_L3_monthly_2015_04_FNL_v04.0_OrbitStartEnd.json", granule));
     }
 
     @Test
@@ -230,7 +230,7 @@ public class MetadataFilesToEchoTest {
         JSONObject track = (JSONObject) ((JSONObject) ((JSONObject) granule.get("SpatialExtent")).get("HorizontalSpatialDomain")).get("Track");
         assertEquals(new Long(374), track.get("Cycle"));
         assertEquals(new Long(172), ((JSONObject) ((JSONArray) track.get("Passes")).get(0)).get("Pass"));
-        compareFileWithGranuleJson("ummgResults/from_mp_file/JA1_GPN_2PeP374_172_20120303_112035_20120303_121638_withcyclepass.json", granuleJson);
+        assertTrue(UnitTestUtil.compareFileWithGranuleJson("ummgResults/from_mp_file/JA1_GPN_2PeP374_172_20120303_112035_20120303_121638_withcyclepass.json", granuleJson));
     }
 
     @Test
@@ -252,7 +252,7 @@ public class MetadataFilesToEchoTest {
         JSONObject track = (JSONObject) ((JSONObject) ((JSONObject) granule.get("SpatialExtent")).get("HorizontalSpatialDomain")).get("Track");
         assertEquals(new Long(22), track.get("Cycle"));
         assertEquals(new Long(33), ((JSONObject) ((JSONArray) track.get("Passes")).get(0)).get("Pass"));
-        compareFileWithGranuleJson("ummgResults/swotArchiveXml/SWOT_IVK_20210612T081400_20210612T072103_20210612T080137_O_APID1402.PTM_1.archive.json", granule);
+        assertTrue(UnitTestUtil.compareFileWithGranuleJson("ummgResults/swotArchiveXml/SWOT_IVK_20210612T081400_20210612T072103_20210612T080137_O_APID1402.PTM_1.archive.json", granule));
     }
 
     @Test
@@ -546,7 +546,7 @@ public class MetadataFilesToEchoTest {
                     Arrays.toString(keys.toArray()) + "\n" +
                     Arrays.toString(checkForKey.toArray())));
         }
-        compareFileWithGranuleJson("ummgResults/additionalAttributes/OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0_publishAll.json", granuleJson);
+        assertTrue(UnitTestUtil.compareFileWithGranuleJson("ummgResults/additionalAttributes/OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0_publishAll.json", granuleJson));
     }
     
     /**
@@ -652,7 +652,7 @@ public class MetadataFilesToEchoTest {
             e.printStackTrace();
             fail();
         }
-        compareFileWithGranuleJson("ummgResults/additionalAttributes/OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0.json", granule);
+        assertTrue(UnitTestUtil.compareFileWithGranuleJson("ummgResults/additionalAttributes/OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0.json", granule));
     }
 
     @Test
@@ -701,7 +701,7 @@ public class MetadataFilesToEchoTest {
             e.printStackTrace();
             fail();
         }
-        compareFileWithGranuleJson("ummgResults/additionalAttributes/OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0_publishSpecific.json", granuleJson);
+        assertTrue(UnitTestUtil.compareFileWithGranuleJson("ummgResults/additionalAttributes/OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0_publishSpecific.json", granuleJson));
     }
 
     @Test
@@ -759,7 +759,7 @@ public class MetadataFilesToEchoTest {
             e.printStackTrace();
             fail();
         }
-        compareFileWithGranuleJson("ummgResults/additionalAttributes/OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0_publishAllWithSpecific.json", granuleJson);
+        assertTrue(UnitTestUtil.compareFileWithGranuleJson("ummgResults/additionalAttributes/OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0_publishAllWithSpecific.json", granuleJson));
     }
 
     @Test
@@ -848,7 +848,7 @@ public class MetadataFilesToEchoTest {
         } catch (Exception e){
             fail("Issue when generating JSON");
         }
-        compareFileWithGranuleJson("ummgResults/additionalAttributes/OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0_publishAllEmptyCatchError_3.json", granule);
+        assertTrue(UnitTestUtil.compareFileWithGranuleJson("ummgResults/additionalAttributes/OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0_publishAllEmptyCatchError_3.json", granule));
     }
 
     @Test
@@ -923,7 +923,7 @@ public class MetadataFilesToEchoTest {
             e.printStackTrace();
             fail();
         }
-        compareFileWithGranuleJson("ummgResults/additionalAttributes/OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0_appendFieldToJSON_String.json", granuleJson);
+        assertTrue(UnitTestUtil.compareFileWithGranuleJson("ummgResults/additionalAttributes/OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0_appendFieldToJSON_String.json", granuleJson));
     }
     
     @Test
@@ -973,23 +973,7 @@ public class MetadataFilesToEchoTest {
         // load pre-saved file and compare with generated granule JSONObject
         // SWOTCalVal_WM_ADCP_L0_RiverRay1_20220727T191701_20220727T192858_20220920T142800_swotCalVal_ummg.json
         // load pre-saved file and perform json comparison
-        assertTrue(compareFileWithGranuleJson("ummgResults/swotCalVal/SWOTCalVal_WM_ADCP_L0_RiverRay1_20220727T191701_20220727T192858_20220920T142800_swotCalVal_ummg.json", granule));
-    }
-
-    public boolean compareFileWithGranuleJson(String filePath, JSONObject granuleJson) throws
-            IOException, ParseException{
-        ClassLoader classLoader = getClass().getClassLoader();
-        File preSavedJsonFile = new File(classLoader.getResource(filePath).getFile());
-        String readInJsonStr = FileUtils.readFileToString(preSavedJsonFile, StandardCharsets.UTF_8);
-        JSONParser parser = new JSONParser();
-        ObjectMapper mapper = new ObjectMapper();
-        JSONObject readInJsonObj = (JSONObject) parser.parse(readInJsonStr);
-        // remove ProviderDates structure because it always has most current datetime
-        // the ProviderDates saved in file is different than the provider dates generated on the fly
-        granuleJson.remove("ProviderDates");
-        readInJsonObj.remove("ProviderDates");
-        assertEquals(mapper.readTree(readInJsonObj.toJSONString()), mapper.readTree(granuleJson.toJSONString()));
-        return true;  // if reached this point, return true
+        assertTrue(UnitTestUtil.compareFileWithGranuleJson("ummgResults/swotCalVal/SWOTCalVal_WM_ADCP_L0_RiverRay1_20220727T191701_20220727T192858_20220920T142800_swotCalVal_ummg.json", granule));
     }
     @Test
     public void testSWOTCreateJsonSWOTIsoXMLSpatialType() throws IOException, ParseException, XPathExpressionException, ParserConfigurationException, SAXException, URISyntaxException {
@@ -1074,7 +1058,7 @@ public class MetadataFilesToEchoTest {
 
 
         // verify the pre-saved ummg.json file is equal to the granule json just built
-        assertTrue(compareFileWithGranuleJson("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_footprintOrbitBBox.json", granule));
+        assertTrue(UnitTestUtil.compareFileWithGranuleJson("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_footprintOrbitBBox.json", granule));
         /**
          * Test isoXMLSpatial:[footprint]
          */
@@ -1124,7 +1108,7 @@ public class MetadataFilesToEchoTest {
                 .get("BoundingRectangles"));
         assert bbox == null;
         // load pre-saved file and perform json comparison
-        assertTrue(compareFileWithGranuleJson("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_footprint.json", granule));
+        assertTrue(UnitTestUtil.compareFileWithGranuleJson("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_footprint.json", granule));
         /**
          * Test isoXMLSpatial:[bbox]
          */
@@ -1164,7 +1148,7 @@ public class MetadataFilesToEchoTest {
         assert ((BigDecimal)bbox.get("EastBoundingCoordinate")).compareTo(new BigDecimal("45.675058000000035463017411530017852783203125"))==0;
         assert ((BigDecimal)bbox.get("NorthBoundingCoordinate")).compareTo(new BigDecimal("78.272067999999990206561051309108734130859375"))==0;
         // load pre-saved file and perform json comparison
-        assertTrue(compareFileWithGranuleJson("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_bbox.json", granule));
+        assertTrue(UnitTestUtil.compareFileWithGranuleJson("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_bbox.json", granule));
         /**
          * Test isoXMLSpatial:[orbit]
          */
@@ -1203,7 +1187,7 @@ public class MetadataFilesToEchoTest {
                 .get("Geometry")));
         assert bbox == null;
         // load pre-saved file and perform json comparison
-        assertTrue(compareFileWithGranuleJson("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_orbit.json", granule));
+        assertTrue(UnitTestUtil.compareFileWithGranuleJson("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_orbit.json", granule));
     }
 
     private void clearVariables4IsoXMLSpatialTest(JSONArray isoXMLSpatialArray, HashSet isoXMLSpatialHashSet, JSONObject granule) {
