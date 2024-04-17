@@ -27,7 +27,6 @@ import gov.nasa.cumulus.metadata.umm.generated.TrackType;
 import gov.nasa.podaac.inventory.model.GranuleCharacter;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -128,8 +127,10 @@ public class MetadataFilesToEchoTest {
         }
 
         File file2 = new File(classLoader.getResource("20170408033000-JPL-L2P_GHRSST-SSTskin-MODIS_T-N-v02.0-fv01.0.nc.mp").getFile());
+        JSONObject granuleJson=null;
         try {
             mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
+            granuleJson = mfte.createJson();
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -140,6 +141,7 @@ public class MetadataFilesToEchoTest {
         JSONObject granule = mfte.createJson();
         System.out.println(granule.toJSONString());
         assertEquals("20170408033000-JPL-L2P_GHRSST-SSTskin-MODIS_T-N-v02.0-fv01.0", granule.get("GranuleUR"));
+        compareFileWithGranuleJson("ummgResults/from_mp_file/20170408033000-JPL-L2P_GHRSST-SSTskin-MODIS_T-N-v02.0-fv01.0.json", granuleJson);
     }
 
     @Test
@@ -159,8 +161,10 @@ public class MetadataFilesToEchoTest {
         }
 
         File file2 = new File(classLoader.getResource("RSS_SMAP_SSS_L2C_r00870_20150401T004312_2015091_FNL_V04.0.nc.mp").getFile());
+        JSONObject granuleJson = null;
         try {
             mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
+            granuleJson = mfte.createJson();
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -173,6 +177,7 @@ public class MetadataFilesToEchoTest {
         JSONArray orbitArray = (JSONArray) granule.get("OrbitCalculatedSpatialDomains");
         Integer orbitNumber = (Integer) ((JSONObject) orbitArray.get(0)).get("OrbitNumber");
         assertEquals(orbitNumber, new Integer(870));
+        compareFileWithGranuleJson("ummgResults/from_mp_file/RSS_SMAP_SSS_L2C_r00870_20150401T004312_2015091_FNL_V04.0.json", granuleJson);
     }
 
     @Test
@@ -184,23 +189,17 @@ public class MetadataFilesToEchoTest {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
         MetadataFilesToEcho mfte = new MetadataFilesToEcho();
-
         mfte.readConfiguration(file.getAbsolutePath());
-
-
         File file2 = new File(classLoader.getResource("RSS_smap_SSS_L3_monthly_2015_04_FNL_v04.0.nc.mp").getFile());
-        mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
-
-
         mfte.getGranule().setName("SMAP_RSS_L3_SSS_SMI_MONTHLY_V4");
-
+        mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
         JSONObject granule = mfte.createJson();
-        System.out.println(granule.toJSONString());
         JSONArray orbitArray = (JSONArray) granule.get("OrbitCalculatedSpatialDomains");
         Integer beginOrbit = (Integer) ((JSONObject) orbitArray.get(0)).get("BeginOrbitNumber");
         Integer endOrbit = (Integer) ((JSONObject) orbitArray.get(0)).get("EndOrbitNumber");
         assertEquals(beginOrbit, new Integer("870"));
         assertEquals(endOrbit, new Integer("1308"));
+        compareFileWithGranuleJson("ummgResults/from_mp_file/RSS_smap_SSS_L3_monthly_2015_04_FNL_v04.0_OrbitStartEnd.json", granule);
     }
 
     @Test
@@ -214,8 +213,10 @@ public class MetadataFilesToEchoTest {
 
 
         File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
+        JSONObject granuleJson=null;
         try {
             mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
+            granuleJson = mfte.createJson();
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -229,6 +230,7 @@ public class MetadataFilesToEchoTest {
         JSONObject track = (JSONObject) ((JSONObject) ((JSONObject) granule.get("SpatialExtent")).get("HorizontalSpatialDomain")).get("Track");
         assertEquals(new Long(374), track.get("Cycle"));
         assertEquals(new Long(172), ((JSONObject) ((JSONArray) track.get("Passes")).get(0)).get("Pass"));
+        compareFileWithGranuleJson("ummgResults/from_mp_file/JA1_GPN_2PeP374_172_20120303_112035_20120303_121638_withcyclepass.json", granuleJson);
     }
 
     @Test
@@ -240,25 +242,17 @@ public class MetadataFilesToEchoTest {
         File cfgFile = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
         MetadataFilesToEcho mfte = new MetadataFilesToEcho();
 
-
         mfte.readConfiguration(cfgFile.getAbsolutePath());
         mfte.readSwotArchiveXmlFile(file.getAbsolutePath());
-
-
         mfte.getGranule().setName("SWOT_IVK_20210612T081400_20210612T072103_20210612T080137_O_APID1402");
-
         JSONObject granule = mfte.createJson();
-        Gson gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
-                .registerTypeHierarchyAdapter(Collection.class, new UMMGCollectionAdapter())
-                .registerTypeHierarchyAdapter(List.class, new UMMGListAdapter())
-                .registerTypeHierarchyAdapter(Map.class, new UMMGMapAdapter())
-                .create();
-        String jsonStr = gsonBuilder.toJson(granule);
+
         assertEquals("SWOT_IVK_20210612T081400_20210612T072103_20210612T080137_O_APID1402", granule.get("GranuleUR"));
 
         JSONObject track = (JSONObject) ((JSONObject) ((JSONObject) granule.get("SpatialExtent")).get("HorizontalSpatialDomain")).get("Track");
         assertEquals(new Long(22), track.get("Cycle"));
         assertEquals(new Long(33), ((JSONObject) ((JSONArray) track.get("Passes")).get(0)).get("Pass"));
+        compareFileWithGranuleJson("ummgResults/swotArchiveXml/SWOT_IVK_20210612T081400_20210612T072103_20210612T080137_O_APID1402.PTM_1.archive.json", granule);
     }
 
     @Test
@@ -475,11 +469,14 @@ public class MetadataFilesToEchoTest {
     }
     
         @Test
-    public void testReadSwotArchiveMetadataFile_Pass_Cycle_LeadingZeros() throws IOException, ParseException, XPathExpressionException, ParserConfigurationException, SAXException{
+    public void testReadSwotArchiveMetadataFile_Pass_Cycle_LeadingZeros() throws
+                IOException, ParseException, XPathExpressionException, ParserConfigurationException, SAXException, URISyntaxException{
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("SWOT_INT_KCAL_Dyn_403_008_20230117T150452_20230117T155629_PIA0_01.archive.xml").getFile());
         File cfgFile = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
         MetadataFilesToEcho mfte = new MetadataFilesToEcho(true);
+        mfte.getGranule().setName("SWOT_INT_KCAL_Dyn_403_008_20230117T150452_20230117T155629_PIA0_01");
+        mfte.readConfiguration(cfgFile.getAbsolutePath());
 
         Document doc = null;
         XPath xpath = null;
@@ -505,11 +502,11 @@ public class MetadataFilesToEchoTest {
     public void testReadIsoMendsMetadataFileAdditionalFields_publishAll() throws ParseException, IOException, URISyntaxException, XPathExpressionException, ParserConfigurationException, SAXException {
 
         // Simple "publishAll" is true
-
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0.iso.xml").getFile());
         File cfgFile = new File(classLoader.getResource("OPERA_L3_DSWX-HLS_PROVISIONAL_V0_test_1.cmr.cfg").getFile());
         MetadataFilesToEcho mfte = new MetadataFilesToEcho(true);
+        mfte.getGranule().setName("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0");
 
         Document doc = null;
         XPath xpath = null;
@@ -518,9 +515,7 @@ public class MetadataFilesToEchoTest {
         doc = mfte.makeDoc(file.getAbsolutePath());
         xpath = mfte.makeXpath(doc);
         IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
-
         // Verify the values here:
-
         // Confirm additional attributes has been filled
         List<AdditionalAttributeType> aat = isoGranule.getAdditionalAttributeTypes();
         assertEquals(aat.size(), 11);
@@ -575,7 +570,6 @@ public class MetadataFilesToEchoTest {
     public void testReadIsoMendsMetadataFileAdditionalFields_appendFieldToJSON() throws ParseException, IOException, URISyntaxException {
 
         // publish all is set to true and having a dedicated field added to JSON (CloudCover (JSON) mapped to PercentCloudCover (XML))
-
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0.iso.xml").getFile());
         File cfgFile = new File(classLoader.getResource("OPERA_L3_DSWX-HLS_PROVISIONAL_V0_test_2.cmr.cfg").getFile());
@@ -587,6 +581,7 @@ public class MetadataFilesToEchoTest {
             mfte.readConfiguration(cfgFile.getAbsolutePath());
             doc = mfte.makeDoc(file.getAbsolutePath());
             xpath = mfte.makeXpath(doc);
+            mfte.getGranule().setName("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0");
             IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
 
             File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
@@ -596,9 +591,7 @@ public class MetadataFilesToEchoTest {
                 e.printStackTrace();
                 fail();
             }
-
             // Verify the values here:
-
             // Confirm additional attributes has been filled
             List<AdditionalAttributeType> aat = isoGranule.getAdditionalAttributeTypes();
             assertEquals(aat.size(), 11);  // 10 additional attributes + MGRS_TILE_ID
@@ -628,9 +621,7 @@ public class MetadataFilesToEchoTest {
             e.printStackTrace();
             fail();
         }
-
-        mfte.getGranule().setName("some_random_granule_name");
-
+        mfte.getGranule().setName("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0");
         JSONObject granule = mfte.createJson();
         Gson gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
                 .registerTypeHierarchyAdapter(Collection.class, new UMMGCollectionAdapter())
@@ -640,7 +631,6 @@ public class MetadataFilesToEchoTest {
         String jsonStr = gsonBuilder.toJson(granule);
 
         // Ensure jsonStr has cloud coverage field (value from PercentCloudCover in iso.xml)
-
         JSONParser parser = new JSONParser();
         JSONObject resultJSON = (JSONObject) parser.parse(jsonStr);
 
@@ -655,13 +645,13 @@ public class MetadataFilesToEchoTest {
             e.printStackTrace();
             fail();
         }
+        compareFileWithGranuleJson("ummgResults/additionalAttributes/OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0.json", granule);
     }
 
     @Test
     public void testReadIsoMendsMetadataFileAdditionalFields_publishSpecific() throws ParseException, IOException, URISyntaxException {
 
         // PublishAll is false and publish list is filled in
-
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0.iso.xml").getFile());
         File cfgFile = new File(classLoader.getResource("OPERA_L3_DSWX-HLS_PROVISIONAL_V0_test_3.cmr.cfg").getFile());
@@ -669,12 +659,14 @@ public class MetadataFilesToEchoTest {
 
         Document doc = null;
         XPath xpath = null;
+        JSONObject granuleJson = null;
         try {
             mfte.readConfiguration(cfgFile.getAbsolutePath());
             doc = mfte.makeDoc(file.getAbsolutePath());
             xpath = mfte.makeXpath(doc);
             IsoGranule isoGranule = mfte.readIsoMendsMetadataFile("s3://mybucket/mygranule.nc",  doc,  xpath);
-
+            // Use a pre-saved .mp file to patch the UMMG so the mfte.createJson() won't fail.  createJson() is needed to test
+            // generated json with pre-saved ummg
             File file2 = new File(classLoader.getResource("JA1_GPN_2PeP374_172_20120303_112035_20120303_121638.nc.mp").getFile());
             try {
                 mfte.readCommonMetadataFile(file2.getAbsolutePath(), "s3://a/path/to/s3");
@@ -682,7 +674,8 @@ public class MetadataFilesToEchoTest {
                 e.printStackTrace();
                 fail();
             }
-
+            mfte.getGranule().setName("OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0");
+            granuleJson = mfte.createJson();
             // Verify the values here:
 
             // Confirm additional attributes has been filled
@@ -703,6 +696,7 @@ public class MetadataFilesToEchoTest {
             e.printStackTrace();
             fail();
         }
+        compareFileWithGranuleJson("ummgResults/additionalAttributes/OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0_publishSpecific.json", granuleJson);
     }
 
     @Test
@@ -1210,59 +1204,6 @@ public class MetadataFilesToEchoTest {
         assert bbox == null;
         // load pre-saved file and perform json comparison
         assertTrue(compareFileWithGranuleJson("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_orbit.json", granule));
-    }
-    @Test
-    public void test_Example() throws IOException, ParseException {
-        // Create a sample JSONObject
-        JSONObject obj = new JSONObject();
-        obj.put("name", "John Doe");
-        obj.put("age", 30);
-        obj.put("city", "New York");
-
-        // Write JSONObject to f
-
-        FileUtils.writeStringToFile(new File("/tmp/tmp.json"), obj.toJSONString(), StandardCharsets.UTF_8);
-
-        // Read JSONObject from file
-        String readInStr = FileUtils.readFileToString(new File("/tmp/tmp.json"), StandardCharsets.UTF_8);
-        JSONParser parser = new JSONParser();
-        JSONObject loadedObj = (JSONObject) parser.parse(readInStr);
-
-        // Compare original and loaded JSONObject
-        assert obj.hashCode() == loadedObj.hashCode();
-        boolean isEqual = obj.equals(loadedObj);
-        System.out.println("Objects are equal? " + isEqual);
-        compareJson(obj, loadedObj);
-    }
-
-    public void compareJson(JSONObject obj1, JSONObject obj2) {
-        // Check for different keys
-        for (Object key : obj1.keySet()) {
-            if (!obj2.containsKey(key)) {
-                System.out.println("Unequal field: " + key + " (missing in object2)");
-            }
-        }
-
-        for (Object key : obj2.keySet()) {
-            if (!obj1.containsKey(key)) {
-                System.out.println("Unequal field: " + key + " (missing in object1)");
-            }
-        }
-
-        // Compare values for existing keys
-        for (Object key : obj1.keySet()) {
-            Object value1 = obj1.get(key);
-            Object value2 = obj2.get(key);
-
-            if (value1 instanceof JSONObject && value2 instanceof JSONObject) {
-                // Recursive comparison for nested objects
-                compareJson((JSONObject) value1, (JSONObject) value2);
-            } else if (value1 instanceof JSONArray && value2 instanceof JSONArray) {
-                // Handle JSONArray comparison if needed (implement your logic)
-            } else if (!value1.equals(value2)) {
-                System.out.println("Unequal field: " + key + ", value1: " + value1 + ", value2: " + value2);
-            }
-        }
     }
 
     private void clearVariables4IsoXMLSpatialTest(JSONArray isoXMLSpatialArray, HashSet isoXMLSpatialHashSet, JSONObject granule) {

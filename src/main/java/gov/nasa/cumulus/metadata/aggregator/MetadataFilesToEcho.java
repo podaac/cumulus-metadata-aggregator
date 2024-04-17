@@ -100,7 +100,6 @@ public class MetadataFilesToEcho {
 				(Boolean) metadata.get("rangeIs360"),
 				null,
 				additionalAttributes);
-
 	}
 
 	/**
