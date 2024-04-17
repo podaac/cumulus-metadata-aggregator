@@ -25,7 +25,6 @@ import gov.nasa.cumulus.metadata.umm.generated.TrackPassTileType;
 import gov.nasa.cumulus.metadata.umm.generated.TrackType;
 
 import gov.nasa.podaac.inventory.model.GranuleCharacter;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -41,7 +40,6 @@ import org.w3c.dom.Document;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.Collection;

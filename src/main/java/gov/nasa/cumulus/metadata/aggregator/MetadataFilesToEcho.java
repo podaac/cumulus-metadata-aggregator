@@ -1084,17 +1084,6 @@ public class MetadataFilesToEcho {
         FileUtils.writeStringToFile(new File(outputLocation), granuleJson.toJSONString(), StandardCharsets.UTF_8);
 	}
 
-	public void writeJson(String outputLocation, JSONObject jsonObject)
-			throws IOException{
-		JSONObject granuleJson = jsonObject;
-		FileUtils.writeStringToFile(new File(outputLocation), granuleJson.toJSONString(), StandardCharsets.UTF_8);
-	}
-
-	public void writeJson(String outputLocation, String jsonStr)
-			throws IOException{
-		FileUtils.writeStringToFile(new File(outputLocation), jsonStr, StandardCharsets.UTF_8);
-	}
-
 	public Dataset getDataset(){
 		return this.dataset;
 	}

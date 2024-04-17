@@ -524,10 +524,6 @@ public class UMMTest {
 
 		JSONObject umm = parseXfduManifest(testFile, testConfigFile, granuleId);
 
-		MetadataFilesToEcho mfte =  new MetadataFilesToEcho(true);
-		mfte.writeJson("/tmp/notOverIDL.json", umm.toJSONString());
-
-
 		//SpatialExtent
 		JSONObject hsd = (JSONObject) ((JSONObject) umm.get("SpatialExtent" )).get("HorizontalSpatialDomain" );
 
