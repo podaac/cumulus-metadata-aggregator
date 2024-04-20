@@ -23,6 +23,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockedStatic;
 import org.xml.sax.SAXException;
@@ -30,6 +32,27 @@ import org.mockito.Mockito;
 
 public class UMMTest {
 
+	MockedStatic<CMRRestClientProvider> mockedCMRRestClientProvider = null;
+	@Before
+	public void initialize() throws  URISyntaxException, ParseException, IOException{
+		System.out.println("MetadataFilesToEchoTest constructor is being called");
+		UMMGranuleFile spiedUMMGranuleFile = Mockito.spy(UMMGranuleFile.class);
+		Mockito.doReturn(true)
+				.when(spiedUMMGranuleFile)
+				.isSpatialValid(any());
+		CMRLambdaRestClient mockedEchoLambdaRestClient= Mockito.mock(CMRLambdaRestClient.class);
+		Mockito.doReturn(true)
+				.when(mockedEchoLambdaRestClient)
+				.isUMMGSpatialValid(any(), any(), any());
+
+		mockedCMRRestClientProvider = mockStatic(CMRRestClientProvider.class);
+		mockedCMRRestClientProvider.when(CMRRestClientProvider::getLambdaRestClient).thenReturn(mockedEchoLambdaRestClient);
+	}
+	
+	@After
+	public void cleanup(){
+		mockedCMRRestClientProvider.close();
+	}
     @Test
     public void testIsoRequiredFields() throws IOException, ParseException, XPathExpressionException, ParserConfigurationException, SAXException, URISyntaxException {
         /*
@@ -743,48 +766,6 @@ public class UMMTest {
 		assertNull(umm.get("AdditionalAttributes"));
 	}
 
-	private JSONObject parseXfduManifest(String testFile, String testConfigFile, String granuleId)
-			throws XPathExpressionException, ParserConfigurationException,
-			IOException, SAXException, ParseException, java.text.ParseException, URISyntaxException {
-		String testDir = "src/test/resources";
-
-		String testFilePath = testDir + File.separator + testFile;
-
-		String testConfigFilePath = testDir + File.separator + testConfigFile;
-
-		MetadataFilesToEcho mtfe = new MetadataFilesToEcho(false);
-
-		mtfe.readConfiguration(testConfigFilePath);
-		mtfe.readSentinelManifest(testFilePath);
-
-		mtfe.getGranule().setName(granuleId);
-
-		// Mock the isSpatial valid function within UMMGFile class
-
-		UMMGranuleFile mockedUMMGranuleFile = Mockito.mock(UMMGranuleFile.class);
-		Mockito.spy(mockedUMMGranuleFile);
-		Mockito.doReturn(true)
-				.when(mockedUMMGranuleFile)
-				.isSpatialValid(any());
-
-		CMRLambdaRestClient mockedEchoLambdaRestClient= Mockito.mock(CMRLambdaRestClient.class);
-		Mockito.doReturn(true)
-				.when(mockedEchoLambdaRestClient)
-				.isUMMGSpatialValid(any(), any(), any());
-
-		MockedStatic<CMRRestClientProvider> mockedECHORestClientProvider = mockStatic(CMRRestClientProvider.class);
-		when(CMRRestClientProvider.getLambdaRestClient()).thenReturn(mockedEchoLambdaRestClient);
-
-		//write UMM-G to file
-		mtfe.writeJson(testDir + "/" + granuleId + ".cmr.json");
-
-		//the CMR file should have the following values...
-		JSONParser parser = new JSONParser();
-		Object obj = parser.parse(new FileReader(testDir + "/" + granuleId + ".cmr.json"));
-		// close the static mock.  Otherwise, re-register static mock will cause exception.
-		mockedECHORestClientProvider.close();
-		return (JSONObject) obj;
-	}
 
 	@Test
 	public void testGetUmmChecksumAlgorithm() {
@@ -847,4 +828,28 @@ public class UMMTest {
 		String tile = (String)tiles.get(1);
 		assertTrue(StringUtils.equals(tile, "tile2-2"));
 	}
+
+	private JSONObject parseXfduManifest(String testFile, String testConfigFile, String granuleId)
+			throws XPathExpressionException, ParserConfigurationException,
+			IOException, SAXException, ParseException, java.text.ParseException, URISyntaxException {
+		String testDir = "src/test/resources";
+		String testFilePath = testDir + File.separator + testFile;
+		String testConfigFilePath = testDir + File.separator + testConfigFile;
+
+		MetadataFilesToEcho mtfe = new MetadataFilesToEcho(false);
+
+		mtfe.readConfiguration(testConfigFilePath);
+		mtfe.readSentinelManifest(testFilePath);
+
+		mtfe.getGranule().setName(granuleId);
+		//write UMM-G to file
+		mtfe.writeJson(testDir + "/" + granuleId + ".cmr.json");
+
+		//the CMR file should have the following values...
+		JSONParser parser = new JSONParser();
+		Object obj = parser.parse(new FileReader(testDir + "/" + granuleId + ".cmr.json"));
+		return (JSONObject) obj;
+	}
+
+
 }

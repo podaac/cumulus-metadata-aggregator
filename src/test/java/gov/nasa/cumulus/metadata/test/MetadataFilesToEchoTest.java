@@ -4,14 +4,12 @@ import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import gov.nasa.cumulus.metadata.aggregator.*;
@@ -30,6 +28,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockedStatic;
 import org.xml.sax.SAXException;
@@ -48,6 +48,27 @@ import java.util.Map;
 
 
 public class MetadataFilesToEchoTest {
+    MockedStatic<CMRRestClientProvider> mockedCMRRestClientProvider = null;
+    @Before
+    public void initialize() throws  URISyntaxException, ParseException, IOException{
+        System.out.println("MetadataFilesToEchoTest constructor is being called");
+        UMMGranuleFile spiedUMMGranuleFile = Mockito.spy(UMMGranuleFile.class);
+        Mockito.doReturn(true)
+                .when(spiedUMMGranuleFile)
+                .isSpatialValid(any());
+        CMRLambdaRestClient mockedEchoLambdaRestClient= Mockito.mock(CMRLambdaRestClient.class);
+        Mockito.doReturn(true)
+                .when(mockedEchoLambdaRestClient)
+                .isUMMGSpatialValid(any(), any(), any());
+
+        mockedCMRRestClientProvider = mockStatic(CMRRestClientProvider.class);
+        mockedCMRRestClientProvider.when(CMRRestClientProvider::getLambdaRestClient).thenReturn(mockedEchoLambdaRestClient);
+    }
+
+    @After
+    public void cleanup(){
+        mockedCMRRestClientProvider.close();
+    }
 
     @Test
     public void testParseCommonHandlerFiles() {
@@ -982,7 +1003,6 @@ public class MetadataFilesToEchoTest {
         array.add("orbit");
         array.add("bbox");
 
-        //HashSet<MENDsIsoXMLSpatialTypeEnum> h = lambda.createIsoXMLSpatialTypeSet("[footprint,orbit]");
         HashSet<MENDsIsoXMLSpatialTypeEnum> h = lambda.createIsoXMLSpatialTypeSet(array);
         assertTrue(h.contains(MENDsIsoXMLSpatialTypeEnum.FOOTPRINT));
         assertTrue(h.contains(MENDsIsoXMLSpatialTypeEnum.ORBIT));
@@ -998,20 +1018,6 @@ public class MetadataFilesToEchoTest {
         File cfgFile = new File(classLoader.getResource("MODIS_T-JPL-L2P-v2014.0.cmr.cfg").getFile());
         mfte.readConfiguration(cfgFile.getAbsolutePath());
         mfte.readIsoMetadataFile(file.getAbsolutePath(), "s3://fake_bucket/fake_dir/fake.nc.iso.xml");
-        //////  Star Mocking code of isSpatialValid
-        UMMGranuleFile mockedUMMGranuleFile = Mockito.mock(UMMGranuleFile.class);
-        Mockito.spy(mockedUMMGranuleFile);
-        Mockito.doReturn(true)
-                .when(mockedUMMGranuleFile)
-                .isSpatialValid(any());
-        CMRLambdaRestClient mockedEchoLambdaRestClient= Mockito.mock(CMRLambdaRestClient.class);
-        Mockito.doReturn(true)
-                .when(mockedEchoLambdaRestClient)
-                .isUMMGSpatialValid(any(), any(), any());
-
-        MockedStatic<CMRRestClientProvider> mockedECHORestClientProvider = mockStatic(CMRRestClientProvider.class);
-        when(CMRRestClientProvider.getLambdaRestClient()).thenReturn(mockedEchoLambdaRestClient);
-        //////  END Mocking code of isSpatialValid
 
         JSONObject granule = mfte.createJson();
         JSONArray polygonPoints =((JSONArray)((JSONObject) ((JSONObject)((JSONArray)((JSONObject)((JSONObject)((JSONObject)granule
