@@ -81,7 +81,7 @@ public class MetadataAggregatorLambda implements ITask {
 		}
 
 		/*
-		Typically should only have 1 file tagged with "Data"
+		Typically should only have 1 file tagged as "data"
 		*/
 		//data location
 		String s3Location = null;
