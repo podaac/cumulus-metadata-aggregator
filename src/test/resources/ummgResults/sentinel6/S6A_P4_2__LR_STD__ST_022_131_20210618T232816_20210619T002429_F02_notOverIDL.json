@@ -1,1 +1,194 @@
-{"TemporalExtent":{"RangeDateTime":{"EndingDateTime":"2021-06-19T00:24:29.471Z","BeginningDateTime":"2021-06-18T23:28:16.542Z"}},"MetadataSpecification":{"Version":"1.6.5","URL":"https:\/\/cdn.earthdata.nasa.gov\/umm\/granule\/v1.6.5","Name":"UMM-G"},"GranuleUR":"S6A_P4_2__LR_STD__ST_022_131_20210618T232816_20210619T002429_F02","ProviderDates":[{"Type":"Insert","Date":"2024-04-17T22:56:28.512Z"},{"Type":"Update","Date":"2024-04-17T22:56:28.514Z"}],"SpatialExtent":{"HorizontalSpatialDomain":{"Geometry":{"GPolygons":[{"Boundary":{"Points":[{"Latitude":-65.649768,"Longitude":-25.561001},{"Latitude":-66.644101,"Longitude":-25.454693},{"Latitude":-63.597255,"Longitude":2.884525},{"Latitude":-56.022254,"Longitude":22.501876},{"Latitude":-46.176484,"Longitude":34.738356},{"Latitude":-35.287184,"Longitude":42.821997},{"Latitude":-23.891329,"Longitude":48.714422},{"Latitude":-12.243013,"Longitude":53.479583},{"Latitude":-0.492119,"Longitude":57.755247},{"Latitude":11.245057,"Longitude":62.012329},{"Latitude":22.847334,"Longitude":66.712901},{"Latitude":34.159401,"Longitude":72.465261},{"Latitude":44.931266,"Longitude":80.267339},{"Latitude":54.690314,"Longitude":91.997549},{"Latitude":62.326143,"Longitude":110.882612},{"Latitude":65.638561,"Longitude":138.707184},{"Latitude":65.64749,"Longitude":140.321732},{"Latitude":66.647475,"Longitude":140.316202},{"Latitude":66.638546,"Longitude":138.701654},{"Latitude":63.319145,"Longitude":110.764513},{"Latitude":55.61772,"Longitude":91.623494},{"Latitude":45.700998,"Longitude":79.628972},{"Latitude":34.746947,"Longitude":71.65607},{"Latitude":23.301042,"Longitude":65.821751},{"Latitude":11.620689,"Longitude":61.08556},{"Latitude":-0.151127,"Longitude":56.81518},{"Latitude":-11.901085,"Longitude":52.539857},{"Latitude":-23.512671,"Longitude":47.788885},{"Latitude":-34.827746,"Longitude":41.933788},{"Latitude":-45.580038,"Longitude":33.935703},{"Latitude":-55.2425,"Longitude":21.87579},{"Latitude":-62.663981,"Longitude":2.525361},{"Latitude":-65.649768,"Longitude":-25.561001}]}}]},"Track":{"Cycle":22,"Passes":[{"Pass":131}]}}},"AdditionalAttributes":[{"Values":["S6A_P4_2__LR______20210618T232816_20210619T002429_20210619T220302_3373_022_131_065_EUM__OPE_ST_F02.SEN6"],"Name":"ProviderDataSource"}],"DataGranule":{"DayNightFlag":"Unspecified","ProductionDateTime":"2021-06-19T22:10:40.000Z"},"CollectionReference":{"Version":"E","ShortName":"JASON_CS_S6A_L0_ALT_ACQ"}}
+{
+  "TemporalExtent": {
+    "RangeDateTime": {
+      "EndingDateTime": "2021-06-19T00:24:29.471Z",
+      "BeginningDateTime": "2021-06-18T23:28:16.542Z"
+    }
+  },
+  "MetadataSpecification": {
+    "Version": "1.6.6",
+    "URL": "https://cdn.earthdata.nasa.gov/umm/granule/v1.6.6",
+    "Name": "UMM-G"
+  },
+  "GranuleUR": "S6A_P4_2__LR_STD__ST_022_131_20210618T232816_20210619T002429_F02",
+  "ProviderDates": [
+    {
+      "Type": "Insert",
+      "Date": "2024-04-17T22:56:28.512Z"
+    },
+    {
+      "Type": "Update",
+      "Date": "2024-04-17T22:56:28.514Z"
+    }
+  ],
+  "SpatialExtent": {
+    "HorizontalSpatialDomain": {
+      "Geometry": {
+        "GPolygons": [
+          {
+            "Boundary": {
+              "Points": [
+                {
+                  "Latitude": -65.649768,
+                  "Longitude": -25.561001
+                },
+                {
+                  "Latitude": -66.644101,
+                  "Longitude": -25.454693
+                },
+                {
+                  "Latitude": -63.597255,
+                  "Longitude": 2.884525
+                },
+                {
+                  "Latitude": -56.022254,
+                  "Longitude": 22.501876
+                },
+                {
+                  "Latitude": -46.176484,
+                  "Longitude": 34.738356
+                },
+                {
+                  "Latitude": -35.287184,
+                  "Longitude": 42.821997
+                },
+                {
+                  "Latitude": -23.891329,
+                  "Longitude": 48.714422
+                },
+                {
+                  "Latitude": -12.243013,
+                  "Longitude": 53.479583
+                },
+                {
+                  "Latitude": -0.492119,
+                  "Longitude": 57.755247
+                },
+                {
+                  "Latitude": 11.245057,
+                  "Longitude": 62.012329
+                },
+                {
+                  "Latitude": 22.847334,
+                  "Longitude": 66.712901
+                },
+                {
+                  "Latitude": 34.159401,
+                  "Longitude": 72.465261
+                },
+                {
+                  "Latitude": 44.931266,
+                  "Longitude": 80.267339
+                },
+                {
+                  "Latitude": 54.690314,
+                  "Longitude": 91.997549
+                },
+                {
+                  "Latitude": 62.326143,
+                  "Longitude": 110.882612
+                },
+                {
+                  "Latitude": 65.638561,
+                  "Longitude": 138.707184
+                },
+                {
+                  "Latitude": 65.64749,
+                  "Longitude": 140.321732
+                },
+                {
+                  "Latitude": 66.647475,
+                  "Longitude": 140.316202
+                },
+                {
+                  "Latitude": 66.638546,
+                  "Longitude": 138.701654
+                },
+                {
+                  "Latitude": 63.319145,
+                  "Longitude": 110.764513
+                },
+                {
+                  "Latitude": 55.61772,
+                  "Longitude": 91.623494
+                },
+                {
+                  "Latitude": 45.700998,
+                  "Longitude": 79.628972
+                },
+                {
+                  "Latitude": 34.746947,
+                  "Longitude": 71.65607
+                },
+                {
+                  "Latitude": 23.301042,
+                  "Longitude": 65.821751
+                },
+                {
+                  "Latitude": 11.620689,
+                  "Longitude": 61.08556
+                },
+                {
+                  "Latitude": -0.151127,
+                  "Longitude": 56.81518
+                },
+                {
+                  "Latitude": -11.901085,
+                  "Longitude": 52.539857
+                },
+                {
+                  "Latitude": -23.512671,
+                  "Longitude": 47.788885
+                },
+                {
+                  "Latitude": -34.827746,
+                  "Longitude": 41.933788
+                },
+                {
+                  "Latitude": -45.580038,
+                  "Longitude": 33.935703
+                },
+                {
+                  "Latitude": -55.2425,
+                  "Longitude": 21.87579
+                },
+                {
+                  "Latitude": -62.663981,
+                  "Longitude": 2.525361
+                },
+                {
+                  "Latitude": -65.649768,
+                  "Longitude": -25.561001
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "Track": {
+        "Cycle": 22,
+        "Passes": [
+          {
+            "Pass": 131
+          }
+        ]
+      }
+    }
+  },
+  "AdditionalAttributes": [
+    {
+      "Values": [
+        "S6A_P4_2__LR______20210618T232816_20210619T002429_20210619T220302_3373_022_131_065_EUM__OPE_ST_F02.SEN6"
+      ],
+      "Name": "ProviderDataSource"
+    }
+  ],
+  "DataGranule": {
+    "DayNightFlag": "Unspecified",
+    "ProductionDateTime": "2021-06-19T22:10:40.000Z"
+  },
+  "CollectionReference": {
+    "Version": "E",
+    "ShortName": "JASON_CS_S6A_L0_ALT_ACQ"
+  }
+}

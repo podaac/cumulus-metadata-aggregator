@@ -1,5 +1,6 @@
 package gov.nasa.cumulus.metadata.test;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONObject;

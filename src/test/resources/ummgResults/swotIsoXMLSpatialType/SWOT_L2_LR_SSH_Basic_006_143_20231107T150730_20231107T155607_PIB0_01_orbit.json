@@ -1,1 +1,125 @@
-{"InputGranules":["SWOT_GranulePolygons_Nom_20230213T142900_v05.json","SWOT_INT_LR_XOverCal_20231106T233827_20231107T233918_PIB0_01.nc","SWOT_L2_LR_PreCalSSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01.nc","SWOT_L2_LR_PreCalSSH_Expert_006_143_20231107T150730_20231107T155607_PIB0_01.nc","SWOT_L2_LR_PreCalSSH_Unsmoothed_006_143_20231107T150440_20231107T155606_PIB0_01.nc","SWOT_L2_LR_PreCalSSH_WindWave_006_143_20231107T150730_20231107T155607_PIB0_01.nc","SWOT_NC_Compression_L2_LR_SSH_Basic_20210728T100000_v004.yaml","SWOT_NC_Compression_L2_LR_SSH_Expert_20210728T100000_v004.yaml","SWOT_NC_Compression_L2_LR_SSH_Unsmoothed_20210728T100000_v004.yaml","SWOT_NC_Compression_L2_LR_SSH_WindWave_20210728T100000_v004.yaml","SWOT_ORF_AXXCNE20231109_104300_20230720_200750_20231124_075610"],"TemporalExtent":{"RangeDateTime":{"EndingDateTime":"2023-11-07T15:56:22.407Z","BeginningDateTime":"2023-11-07T15:04:24.790Z"}},"MetadataSpecification":{"Version":"1.6.5","URL":"https:\/\/cdn.earthdata.nasa.gov\/umm\/granule\/v1.6.5","Name":"UMM-G"},"Platforms":[{"Instruments":[{"ShortName":"KaRIn"}],"ShortName":"SWOT"}],"GranuleUR":"SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01","ProviderDates":[{"Type":"Insert","Date":"2024-04-15T23:59:46.728Z"},{"Type":"Update","Date":"2024-04-15T23:59:46.738Z"}],"MeasuredParameters":[{"QAStats":{"QAPercentMissingData":0.0,"QAPercentOutOfBoundsData":0.0},"ParameterName":"N\/A"}],"SpatialExtent":{"HorizontalSpatialDomain":{"Orbit":{"StartLatitude":-77.66,"EndLatitude":77.66,"AscendingCrossing":-38.05,"StartDirection":"A","EndDirection":"A"},"Track":{"Cycle":6,"Passes":[{"Pass":143}]}}},"PGEVersionClass":{"PGEName":"PGE_L2_LR_SSH","PGEVersion":"4.3.0"},"DataGranule":{"ArchiveAndDistributionInformation":[],"DayNightFlag":"Unspecified","Identifiers":[{"Identifier":"SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01.nc","IdentifierType":"ProducerGranuleId"},{"Identifier":"PIB0","IdentifierType":"CRID"},{"Identifier":"1.1","IdentifierType":"Other","IdentifierName":"SASVersionId"},{"Identifier":"4.3.0","IdentifierType":"Other","IdentifierName":"PGEVersionId"},{"Identifier":"ICV01 CollectionVersion filler","IdentifierType":"Other","IdentifierName":"ScienceAlgorithmVersionId"},{"Identifier":"01","IdentifierType":"Other","IdentifierName":"ProductCounter"}],"ReprocessingPlanned":"None","ProductionDateTime":"2023-11-10T01:03:13.602Z"},"CollectionReference":{"Version":"4.2","ShortName":"MODIS_T-JPL-L2P-v2014.0"},"RelatedUrls":[{"Type":"GET DATA","Description":"The base directory location for the granule.","URL":"s3:\/\/fake_bucket\/fake_dir\/fake.nc.iso.xml"}]}
+{
+  "InputGranules": [
+    "SWOT_GranulePolygons_Nom_20230213T142900_v05.json",
+    "SWOT_INT_LR_XOverCal_20231106T233827_20231107T233918_PIB0_01.nc",
+    "SWOT_L2_LR_PreCalSSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01.nc",
+    "SWOT_L2_LR_PreCalSSH_Expert_006_143_20231107T150730_20231107T155607_PIB0_01.nc",
+    "SWOT_L2_LR_PreCalSSH_Unsmoothed_006_143_20231107T150440_20231107T155606_PIB0_01.nc",
+    "SWOT_L2_LR_PreCalSSH_WindWave_006_143_20231107T150730_20231107T155607_PIB0_01.nc",
+    "SWOT_NC_Compression_L2_LR_SSH_Basic_20210728T100000_v004.yaml",
+    "SWOT_NC_Compression_L2_LR_SSH_Expert_20210728T100000_v004.yaml",
+    "SWOT_NC_Compression_L2_LR_SSH_Unsmoothed_20210728T100000_v004.yaml",
+    "SWOT_NC_Compression_L2_LR_SSH_WindWave_20210728T100000_v004.yaml",
+    "SWOT_ORF_AXXCNE20231109_104300_20230720_200750_20231124_075610"
+  ],
+  "TemporalExtent": {
+    "RangeDateTime": {
+      "EndingDateTime": "2023-11-07T15:56:22.407Z",
+      "BeginningDateTime": "2023-11-07T15:04:24.790Z"
+    }
+  },
+  "MetadataSpecification": {
+    "Version": "1.6.6",
+    "URL": "https://cdn.earthdata.nasa.gov/umm/granule/v1.6.6",
+    "Name": "UMM-G"
+  },
+  "Platforms": [
+    {
+      "Instruments": [
+        {
+          "ShortName": "KaRIn"
+        }
+      ],
+      "ShortName": "SWOT"
+    }
+  ],
+  "GranuleUR": "SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01",
+  "ProviderDates": [
+    {
+      "Type": "Insert",
+      "Date": "2024-04-15T23:59:46.728Z"
+    },
+    {
+      "Type": "Update",
+      "Date": "2024-04-15T23:59:46.738Z"
+    }
+  ],
+  "MeasuredParameters": [
+    {
+      "QAStats": {
+        "QAPercentMissingData": 0.0,
+        "QAPercentOutOfBoundsData": 0.0
+      },
+      "ParameterName": "N/A"
+    }
+  ],
+  "SpatialExtent": {
+    "HorizontalSpatialDomain": {
+      "Orbit": {
+        "StartLatitude": -77.66,
+        "EndLatitude": 77.66,
+        "AscendingCrossing": -38.05,
+        "StartDirection": "A",
+        "EndDirection": "A"
+      },
+      "Track": {
+        "Cycle": 6,
+        "Passes": [
+          {
+            "Pass": 143
+          }
+        ]
+      }
+    }
+  },
+  "PGEVersionClass": {
+    "PGEName": "PGE_L2_LR_SSH",
+    "PGEVersion": "4.3.0"
+  },
+  "DataGranule": {
+    "DayNightFlag": "Unspecified",
+    "Identifiers": [
+      {
+        "Identifier": "SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01.nc",
+        "IdentifierType": "ProducerGranuleId"
+      },
+      {
+        "Identifier": "PIB0",
+        "IdentifierType": "CRID"
+      },
+      {
+        "Identifier": "1.1",
+        "IdentifierType": "Other",
+        "IdentifierName": "SASVersionId"
+      },
+      {
+        "Identifier": "4.3.0",
+        "IdentifierType": "Other",
+        "IdentifierName": "PGEVersionId"
+      },
+      {
+        "Identifier": "ICV01 CollectionVersion filler",
+        "IdentifierType": "Other",
+        "IdentifierName": "ScienceAlgorithmVersionId"
+      },
+      {
+        "Identifier": "01",
+        "IdentifierType": "Other",
+        "IdentifierName": "ProductCounter"
+      }
+    ],
+    "ReprocessingPlanned": "None",
+    "ProductionDateTime": "2023-11-10T01:03:13.602Z"
+  },
+  "CollectionReference": {
+    "Version": "4.2",
+    "ShortName": "MODIS_T-JPL-L2P-v2014.0"
+  },
+  "RelatedUrls": [
+    {
+      "Type": "GET DATA",
+      "Description": "The base directory location for the granule.",
+      "URL": "s3://fake_bucket/fake_dir/fake.nc.iso.xml"
+    }
+  ]
+}

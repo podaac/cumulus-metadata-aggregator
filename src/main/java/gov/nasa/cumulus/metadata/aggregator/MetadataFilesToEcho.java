@@ -1074,13 +1074,13 @@ public class MetadataFilesToEcho {
 		granule.setIngestTime(new Date());
 		UMMGranuleFile granuleFile = new UMMGranuleFile(granule, dataset, rangeIs360, this.isoXMLSpatialTypeEnumHashSet);
 		JSONObject granuleJson = granuleFile.defineGranule();
+		JSONUtils.cleanJSON(granuleJson);
 		return granuleJson;
 	}
 
 	public void writeJson(String outputLocation)
 			throws IOException, ParseException, URISyntaxException{
 		JSONObject granuleJson = createJson();
-        JSONUtils.cleanJSON(granuleJson);
         FileUtils.writeStringToFile(new File(outputLocation), granuleJson.toJSONString(), StandardCharsets.UTF_8);
 	}
 

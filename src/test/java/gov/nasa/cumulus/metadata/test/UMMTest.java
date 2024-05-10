@@ -117,7 +117,7 @@ public class UMMTest {
             fail("Did not find exactly one Insert and one Update field in ProviderDates");
         }
         assertNotNull(umm.get("MetadataSpecification"));
-        testMetadataSpec(umm, "1.6.5");
+        testMetadataSpec(umm, "1.6.6");
         // These tests are based on testCollection.config, and will need
         // to be changed if the test resource changes.
         JSONObject cr = (JSONObject)umm.get("CollectionReference");
@@ -842,6 +842,8 @@ public class UMMTest {
 		mtfe.readSentinelManifest(testFilePath);
 
 		mtfe.getGranule().setName(granuleId);
+//		JSONObject granuleJson = mtfe.createJson();
+//		return granuleJson;
 		//write UMM-G to file
 		mtfe.writeJson(testDir + "/" + granuleId + ".cmr.json");
 
@@ -849,6 +851,14 @@ public class UMMTest {
 		JSONParser parser = new JSONParser();
 		Object obj = parser.parse(new FileReader(testDir + "/" + granuleId + ".cmr.json"));
 		return (JSONObject) obj;
+	}
+
+	@Test
+	public void testStringMatch() {
+		String regex = "^.*_B02_BWTR\\.tif$";
+		String s3File = "s3://src/test/resources/tester/asdaffaf_B02_BWTR.tif";
+		boolean matched = s3File.matches(regex);
+		System.out.println("matched? " + matched);
 	}
 
 
