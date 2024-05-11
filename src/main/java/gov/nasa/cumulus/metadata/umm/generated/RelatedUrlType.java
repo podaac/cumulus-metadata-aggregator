@@ -3,71 +3,73 @@ package gov.nasa.cumulus.metadata.umm.generated;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.processing.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
 /**
  * This entity holds all types of online URL associated with the granule such as guide document or ordering site etc.
- *
+ * 
  */
+@Generated("jsonschema2pojo")
 public class RelatedUrlType {
 
     /**
      * The URL for the relevant resource.
      * (Required)
-     *
+     * 
      */
     @SerializedName("URL")
     @Expose
     private String url;
     /**
-     *
+     * 
      * (Required)
-     *
+     * 
      */
     @SerializedName("Type")
     @Expose
-    private RelatedUrlType.RelatedUrlTypeEnum type;
+    private RelatedUrlTypeEnum type;
     @SerializedName("Subtype")
     @Expose
-    private RelatedUrlType.RelatedUrlSubTypeEnum subtype;
+    private RelatedUrlSubTypeEnum subtype;
     /**
      * Description of the web page at this URL.
-     *
+     * 
      */
     @SerializedName("Description")
     @Expose
     private String description;
     /**
      * The format that granule data confirms to. While the value is listed as open to any text, CMR requires that it confirm to one of the values on the GranuleDataFormat values in the Keyword Management System: https://gcmd.earthdata.nasa.gov/kms/concepts/concept_scheme/GranuleDataFormat
-     *
+     * 
      */
     @SerializedName("Format")
     @Expose
     private String format;
     @SerializedName("MimeType")
     @Expose
-    private RelatedUrlType.MimeTypeEnum mimeType;
+    private MimeTypeEnum mimeType;
     /**
      * The size of the resource.
-     *
+     * 
      */
     @SerializedName("Size")
     @Expose
     private Double size;
     /**
      * The unit of the file size.
-     *
+     * 
      */
     @SerializedName("SizeUnit")
     @Expose
-    private RelatedUrlType.FileSizeUnitEnum sizeUnit;
+    private FileSizeUnitEnum sizeUnit;
 
     /**
      * The URL for the relevant resource.
      * (Required)
-     *
+     * 
      */
     public String getUrl() {
         return url;
@@ -76,41 +78,41 @@ public class RelatedUrlType {
     /**
      * The URL for the relevant resource.
      * (Required)
-     *
+     * 
      */
     public void setUrl(String url) {
         this.url = url;
     }
 
     /**
-     *
+     * 
      * (Required)
-     *
+     * 
      */
-    public RelatedUrlType.RelatedUrlTypeEnum getType() {
+    public RelatedUrlTypeEnum getType() {
         return type;
     }
 
     /**
-     *
+     * 
      * (Required)
-     *
+     * 
      */
-    public void setType(RelatedUrlType.RelatedUrlTypeEnum type) {
+    public void setType(RelatedUrlTypeEnum type) {
         this.type = type;
     }
 
-    public RelatedUrlType.RelatedUrlSubTypeEnum getSubtype() {
+    public RelatedUrlSubTypeEnum getSubtype() {
         return subtype;
     }
 
-    public void setSubtype(RelatedUrlType.RelatedUrlSubTypeEnum subtype) {
+    public void setSubtype(RelatedUrlSubTypeEnum subtype) {
         this.subtype = subtype;
     }
 
     /**
      * Description of the web page at this URL.
-     *
+     * 
      */
     public String getDescription() {
         return description;
@@ -118,7 +120,7 @@ public class RelatedUrlType {
 
     /**
      * Description of the web page at this URL.
-     *
+     * 
      */
     public void setDescription(String description) {
         this.description = description;
@@ -126,7 +128,7 @@ public class RelatedUrlType {
 
     /**
      * The format that granule data confirms to. While the value is listed as open to any text, CMR requires that it confirm to one of the values on the GranuleDataFormat values in the Keyword Management System: https://gcmd.earthdata.nasa.gov/kms/concepts/concept_scheme/GranuleDataFormat
-     *
+     * 
      */
     public String getFormat() {
         return format;
@@ -134,23 +136,23 @@ public class RelatedUrlType {
 
     /**
      * The format that granule data confirms to. While the value is listed as open to any text, CMR requires that it confirm to one of the values on the GranuleDataFormat values in the Keyword Management System: https://gcmd.earthdata.nasa.gov/kms/concepts/concept_scheme/GranuleDataFormat
-     *
+     * 
      */
     public void setFormat(String format) {
         this.format = format;
     }
 
-    public RelatedUrlType.MimeTypeEnum getMimeType() {
+    public MimeTypeEnum getMimeType() {
         return mimeType;
     }
 
-    public void setMimeType(RelatedUrlType.MimeTypeEnum mimeType) {
+    public void setMimeType(MimeTypeEnum mimeType) {
         this.mimeType = mimeType;
     }
 
     /**
      * The size of the resource.
-     *
+     * 
      */
     public Double getSize() {
         return size;
@@ -158,7 +160,7 @@ public class RelatedUrlType {
 
     /**
      * The size of the resource.
-     *
+     * 
      */
     public void setSize(Double size) {
         this.size = size;
@@ -166,17 +168,17 @@ public class RelatedUrlType {
 
     /**
      * The unit of the file size.
-     *
+     * 
      */
-    public RelatedUrlType.FileSizeUnitEnum getSizeUnit() {
+    public FileSizeUnitEnum getSizeUnit() {
         return sizeUnit;
     }
 
     /**
      * The unit of the file size.
-     *
+     * 
      */
-    public void setSizeUnit(RelatedUrlType.FileSizeUnitEnum sizeUnit) {
+    public void setSizeUnit(FileSizeUnitEnum sizeUnit) {
         this.sizeUnit = sizeUnit;
     }
 
@@ -253,8 +255,9 @@ public class RelatedUrlType {
 
     /**
      * The unit of the file size.
-     *
+     * 
      */
+    @Generated("jsonschema2pojo")
     public enum FileSizeUnitEnum {
 
         @SerializedName("KB")
@@ -270,10 +273,10 @@ public class RelatedUrlType {
         @SerializedName("NA")
         NA("NA");
         private final String value;
-        private final static Map<String, RelatedUrlType.FileSizeUnitEnum> CONSTANTS = new HashMap<String, RelatedUrlType.FileSizeUnitEnum>();
+        private final static Map<String, FileSizeUnitEnum> CONSTANTS = new HashMap<String, FileSizeUnitEnum>();
 
         static {
-            for (RelatedUrlType.FileSizeUnitEnum c: values()) {
+            for (FileSizeUnitEnum c: values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
@@ -291,8 +294,8 @@ public class RelatedUrlType {
             return this.value;
         }
 
-        public static RelatedUrlType.FileSizeUnitEnum fromValue(String value) {
-            RelatedUrlType.FileSizeUnitEnum constant = CONSTANTS.get(value);
+        public static FileSizeUnitEnum fromValue(String value) {
+            FileSizeUnitEnum constant = CONSTANTS.get(value);
             if (constant == null) {
                 throw new IllegalArgumentException(value);
             } else {
@@ -302,6 +305,7 @@ public class RelatedUrlType {
 
     }
 
+    @Generated("jsonschema2pojo")
     public enum MimeTypeEnum {
 
         @SerializedName("application/json")
@@ -361,10 +365,10 @@ public class RelatedUrlType {
         @SerializedName("Not provided")
         NOT_PROVIDED("Not provided");
         private final String value;
-        private final static Map<String, RelatedUrlType.MimeTypeEnum> CONSTANTS = new HashMap<String, RelatedUrlType.MimeTypeEnum>();
+        private final static Map<String, MimeTypeEnum> CONSTANTS = new HashMap<String, MimeTypeEnum>();
 
         static {
-            for (RelatedUrlType.MimeTypeEnum c: values()) {
+            for (MimeTypeEnum c: values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
@@ -382,8 +386,8 @@ public class RelatedUrlType {
             return this.value;
         }
 
-        public static RelatedUrlType.MimeTypeEnum fromValue(String value) {
-            RelatedUrlType.MimeTypeEnum constant = CONSTANTS.get(value);
+        public static MimeTypeEnum fromValue(String value) {
+            MimeTypeEnum constant = CONSTANTS.get(value);
             if (constant == null) {
                 throw new IllegalArgumentException(value);
             } else {
@@ -393,8 +397,11 @@ public class RelatedUrlType {
 
     }
 
+    @Generated("jsonschema2pojo")
     public enum RelatedUrlSubTypeEnum {
 
+        @SerializedName("BROWSE IMAGE SOURCE")
+        BROWSE_IMAGE_SOURCE("BROWSE IMAGE SOURCE"),
         @SerializedName("MOBILE APP")
         MOBILE_APP("MOBILE APP"),
         @SerializedName("APPEARS")
@@ -532,10 +539,10 @@ public class RelatedUrlType {
         @SerializedName("DMR++ MISSING DATA")
         DMR_MISSING_DATA("DMR++ MISSING DATA");
         private final String value;
-        private final static Map<String, RelatedUrlType.RelatedUrlSubTypeEnum> CONSTANTS = new HashMap<String, RelatedUrlType.RelatedUrlSubTypeEnum>();
+        private final static Map<String, RelatedUrlSubTypeEnum> CONSTANTS = new HashMap<String, RelatedUrlSubTypeEnum>();
 
         static {
-            for (RelatedUrlType.RelatedUrlSubTypeEnum c: values()) {
+            for (RelatedUrlSubTypeEnum c: values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
@@ -553,8 +560,8 @@ public class RelatedUrlType {
             return this.value;
         }
 
-        public static RelatedUrlType.RelatedUrlSubTypeEnum fromValue(String value) {
-            RelatedUrlType.RelatedUrlSubTypeEnum constant = CONSTANTS.get(value);
+        public static RelatedUrlSubTypeEnum fromValue(String value) {
+            RelatedUrlSubTypeEnum constant = CONSTANTS.get(value);
             if (constant == null) {
                 throw new IllegalArgumentException(value);
             } else {
@@ -564,6 +571,7 @@ public class RelatedUrlType {
 
     }
 
+    @Generated("jsonschema2pojo")
     public enum RelatedUrlTypeEnum {
 
         @SerializedName("DOWNLOAD SOFTWARE")
@@ -585,10 +593,10 @@ public class RelatedUrlType {
         @SerializedName("VIEW RELATED INFORMATION")
         VIEW_RELATED_INFORMATION("VIEW RELATED INFORMATION");
         private final String value;
-        private final static Map<String, RelatedUrlType.RelatedUrlTypeEnum> CONSTANTS = new HashMap<String, RelatedUrlType.RelatedUrlTypeEnum>();
+        private final static Map<String, RelatedUrlTypeEnum> CONSTANTS = new HashMap<String, RelatedUrlTypeEnum>();
 
         static {
-            for (RelatedUrlType.RelatedUrlTypeEnum c: values()) {
+            for (RelatedUrlTypeEnum c: values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
@@ -606,8 +614,8 @@ public class RelatedUrlType {
             return this.value;
         }
 
-        public static RelatedUrlType.RelatedUrlTypeEnum fromValue(String value) {
-            RelatedUrlType.RelatedUrlTypeEnum constant = CONSTANTS.get(value);
+        public static RelatedUrlTypeEnum fromValue(String value) {
+            RelatedUrlTypeEnum constant = CONSTANTS.get(value);
             if (constant == null) {
                 throw new IllegalArgumentException(value);
             } else {

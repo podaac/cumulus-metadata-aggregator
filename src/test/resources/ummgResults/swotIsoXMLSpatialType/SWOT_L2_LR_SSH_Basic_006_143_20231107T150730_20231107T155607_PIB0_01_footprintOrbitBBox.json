@@ -19,8 +19,8 @@
     }
   },
   "MetadataSpecification": {
-    "Version": "1.6.5",
-    "URL": "https://cdn.earthdata.nasa.gov/umm/granule/v1.6.5",
+    "Version": "1.6.6",
+    "URL": "https://cdn.earthdata.nasa.gov/umm/granule/v1.6.6",
     "Name": "UMM-G"
   },
   "Platforms": [
@@ -355,7 +355,6 @@
     "PGEVersion": "4.3.0"
   },
   "DataGranule": {
-    "ArchiveAndDistributionInformation": [],
     "DayNightFlag": "Unspecified",
     "Identifiers": [
       {

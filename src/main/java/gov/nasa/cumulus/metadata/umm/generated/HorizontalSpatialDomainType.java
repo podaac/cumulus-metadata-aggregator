@@ -1,6 +1,7 @@
 
 package gov.nasa.cumulus.metadata.umm.generated;
 
+import javax.annotation.processing.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,6 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * Information about a granule with horizontal spatial coverage.
  * 
  */
+@Generated("jsonschema2pojo")
 public class HorizontalSpatialDomainType {
 
     /**

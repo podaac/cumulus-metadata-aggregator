@@ -1,1 +1,60 @@
-{"TemporalExtent":{"RangeDateTime":{"EndingDateTime":"2012-03-03T12:16:38.727Z","BeginningDateTime":"2012-03-03T11:20:35.236Z"}},"MetadataSpecification":{"Version":"1.6.5","URL":"https:\/\/cdn.earthdata.nasa.gov\/umm\/granule\/v1.6.5","Name":"UMM-G"},"GranuleUR":null,"ProviderDates":[{"Type":"Insert","Date":"2024-04-17T01:17:07.865Z"},{"Type":"Update","Date":"2024-04-17T01:17:07.882Z"}],"SpatialExtent":{"HorizontalSpatialDomain":{"Geometry":{"BoundingRectangles":[{"WestBoundingCoordinate":0.238,"SouthBoundingCoordinate":-66.147,"EastBoundingCoordinate":359.846,"NorthBoundingCoordinate":66.142}]},"Track":{"Cycle":374,"Passes":[{"Pass":172}]}}},"DataGranule":{"ArchiveAndDistributionInformation":[],"DayNightFlag":"Unspecified","ProductionDateTime":"2016-03-16T03:02:03.000Z"},"CollectionReference":{"Version":"4.2","ShortName":"MODIS_T-JPL-L2P-v2014.0"},"RelatedUrls":[{"Type":"GET DATA","Description":"The base directory location for the granule.","URL":"s3:\/\/a\/path\/to\/s3"}]}
+{
+  "TemporalExtent": {
+    "RangeDateTime": {
+      "EndingDateTime": "2012-03-03T12:16:38.727Z",
+      "BeginningDateTime": "2012-03-03T11:20:35.236Z"
+    }
+  },
+  "MetadataSpecification": {
+    "Version": "1.6.6",
+    "URL": "https://cdn.earthdata.nasa.gov/umm/granule/v1.6.6",
+    "Name": "UMM-G"
+  },
+  "ProviderDates": [
+    {
+      "Type": "Insert",
+      "Date": "2024-04-17T01:17:07.865Z"
+    },
+    {
+      "Type": "Update",
+      "Date": "2024-04-17T01:17:07.882Z"
+    }
+  ],
+  "SpatialExtent": {
+    "HorizontalSpatialDomain": {
+      "Geometry": {
+        "BoundingRectangles": [
+          {
+            "WestBoundingCoordinate": 0.238,
+            "SouthBoundingCoordinate": -66.147,
+            "EastBoundingCoordinate": 359.846,
+            "NorthBoundingCoordinate": 66.142
+          }
+        ]
+      },
+      "Track": {
+        "Cycle": 374,
+        "Passes": [
+          {
+            "Pass": 172
+          }
+        ]
+      }
+    }
+  },
+  "DataGranule": {
+    "DayNightFlag": "Unspecified",
+    "ProductionDateTime": "2016-03-16T03:02:03.000Z"
+  },
+  "CollectionReference": {
+    "Version": "4.2",
+    "ShortName": "MODIS_T-JPL-L2P-v2014.0"
+  },
+  "RelatedUrls": [
+    {
+      "Type": "GET DATA",
+      "Description": "The base directory location for the granule.",
+      "URL": "s3://a/path/to/s3"
+    }
+  ]
+}
