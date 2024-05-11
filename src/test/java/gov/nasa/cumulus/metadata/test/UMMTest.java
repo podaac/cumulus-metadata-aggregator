@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -530,10 +531,10 @@ public class UMMTest {
 
 		//Geometry/BoundingRectangles
 		JSONObject gbbx = (JSONObject)boundingCoordinates.get(0);
-		assertEquals(gbbx.get("WestBoundingCoordinate"), Double.valueOf(-180));
-		assertEquals(gbbx.get("SouthBoundingCoordinate"), Double.valueOf(-90.00));
-		assertEquals(gbbx.get("EastBoundingCoordinate"), Double.valueOf(180.00));
-		assertEquals(gbbx.get("NorthBoundingCoordinate"), Double.valueOf(90.00));
+		assertEquals(gbbx.get("WestBoundingCoordinate"), BigDecimal.valueOf(-180.0));
+		assertEquals(gbbx.get("SouthBoundingCoordinate"), BigDecimal.valueOf(-90.00));
+		assertEquals(gbbx.get("EastBoundingCoordinate"), BigDecimal.valueOf(180.00));
+		assertEquals(gbbx.get("NorthBoundingCoordinate"), BigDecimal.valueOf(90.00));
 	}
 
 	@Test
@@ -595,11 +596,11 @@ public class UMMTest {
 		Object firstBoundBoxObj = ((JSONArray)geom.get("BoundingRectangles")).get(0);
 		JSONObject bouningdbox = (JSONObject)firstBoundBoxObj;
 
-		assertEquals(Double.valueOf(-180.0), ((Double) bouningdbox.get("WestBoundingCoordinate")));
-		assertEquals(Double.valueOf(-90.0), ((Double) bouningdbox.get("SouthBoundingCoordinate")));
+		assertEquals(BigDecimal.valueOf(-180.0), ((BigDecimal) bouningdbox.get("WestBoundingCoordinate")));
+		assertEquals(BigDecimal.valueOf(-90.0), ((BigDecimal) bouningdbox.get("SouthBoundingCoordinate")));
 
-		assertEquals(Double.valueOf(180.0), ((Double) bouningdbox.get("EastBoundingCoordinate")));
-		assertEquals(Double.valueOf(90.0), ((Double) bouningdbox.get("NorthBoundingCoordinate")));
+		assertEquals(BigDecimal.valueOf(180.0), ((BigDecimal) bouningdbox.get("EastBoundingCoordinate")));
+		assertEquals(BigDecimal.valueOf(90.0), ((BigDecimal) bouningdbox.get("NorthBoundingCoordinate")));
 	}
 
 	@Test
@@ -842,15 +843,15 @@ public class UMMTest {
 		mtfe.readSentinelManifest(testFilePath);
 
 		mtfe.getGranule().setName(granuleId);
-//		JSONObject granuleJson = mtfe.createJson();
-//		return granuleJson;
-		//write UMM-G to file
-		mtfe.writeJson(testDir + "/" + granuleId + ".cmr.json");
-
-		//the CMR file should have the following values...
-		JSONParser parser = new JSONParser();
-		Object obj = parser.parse(new FileReader(testDir + "/" + granuleId + ".cmr.json"));
-		return (JSONObject) obj;
+		JSONObject granuleJson = mtfe.createJson();
+		return granuleJson;
+//		//write UMM-G to file
+//		mtfe.writeJson(testDir + "/" + granuleId + ".cmr.json");
+//
+//		//the CMR file should have the following values...
+//		JSONParser parser = new JSONParser();
+//		Object obj = parser.parse(new FileReader(testDir + "/" + granuleId + ".cmr.json"));
+//		return (JSONObject) obj;
 	}
 
 	@Test
