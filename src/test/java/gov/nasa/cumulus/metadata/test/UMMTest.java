@@ -845,13 +845,6 @@ public class UMMTest {
 		mtfe.getGranule().setName(granuleId);
 		JSONObject granuleJson = mtfe.createJson();
 		return granuleJson;
-//		//write UMM-G to file
-//		mtfe.writeJson(testDir + "/" + granuleId + ".cmr.json");
-//
-//		//the CMR file should have the following values...
-//		JSONParser parser = new JSONParser();
-//		Object obj = parser.parse(new FileReader(testDir + "/" + granuleId + ".cmr.json"));
-//		return (JSONObject) obj;
 	}
 
 	@Test
