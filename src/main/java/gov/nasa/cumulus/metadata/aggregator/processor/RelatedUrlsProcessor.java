@@ -3,7 +3,6 @@ package gov.nasa.cumulus.metadata.aggregator.processor;
 import gov.nasa.cumulus.metadata.aggregator.bo.TaskConfigBO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +20,9 @@ public class RelatedUrlsProcessor {
 
     public JSONObject appendSubTypes(JSONObject granuleJson, TaskConfigBO taskConfigBO, JSONArray files) {
         ArrayList<HashMap<String, String>> subTypeHashArray=taskConfigBO.getSubTypeHashArray();
+        if(subTypeHashArray==null || subTypeHashArray.size()==0) {
+            return granuleJson;
+        }
         JSONArray relateUrlsArray =  (JSONArray) granuleJson.get("RelatedUrls");
         // 1: Loop through the existing RelatedUrls array to find any match for the subType regex.
         //    for the finding match, set Subtype to

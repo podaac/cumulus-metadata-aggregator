@@ -18,10 +18,14 @@ public class TaskConfigFactory {
         TaskConfigBO taskConfigBO = new TaskConfigBO();
         //Construct isoXMLSpatialTypeHashset
         JSONArray isoXMLSpatialTypeJsonArray = (JSONArray) config.get("isoXMLSpatialType");
-        taskConfigBO.setIsoXMLSpatialTypeHashSet(createIsoXMLSpatialTypeSet(isoXMLSpatialTypeJsonArray));
+        if(isoXMLSpatialTypeJsonArray !=null && isoXMLSpatialTypeJsonArray.size()>0) {
+            taskConfigBO.setIsoXMLSpatialTypeHashSet(createIsoXMLSpatialTypeSet(isoXMLSpatialTypeJsonArray));
+        }
         //Construct subTypeHashArray
         JSONArray subTypeTypeJsonArray = (JSONArray) config.get("relatedUrlSubTypeMap");
-        taskConfigBO.setSubTypeHashArray(createSubTypeHashArray(subTypeTypeJsonArray));
+        if(subTypeTypeJsonArray!=null && subTypeTypeJsonArray.size()>0) {
+            taskConfigBO.setSubTypeHashArray(createSubTypeHashArray(subTypeTypeJsonArray));
+        }
         return taskConfigBO;
 
     }

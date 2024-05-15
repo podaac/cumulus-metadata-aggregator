@@ -12,7 +12,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -22,7 +21,6 @@ import gov.nasa.cumulus.metadata.aggregator.processor.DMRPPProcessor;
 import gov.nasa.cumulus.metadata.aggregator.processor.FootprintProcessor;
 import gov.nasa.cumulus.metadata.aggregator.processor.ImageProcessor;
 import gov.nasa.cumulus.metadata.aggregator.processor.RelatedUrlsProcessor;
-import gov.nasa.cumulus.metadata.state.MENDsIsoXMLSpatialTypeEnum;
 import gov.nasa.cumulus.metadata.state.WorkflowTypeEnum;
 import gov.nasa.cumulus.metadata.util.S3Utils;
 import org.apache.commons.io.FileUtils;
@@ -196,8 +194,10 @@ public class MetadataAggregatorLambda implements ITask {
 		String cmrFilePath = "/tmp/" + granuleId + ".cmr.json";
 		try {
 			JSONObject granuleJson = mtfe.createJson();
-			RelatedUrlsProcessor relatedUrlsProcessor = new RelatedUrlsProcessor();
-			granuleJson = relatedUrlsProcessor.appendSubTypes(granuleJson, taskConfigBO, files);
+			if(taskConfigBO.getSubTypeHashArray().size() > 0) {
+				RelatedUrlsProcessor relatedUrlsProcessor = new RelatedUrlsProcessor();
+				granuleJson = relatedUrlsProcessor.appendSubTypes(granuleJson, taskConfigBO, files);
+			}
 			FileUtils.writeStringToFile(new File(cmrFilePath), granuleJson.toJSONString(), StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			AdapterLogger.LogError(this.className + " mtfe.writeJson error:" + e.getMessage());

@@ -852,8 +852,6 @@ public class UMMTest {
 		String regex = "^.*_B02_BWTR\\.tif$";
 		String s3File = "s3://src/test/resources/tester/asdaffaf_B02_BWTR.tif";
 		boolean matched = s3File.matches(regex);
-		System.out.println("matched? " + matched);
+		assertEquals(matched, true);
 	}
-
-
 }
