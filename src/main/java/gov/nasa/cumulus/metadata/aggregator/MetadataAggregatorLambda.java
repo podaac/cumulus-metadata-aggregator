@@ -205,6 +205,35 @@ public class MetadataAggregatorLambda implements ITask {
 			throw e;
 		}
 
+
+		String returableJsonStr = createNewOutput(s3Utils, granules, cmrFilePath, granuleId, internalBucket, stagingDirectory);
+		/**
+		 * remove the .mp file from s3
+		 */
+		if (StringUtils.isNotEmpty(mpFileBucket) && StringUtils.isNotEmpty(mpFileKey)) {
+			AdapterLogger.LogInfo(this.className + " cleaning up .mp file");
+			s3Utils.delete(region, mpFileBucket, mpFileKey);
+		}
+		return returableJsonStr;
+	}
+
+	/**
+	 *
+	 * Upload cmr.json to s3 bucket
+	 * Add UMM-G file to payload/file objects
+	 *
+	 * @param s3Utils
+	 * @param granules
+	 * @param cmrFilePath
+	 * @param granuleId
+	 * @param internalBucket
+	 * @param stagingDirectory
+	 * @return  A string represents the output payload
+	 * @throws IOException
+	 */
+	public String createNewOutput(S3Utils s3Utils, JSONArray granules, String cmrFilePath, String granuleId, String internalBucket,
+										String stagingDirectory)
+	throws IOException{
 		/*
 		 * Upload cmr.json to s3 bucket
 		 * Add UMM-G file to payload/file objects
@@ -213,6 +242,7 @@ public class MetadataAggregatorLambda implements ITask {
 		s3Utils.upload(region, internalBucket,
 				Paths.get(stagingDirectory, "/" + granuleId + ".cmr.json").toString(),
 				cmrFile);
+		JSONArray files = (JSONArray) ((JSONObject) granules.get(0)).get("files");
 
 		JSONObject ummFile = new JSONObject();
 		ummFile.put("bucket", internalBucket);
@@ -220,27 +250,15 @@ public class MetadataAggregatorLambda implements ITask {
 		ummFile.put("type", "metadata");
 		ummFile.put("size", cmrFile.length());
 		ummFile.put("key", Paths.get(stagingDirectory, granuleId + ".cmr.json").toString());
-
 		files.add(ummFile);
 
 		AdapterLogger.LogInfo("Cleaning tmp for granule: " + granuleId);
 		FileUtils.cleanDirectory(new File("/tmp"));
-		//jo = input,config...
-		//need to output {granules:[]}
-
 		/**
 		 * combining output objects
 		 */
 		JSONObject returnable = new JSONObject();
 		returnable.put("granules", granules);
-		AdapterLogger.LogInfo(this.className + " Finished processing with granuleId:" + granuleId);
-		/**
-		 * remove the .mp file
-		 */
-		if (StringUtils.isNotEmpty(mpFileBucket) && StringUtils.isNotEmpty(mpFileKey)) {
-			AdapterLogger.LogInfo(this.className + " cleaning up .mp file");
-			s3Utils.delete(region, mpFileBucket, mpFileKey);
-		}
 		return returnable.toJSONString();
 	}
 	/**
