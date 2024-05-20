@@ -34,7 +34,7 @@ public class DatasetDateTime implements Serializable {
 	public DatasetDateTime(DatasetElement element, Date keyValue) {
 		this.datasetElement = element;
 		this.value = keyValue;
-		this.valueLong = new Long(value.getTime());
+		this.valueLong = keyValue.getTime();
 	}
 	
 	public DatasetDateTime(DatasetElement element, Long keyValue) {
@@ -74,7 +74,7 @@ public class DatasetDateTime implements Serializable {
 
 	public void setValue(Date value) {
 		this.value = value;
-		this.valueLong = new Long(value.getTime());
+		this.valueLong = value.getTime();
 	}
 	
 

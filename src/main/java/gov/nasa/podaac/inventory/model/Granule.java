@@ -4,6 +4,7 @@
 package gov.nasa.podaac.inventory.model;
 
 
+import gov.nasa.cumulus.metadata.aggregator.IsoType;
 import gov.nasa.podaac.inventory.api.Constant.GranuleStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -63,6 +64,8 @@ public class Granule {
     private Set<GranuleMetaHistory> metaHistorySet = new HashSet<GranuleMetaHistory>();
     private Set<GranuleContact> granuleContactSet = new HashSet<GranuleContact>();
 	private Dataset dataset;
+
+	private IsoType isoType;
 	
 	private static Log log = LogFactory.getLog(Granule.class);
 
@@ -78,39 +81,39 @@ public class Granule {
 		
 		this.name = name;
 		try{
-		this.startTimeLong = new Long(startTime.getTime());
+		this.startTimeLong = startTime.getTime();
 		}catch(NullPointerException npe)
 		{
 			this.startTimeLong = null;
 		}
 		try{
-		this.stopTimeLong = new Long(stopTime.getTime());
+		this.stopTimeLong = stopTime.getTime();
 		}catch(NullPointerException npe)
 		{
 			this.stopTimeLong = null;
 		}
 		
 		try{
-		this.createTimeLong = new Long(createTime.getTime());
+		this.createTimeLong = createTime.getTime();
 		}catch(NullPointerException npe)
 		{
 			this.createTimeLong = null;
 		}
 		try{
-		this.ingestTimeLong = new Long(ingestTime.getTime());
+		this.ingestTimeLong = ingestTime.getTime();
 		}catch(NullPointerException npe)
 		{
 			this.ingestTimeLong = null;
 		}
 		this.version = version;
 		try{
-		this.requestedTimeLong = new Long(requestedTime.getTime());
+		this.requestedTimeLong = requestedTime.getTime();
 		}catch(NullPointerException npe)
 		{
 			this.requestedTimeLong = null;
 		}
 		try{
-		this.acquiredTimeLong = new Long(acquiredTime.getTime());
+		this.acquiredTimeLong = acquiredTime.getTime();
 		}catch(NullPointerException npe)
 		{
 			this.acquiredTimeLong = null;
@@ -121,7 +124,7 @@ public class Granule {
 		this.checksumType = checksumType;
 		this.status = status;
 		try{
-		this.archiveTimeLong = new Long(archiveTime.getTime());
+		this.archiveTimeLong = archiveTime.getTime();
 		}catch(NullPointerException npe)
 		{
 			this.archiveTimeLong = null;
@@ -197,7 +200,7 @@ public class Granule {
 
 	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
-		this.startTimeLong = new Long(startTime.getTime());
+		this.startTimeLong = startTime.getTime();
 	}
 
 	public Date getStopTime() {
@@ -206,7 +209,7 @@ public class Granule {
 
 	public void setStopTime(Date stopTime) {
 		this.stopTime = stopTime;
-		this.stopTimeLong = new Long(stopTime.getTime());
+		this.stopTimeLong = stopTime.getTime();
 	}
 	
 	
@@ -216,7 +219,7 @@ public class Granule {
 
 	public void setAcquiredTime(Date acquiredTime) {
 		this.acquiredTime = acquiredTime;
-		this.acquiredTimeLong = new Long(acquiredTime.getTime());
+		this.acquiredTimeLong = acquiredTime.getTime();
 	}
 	public Date getRequestedTime() {
 		return requestedTime;
@@ -224,7 +227,7 @@ public class Granule {
 
 	public void setRequestedTime(Date requestedTime) {
 		this.requestedTime = requestedTime;
-		this.requestedTimeLong = new Long(requestedTime.getTime());
+		this.requestedTimeLong = requestedTime.getTime();
 	}
 	
 	public Date getArchiveTime() {
@@ -233,7 +236,7 @@ public class Granule {
 
 	public void setArchiveTime(Date archiveTime) {
 		this.archiveTime = archiveTime;
-		this.archiveTimeLong = new Long(archiveTime.getTime());
+		this.archiveTimeLong = archiveTime.getTime();
 	}
 
 	public Date getCreateTime() {
@@ -242,7 +245,7 @@ public class Granule {
 
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
-		this.createTimeLong = new Long(createTime.getTime());
+		this.createTimeLong = createTime.getTime();
 	}
 
 	public Date getIngestTime() {
@@ -251,7 +254,7 @@ public class Granule {
 
 	public void setIngestTime(Date ingestTime) {
 		this.ingestTime = ingestTime;
-		this.ingestTimeLong = new Long(ingestTime.getTime());
+		this.ingestTimeLong = ingestTime.getTime();
 	}
 
 	public Date getVerifyTime() {
@@ -260,7 +263,7 @@ public class Granule {
 
 	public void setVerifyTime(Date verifyTime) {
 		this.verifyTime = verifyTime;
-		this.verifyTimeLong =  new Long(verifyTime.getTime());
+		this.verifyTimeLong = verifyTime.getTime();
 	}
 
 	public Integer getVersion() {
@@ -847,7 +850,14 @@ public class Granule {
 			}
 		}
 	}
-	
+
+	public IsoType getIsoType() {
+		return isoType;
+	}
+
+	public void setIsoType(IsoType isoType) {
+		this.isoType = isoType;
+	}
 	
     
 }

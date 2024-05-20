@@ -27,7 +27,7 @@ public class GranuleDateTime implements Serializable {
 		this.datasetElement = element;
 		this.value = keyValue;
 		try{
-		this.valueLong = new Long(keyValue.getTime());
+			this.valueLong = keyValue.getTime();
 		}catch(NullPointerException npe)
 		{
 			this.valueLong = null;
@@ -75,7 +75,7 @@ public class GranuleDateTime implements Serializable {
 
 	public void setValue(Date value) {
 		this.value = value;
-		this.valueLong = new Long(value.getTime());
+		this.valueLong = value.getTime();
 	}
 	
 	@Override

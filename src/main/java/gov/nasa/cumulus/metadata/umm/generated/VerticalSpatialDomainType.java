@@ -3,7 +3,6 @@ package gov.nasa.cumulus.metadata.umm.generated;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,7 +11,6 @@ import com.google.gson.annotations.SerializedName;
  * This entity contains the type and value for the granule's vertical spatial domain.
  * 
  */
-@Generated("jsonschema2pojo")
 public class VerticalSpatialDomainType {
 
     @SerializedName("Type")
@@ -179,7 +177,6 @@ public class VerticalSpatialDomainType {
      * Describes the unit of the vertical extent value.
      * 
      */
-    @Generated("jsonschema2pojo")
     public enum Unit {
 
         @SerializedName("Fathoms")
@@ -235,7 +232,6 @@ public class VerticalSpatialDomainType {
 
     }
 
-    @Generated("jsonschema2pojo")
     public enum VerticalSpatialDomainTypeEnum {
 
         @SerializedName("Atmosphere Layer")

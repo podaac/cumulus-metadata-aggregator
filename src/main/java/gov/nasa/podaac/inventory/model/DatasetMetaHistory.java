@@ -78,7 +78,7 @@ public class DatasetMetaHistory implements Serializable {
 	}
 	public void setEchoSubmitDate(Date echoSubmitDate) {
 		this.echoSubmitDate = echoSubmitDate;
-		this.echoSubmitDateLong = new Long(echoSubmitDate.getTime());
+		this.echoSubmitDateLong = echoSubmitDate.getTime();
 	}
 	
 	public Long getEchoSubmitDateLong() {
@@ -103,14 +103,14 @@ public class DatasetMetaHistory implements Serializable {
 	}
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
-		this.creationDateLong = new Long(creationDate.getTime());
+		this.creationDateLong = creationDate.getTime();
 	}
 	public Date getLastRevisionDate() {
 		return lastRevisionDate;
 	}
 	public void setLastRevisionDate(Date lastRevisionDate) {
 		this.lastRevisionDate = lastRevisionDate;
-		this.lastRevisionDateLong = new Long(lastRevisionDate.getTime());
+		this.lastRevisionDateLong = lastRevisionDate.getTime();
 	}
 	
 	

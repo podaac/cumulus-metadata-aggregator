@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.6.0]
+### Added
+- **PODAAC-5876**
+  - Update to use CMA 2.0.0, thus allowing 2.0.3 layer for lambda
+  - Update build to use java 11
+  - To generate java 11 compatible UMMG schema POJOs, jsonschema2pojo shall make use of command line parameter: --target-version 1.11 
+### Deprecated
+### Removed
+### Fixed
+- **PODAAC-5857**
+  - Fixed the issue so footprint and bbx do not always appear together while isoXmlSpatial is configured to footprint only
+  - remove request.close() statement in CMRLambdaRestClient so the response could be pulled out and logged properly instead of always logging apache chunk read error due to the http channel was closed.
+  - adding more parameters to Jsonschema2pojo plugin to generate proper pojo from ummg schema
+### Security
+- Snyk: Security upgrade com.amazonaws:aws-java-sdk-s3 from 1.12.544 to 1.12.641
+
 ## [8.5.0]
 ### Added
 - **PODAAC-5594**

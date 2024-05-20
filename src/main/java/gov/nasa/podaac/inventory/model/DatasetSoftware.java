@@ -54,7 +54,7 @@ public class DatasetSoftware implements Serializable {
 	}
 	public void setSoftwareDate(Date softwareDate) {
 		this.softwareDate = softwareDate;
-		this.softwareDateLong = new Long(softwareDate.getTime());
+		this.softwareDateLong = softwareDate.getTime();
 	}
 	
 	public Long getSoftwareDateLong() {

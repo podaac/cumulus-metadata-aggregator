@@ -3,7 +3,6 @@ package gov.nasa.cumulus.metadata.umm.generated;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,7 +11,6 @@ import com.google.gson.annotations.SerializedName;
  * Contains the excluded boundaries from the GPolygon.
  * 
  */
-@Generated("jsonschema2pojo")
 public class ExclusiveZoneType {
 
     /**
