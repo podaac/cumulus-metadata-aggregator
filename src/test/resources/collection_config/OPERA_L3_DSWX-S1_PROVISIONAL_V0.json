@@ -1,0 +1,115 @@
+{
+  "name": "OPERA_L3_DSWX-S1_PROVISIONAL_V0",
+  "version": "0.0",
+  "url_path": "{cmrMetadata.CollectionReference.ShortName}",
+  "duplicateHandling": "replace",
+  "granuleId": "^OPERA_L3_DSWx-S1_.*v([0-9]*)\\.([0-9]*).*$",
+  "granuleIdExtraction": "^(OPERA_L3_DSWx-S1_.*v([0-9]*)\\.([0-9]*).*)((\\.tif)|(.*\\.md5)|(\\.cmr\\.json)|(\\.iso\\.xml)|(\\.png))?$",
+  "reportToEms": true,
+  "sampleFileName": "OPERA_L3_DSWx-S1_T18MXA_20210905T143156Z_20220131T215426Z_S1A_30_v0.1.tif",
+  "files": [
+    {
+      "type": "data",
+      "regex": "^OPERA_L3_DSWx-S1_.*v([0-9]*)\\.([0-9]*).*\\.tif$",
+      "bucket": "protected",
+      "reportToEms": true,
+      "sampleFileName": "OPERA_L3_DSWx-S1_T18MXA_20210905T143156Z_20220131T215426Z_S1A_30_v0.1.tif"
+    },
+    {
+      "type": "metadata",
+      "regex": "^OPERA_L3_DSWx-S1_.*v([0-9]*)\\.([0-9]*).*\\.cmr\\.json$",
+      "bucket": "private",
+      "reportToEms": true,
+      "sampleFileName": "OPERA_L3_DSWx-S1_T18MXA_20210905T143156Z_20220131T215426Z_S1A_30_v0.1.cmr.json"
+    },
+    {
+      "type": "metadata",
+      "regex": "^OPERA_L3_DSWx-S1_.*v([0-9]*)\\.([0-9]*).*\\.iso\\.xml$",
+      "bucket": "public",
+      "reportToEms": true,
+      "sampleFileName": "OPERA_L3_DSWx-S1_T18MXA_20210905T143156Z_20220131T215426Z_S1A_30_v0.1.iso.xml"
+    },
+    {
+      "type": "browse",
+      "regex": "^OPERA_L3_DSWx-S1_.*v([0-9]*)\\.([0-9]*).*\\.png$",
+      "bucket": "public",
+      "reportToEms": true,
+      "sampleFileName": "OPERA_L3_DSWx-S1_T18MXA_20210905T143156Z_20220131T215426Z_S1A_30_v0.1.png"
+    },
+    {
+      "type": "metadata",
+      "regex": "^OPERA_L3_DSWx-S1_.*v([0-9]*)\\.([0-9]*).*\\.tif\\.md5$",
+      "bucket": "public",
+      "checksumFor": "^OPERA_L3_DSWx-S1_.*v([0-9]*)\\.([0-9]*).*\\.tif$",
+      "reportToEms": true,
+      "sampleFileName": "OPERA_L3_DSWx-S1_T18MXA_20210905T143156Z_20220131T215426Z_S1A_30_v0.1.tif.md5"
+    },
+    {
+      "type": "metadata",
+      "regex": "^OPERA_L3_DSWx-S1_.*v([0-9]*)\\.([0-9]*).*\\.iso\\.xml\\.md5$",
+      "bucket": "public",
+      "checksumFor": "^OPERA_L3_DSWx-S1_.*v([0-9]*)\\.([0-9]*).*\\.iso\\.xml$",
+      "reportToEms": true,
+      "sampleFileName": "OPERA_L3_DSWx-S1_T18MXA_20210905T143156Z_20220131T215426Z_S1A_30_v0.1.iso.xml.md5"
+    },
+    {
+      "type": "metadata",
+      "regex": "^OPERA_L3_DSWx-S1_.*v([0-9]*)\\.([0-9]*).*\\.png\\.md5$",
+      "bucket": "public",
+      "checksumFor": "^OPERA_L3_DSWx-S1_.*v([0-9]*)\\.([0-9]*).*\\.png$",
+      "reportToEms": true,
+      "sampleFileName": "OPERA_L3_DSWx-S1_T18MXA_20210905T143156Z_20220131T215426Z_S1A_30_v0.1.png.md5"
+    }
+  ],
+  "updatedAt": 1714698389216,
+  "meta": {
+    "iso-regex": "^OPERA_L3_DSWx-S1_.*v([0-9]*)\\.([0-9]*).*\\.iso\\.xml$",
+    "isoXmlSpatial": [
+      "bbox"
+    ],
+    "glacier-bucket": "podaac-uat-cumulus-glacier",
+    "workflowChoice": {
+      "dmrpp": false,
+      "glacier": true,
+      "compressed": false,
+      "convertNetCDF": false,
+      "readDataFileForMetadata": false
+    },
+    "response-endpoint": [
+      "arn:aws:sns:us-west-2:065089468788:dyen-cumulus-provider-response-sns"
+    ],
+    "additionalAttributes": {
+      "publish": [
+        "ProductLevel",
+        "ProductType",
+        "Project",
+        "SoftwareVersion",
+        "SpacecraftName",
+        "SpatialCoverage",
+        "Sensor",
+        "ProcessingDatetime",
+        "SensingStart",
+        "SensingEnd",
+        "LayoverShadowCoverage",
+        "RTCProductVersion",
+        "Polarization",
+        "BurstID",
+        "AbsoluteOrbitNumber",
+        "TrackNumber"
+      ],
+      "publishAll": false
+    },
+    "relatedUrlSubTypeMap": [
+      {
+        "regex": "^.*_B01_WTR\\.tif$",
+        "subType": "BROWSE IMAGE SOURCE"
+      },
+      {
+        "regex": "^.*_B02_BWTR\\.tif$",
+        "subType": "IceBridge Portal"
+      }
+    ],
+    "granuleRecoveryWorkflow": "OrcaRecoveryWorkflow",
+    "granuleMetadataFileExtension": "cmr.json"
+  }
+}

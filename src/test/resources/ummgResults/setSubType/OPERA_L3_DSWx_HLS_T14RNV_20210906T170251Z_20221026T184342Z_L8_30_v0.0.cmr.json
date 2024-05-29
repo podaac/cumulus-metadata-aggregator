@@ -1,24 +1,4 @@
 {
-  "MetadataSpecification": {
-    "Version": "1.6.6",
-    "URL": "https://cdn.earthdata.nasa.gov/umm/granule/v1.6.6",
-    "Name": "UMM-G"
-  },
-  "PGEVersionClass": {
-    "PGEName": "DSWX_HLS_PGE",
-    "PGEVersion": "1.0.0-rc.5"
-  },
-  "CollectionReference": {
-    "Version": "0.0",
-    "ShortName": "OPERA_L3_DSWX-HLS_PROVISIONAL_V0"
-  },
-  "RelatedUrls": [
-    {
-      "Type": "GET DATA",
-      "Description": "The base directory location for the granule.",
-      "URL": "s3://a/path/to/s3"
-    }
-  ],
   "InputGranules": [
     "/home/conda/input_dir/HLS.L30.T14RNV.2021249T170251.v2.0.B02.tif",
     "/home/conda/input_dir/HLS.L30.T14RNV.2021249T170251.v2.0.B03.tif",
@@ -39,15 +19,20 @@
       "BeginningDateTime": "2012-03-03T11:20:35.236Z"
     }
   },
-  "SensorProductID_CMR": "LC08_L1TP_027038_20210906_20210915_02_T1; LC08_L1TP_027039_20210906_20210915_02_T1",
+  "MetadataSpecification": {
+    "Version": "1.6.6",
+    "URL": "https://cdn.earthdata.nasa.gov/umm/granule/v1.6.6",
+    "Name": "UMM-G"
+  },
+  "GranuleUR": "OPERA_L3_DSWx_HLS_T14RNV_20210906T170251Z_20221026T184342Z_L8_30_v0.0",
   "ProviderDates": [
     {
       "Type": "Insert",
-      "Date": "2024-04-17T17:16:54.163Z"
+      "Date": "2024-05-15T03:19:06.144Z"
     },
     {
       "Type": "Update",
-      "Date": "2024-04-17T17:16:54.172Z"
+      "Date": "2024-05-15T03:19:06.154Z"
     }
   ],
   "SpatialExtent": {
@@ -75,9 +60,63 @@
   "AdditionalAttributes": [
     {
       "Values": [
+        "HLS.L30.T14RNV.2021249T170251.v2.0"
+      ],
+      "Name": "HlsDataset"
+    },
+    {
+      "Values": [
         "LC08_L1TP_027038_20210906_20210915_02_T1; LC08_L1TP_027039_20210906_20210915_02_T1"
       ],
       "Name": "SensorProductID"
+    },
+    {
+      "Values": [
+        "Lasrc; Lasrc"
+      ],
+      "Name": "Accode"
+    },
+    {
+      "Values": [
+        "135.857670779298"
+      ],
+      "Name": "MeanSunAzimuthAngle"
+    },
+    {
+      "Values": [
+        "32.3676212035439"
+      ],
+      "Name": "MeanSunZenithAngle"
+    },
+    {
+      "Values": [
+        "30.8893421483768"
+      ],
+      "Name": "NBAR_SolarZenith"
+    },
+    {
+      "Values": [
+        "106.186652634788"
+      ],
+      "Name": "MeanViewAzimuthAngle"
+    },
+    {
+      "Values": [
+        "5.12004424472291"
+      ],
+      "Name": "MeanViewZenithAngle"
+    },
+    {
+      "Values": [
+        "67"
+      ],
+      "Name": "SpatialCoverage"
+    },
+    {
+      "Values": [
+        "76"
+      ],
+      "Name": "PercentCloudCover"
     },
     {
       "Values": [
@@ -86,6 +125,10 @@
       "Name": "MGRS_TILE_ID"
     }
   ],
+  "PGEVersionClass": {
+    "PGEName": "DSWX_HLS_PGE",
+    "PGEVersion": "1.0.0-rc.5"
+  },
   "DataGranule": {
     "DayNightFlag": "Unspecified",
     "Identifiers": [
@@ -105,5 +148,26 @@
       }
     ],
     "ProductionDateTime": "2016-03-16T03:02:03.000Z"
-  }
+  },
+  "CollectionReference": {
+    "Version": "0.0",
+    "ShortName": "OPERA_L3_DSWX-HLS_PROVISIONAL_V0"
+  },
+  "RelatedUrls": [
+    {
+      "Type": "GET DATA",
+      "Description": "The base directory location for the granule.",
+      "URL": "s3://a/path/to/s3"
+    },
+    {
+      "Type": "GET DATA",
+      "Subtype": "BROWSE IMAGE SOURCE",
+      "URL": "OPERA_L3_DSWX-S1_PROVISIONAL_V0/OPERA_L3_DSWx-S1_T35TPJ_20240214T155240Z_20240502T001754Z_S1A_30_v0.4/OPERA_L3_DSWx-S1_T35TPJ_20240214T155240Z_20240502T001754Z_S1A_30_v0.4_B01_WTR.tif"
+    },
+    {
+      "Type": "GET DATA",
+      "Subtype": "IceBridge Portal",
+      "URL": "OPERA_L3_DSWX-S1_PROVISIONAL_V0/OPERA_L3_DSWx-S1_T35TPJ_20240214T155240Z_20240502T001754Z_S1A_30_v0.4/OPERA_L3_DSWx-S1_T35TPJ_20240214T155240Z_20240502T001754Z_S1A_30_v0.4_B02_BWTR.tif"
+    }
+  ]
 }

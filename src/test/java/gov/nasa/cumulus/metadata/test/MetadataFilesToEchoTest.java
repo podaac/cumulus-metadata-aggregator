@@ -14,6 +14,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import gov.nasa.cumulus.metadata.aggregator.*;
 
+import gov.nasa.cumulus.metadata.aggregator.bo.TaskConfigBO;
+import gov.nasa.cumulus.metadata.aggregator.factory.TaskConfigFactory;
 import gov.nasa.cumulus.metadata.state.MENDsIsoXMLSpatialTypeEnum;
 import gov.nasa.cumulus.metadata.umm.adapter.UMMGCollectionAdapter;
 import gov.nasa.cumulus.metadata.umm.adapter.UMMGListAdapter;
@@ -994,6 +996,7 @@ public class MetadataFilesToEchoTest {
         // load pre-saved file and perform json comparison
         assertTrue(UnitTestUtil.compareFileWithGranuleJson("ummgResults/swotCalVal/SWOTCalVal_WM_ADCP_L0_RiverRay1_20220727T191701_20220727T192858_20220920T142800_swotCalVal_ummg.json", granule));
     }
+
     @Test
     public void testSWOTCreateJsonSWOTIsoXMLSpatialType() throws IOException, ParseException, XPathExpressionException, ParserConfigurationException, SAXException, URISyntaxException {
         // Create isoXmlSpatial Hashtable which contains footprint, orbit then passed the hashtable to MetadataFilesToEcho contructor
@@ -1002,8 +1005,10 @@ public class MetadataFilesToEchoTest {
         array.add("footprint");
         array.add("orbit");
         array.add("bbox");
-
-        HashSet<MENDsIsoXMLSpatialTypeEnum> h = lambda.createIsoXMLSpatialTypeSet(array);
+        JSONObject config = new JSONObject();
+        config.put("isoXMLSpatialType", array);
+        TaskConfigBO taskConfigBO = TaskConfigFactory.createTaskConfigBO(config);
+        HashSet<MENDsIsoXMLSpatialTypeEnum> h = taskConfigBO.getIsoXMLSpatialTypeHashSet();
         assertTrue(h.contains(MENDsIsoXMLSpatialTypeEnum.FOOTPRINT));
         assertTrue(h.contains(MENDsIsoXMLSpatialTypeEnum.ORBIT));
         assertTrue(h.contains(MENDsIsoXMLSpatialTypeEnum.BBOX));
@@ -1068,7 +1073,10 @@ public class MetadataFilesToEchoTest {
          */
         clearVariables4IsoXMLSpatialTest(array, h, granule);  // clear variables first
         array.add("footprint");
-        h = lambda.createIsoXMLSpatialTypeSet(array);
+        config = new JSONObject();
+        config.put("isoXMLSpatialType", array);
+        taskConfigBO = TaskConfigFactory.createTaskConfigBO(config);
+        h = taskConfigBO.getIsoXMLSpatialTypeHashSet();
         assertTrue(h.contains(MENDsIsoXMLSpatialTypeEnum.FOOTPRINT));
         assertFalse(h.contains(MENDsIsoXMLSpatialTypeEnum.ORBIT));
         assertFalse(h.contains(MENDsIsoXMLSpatialTypeEnum.BBOX));
@@ -1118,7 +1126,10 @@ public class MetadataFilesToEchoTest {
          */
         clearVariables4IsoXMLSpatialTest(array, h, granule);  // clear variables first
         array.add("bbox");
-        h = lambda.createIsoXMLSpatialTypeSet(array);
+        config = new JSONObject();
+        config.put("isoXMLSpatialType", array);
+        taskConfigBO = TaskConfigFactory.createTaskConfigBO(config);
+        h=taskConfigBO.getIsoXMLSpatialTypeHashSet();
         assertFalse(h.contains(MENDsIsoXMLSpatialTypeEnum.FOOTPRINT));
         assertFalse(h.contains(MENDsIsoXMLSpatialTypeEnum.ORBIT));
         assertTrue(h.contains(MENDsIsoXMLSpatialTypeEnum.BBOX));
@@ -1158,7 +1169,10 @@ public class MetadataFilesToEchoTest {
          */
         clearVariables4IsoXMLSpatialTest(array, h, granule);  // clear variables first
         array.add("orbit");
-        h = lambda.createIsoXMLSpatialTypeSet(array);
+        config = new JSONObject();
+        config.put("isoXMLSpatialType", array);
+        taskConfigBO = TaskConfigFactory.createTaskConfigBO(config);
+        h=taskConfigBO.getIsoXMLSpatialTypeHashSet();
         assertFalse(h.contains(MENDsIsoXMLSpatialTypeEnum.FOOTPRINT));
         assertTrue(h.contains(MENDsIsoXMLSpatialTypeEnum.ORBIT));
         assertFalse(h.contains(MENDsIsoXMLSpatialTypeEnum.BBOX));
@@ -1193,10 +1207,10 @@ public class MetadataFilesToEchoTest {
         // load pre-saved file and perform json comparison
         assertTrue(UnitTestUtil.compareFileWithGranuleJson("ummgResults/swotIsoXMLSpatialType/SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01_orbit.json", granule));
     }
-
     private void clearVariables4IsoXMLSpatialTest(JSONArray isoXMLSpatialArray, HashSet isoXMLSpatialHashSet, JSONObject granule) {
         isoXMLSpatialArray.clear();
         isoXMLSpatialHashSet.clear();
         granule.clear();
     }
+
 }
