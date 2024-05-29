@@ -14,7 +14,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 ### Security
 
-
 ## [8.6.0]
 ### Added
 - **PODAAC-5876**
