@@ -218,6 +218,22 @@ public class FootprintProcessorTest {
     }
 
     @Test
+    public void testUMMGAppendFP() throws ParseException, IOException {
+        FootprintProcessor processor = new FootprintProcessor();
+        String fpStr =  processor.getStringByType(fpFileContentString,"FOOTPRINT");
+        String extentStr =  processor.getStringByType(fpFileContentString,"EXTENT");
+        ClassLoader classLoader = getClass().getClassLoader();
+
+        File inputCMAJsonFile = new File(classLoader.getResource("20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.cmr.json").getFile());
+        String originalCmrStr = new String(Files.readAllBytes(inputCMAJsonFile.toPath()));
+
+        String newCMRStr = processor.appendFootPrint("/Users/eyen/development/cloud/cumulus-lambda-java/metadata-publish-opensource2/src/test/resources/20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.fp",
+                originalCmrStr);
+        System.out.println("newCMRStr: " + newCMRStr);
+    }
+
+
+    @Test
     public void testCreateOutputMessage() {
         FootprintProcessor processor = new FootprintProcessor();
         String output =  processor.createOutputMessage(cmaString, 334411,

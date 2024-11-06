@@ -1,0 +1,199 @@
+{
+  "TemporalExtent": {
+    "RangeDateTime": {
+      "EndingDateTime": "2020-03-31T06:04:15.000Z",
+      "BeginningDateTime": "2020-03-31T04:12:54.000Z"
+    }
+  },
+  "MetadataSpecification": {
+    "URL": "https://cdn.earthdata.nasa.gov/umm/granule/v1.6.6",
+    "Name": "UMM-G",
+    "Version": "1.6.6"
+  },
+  "GranuleUR": "20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0",
+  "ProviderDates": [
+    {
+      "Type": "Insert",
+      "Date": "2021-10-19T23:39:56.736Z"
+    },
+    {
+      "Type": "Update",
+      "Date": "2021-10-19T23:39:56.737Z"
+    }
+  ],
+  "SpatialExtent": {
+    "HorizontalSpatialDomain": {
+      "Geometry": {
+        "GPolygons": [
+          {
+            "Boundary": {
+              "Points": [
+                {
+                  "Longitude": -180,
+                  "Latitude": 90
+                },
+                {
+                  "Longitude": -180,
+                  "Latitude": -89.875
+                },
+                {
+                  "Longitude": 179.875,
+                  "Latitude": -89.875
+                },
+                {
+                  "Longitude": 179.875,
+                  "Latitude": 90
+                },
+                {
+                  "Longitude": -180,
+                  "Latitude": 90
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "DataGranule": {
+    "ArchiveAndDistributionInformation": [
+      {
+        "SizeUnit": "MB",
+        "Size": 0.00009250640869140625,
+        "Checksum": {
+          "Value": "155571d509bcb4e4de9d4bc3bd07e9c8",
+          "Algorithm": "MD5"
+        },
+        "SizeInBytes": 97,
+        "Name": "20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.nc.md5"
+      },
+      {
+        "SizeUnit": "MB",
+        "Size": 32.48228740692139,
+        "Checksum": {
+          "Value": "7dcaae675202c7d907ad1c9cc69207d0",
+          "Algorithm": "MD5"
+        },
+        "SizeInBytes": 34060147,
+        "Name": "20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.nc"
+      }
+    ],
+    "DayNightFlag": "Unspecified",
+    "ProductionDateTime": "2020-03-31T06:31:56.000Z"
+  },
+  "CollectionReference": {
+    "Version": "1",
+    "ShortName": "AVHRR19_G-NAVO-L2P-v1.0"
+  },
+  "RelatedUrls": [
+    {
+      "URL": "https://archive.podaac.uat.earthdata.nasa.gov/podaac-uat-cumulus-public/AVHRR19_G-NAVO-L2P-v1.0/20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.nc.md5",
+      "Description": "Download 20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.nc.md5",
+      "Type": "EXTENDED METADATA"
+    },
+    {
+      "URL": "https://archive.podaac.uat.earthdata.nasa.gov/podaac-uat-cumulus-protected/AVHRR19_G-NAVO-L2P-v1.0/20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.nc",
+      "Description": "Download 20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.nc",
+      "Type": "GET DATA"
+    },
+    {
+      "URL": "https://archive.podaac.uat.earthdata.nasa.gov/s3credentials",
+      "Description": "api endpoint to retrieve temporary credentials valid for same-region direct s3 access",
+      "Type": "VIEW RELATED INFORMATION"
+    },
+    {
+      "URL": "https://opendap.uat.earthdata.nasa.gov/collections/C1240739764-POCLOUD/granules/20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0",
+      "Type": "USE SERVICE API",
+      "Subtype": "OPENDAP DATA",
+      "Description": "OPeNDAP request URL"
+    },
+    {
+      "URL": "https://archive.podaac.uat.earthdata.nasa.gov/podaac-uat-cumulus-public/AVHRR19_G-NAVO-L2P-v1.0/20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.sea_surface_temperature.png",
+      "Type": "GET RELATED VISUALIZATION",
+      "Subtype": "DIRECT DOWNLOAD",
+      "MimeType": "image/png"
+    },
+    {
+      "URL": "https://archive.podaac.uat.earthdata.nasa.gov/podaac-uat-cumulus-public/AVHRR19_G-NAVO-L2P-v1.0/20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.sses_bias.png",
+      "Type": "GET RELATED VISUALIZATION",
+      "Subtype": "DIRECT DOWNLOAD",
+      "MimeType": "image/png"
+    },
+    {
+      "URL": "https://archive.podaac.uat.earthdata.nasa.gov/podaac-uat-cumulus-public/AVHRR19_G-NAVO-L2P-v1.0/20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.sses_standard_deviation.png",
+      "Type": "GET RELATED VISUALIZATION",
+      "Subtype": "DIRECT DOWNLOAD",
+      "MimeType": "image/png"
+    },
+    {
+      "URL": "https://archive.podaac.uat.earthdata.nasa.gov/podaac-uat-cumulus-public/AVHRR19_G-NAVO-L2P-v1.0/20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.wind_speed.png",
+      "Type": "GET RELATED VISUALIZATION",
+      "Subtype": "DIRECT DOWNLOAD",
+      "MimeType": "image/png"
+    },
+    {
+      "URL": "https://archive.podaac.uat.earthdata.nasa.gov/podaac-uat-cumulus-public/AVHRR19_G-NAVO-L2P-v1.0/20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.dt_analysis.png",
+      "Type": "GET RELATED VISUALIZATION",
+      "Subtype": "DIRECT DOWNLOAD",
+      "MimeType": "image/png"
+    },
+    {
+      "URL": "https://archive.podaac.uat.earthdata.nasa.gov/podaac-uat-cumulus-public/AVHRR19_G-NAVO-L2P-v1.0/20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.quality_level.png",
+      "Type": "GET RELATED VISUALIZATION",
+      "Subtype": "DIRECT DOWNLOAD",
+      "MimeType": "image/png"
+    },
+    {
+      "URL": "s3://podaac-uat-cumulus-public/AVHRR19_G-NAVO-L2P-v1.0/20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.nc.md5",
+      "Description": "This link provides direct download access via S3 to the granule",
+      "Type": "EXTENDED METADATA"
+    },
+    {
+      "URL": "s3://podaac-uat-cumulus-protected/AVHRR19_G-NAVO-L2P-v1.0/20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.nc",
+      "Description": "This link provides direct download access via S3 to the granule",
+      "Type": "GET DATA VIA DIRECT ACCESS"
+    },
+    {
+      "URL": "https://archive.swot.podaac.uat.earthdata.nasa.gov/podaac-swot-uat-cumulus-public/AVHRR19_G-NAVO-L2P-v1.0/20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.sea_surface_temperature.png",
+      "Type": "GET RELATED VISUALIZATION",
+      "Subtype": "DIRECT DOWNLOAD",
+      "Description": "sea_surface_temperature",
+      "MimeType": "image/png"
+    },
+    {
+      "URL": "https://archive.swot.podaac.uat.earthdata.nasa.gov/podaac-swot-uat-cumulus-public/AVHRR19_G-NAVO-L2P-v1.0/20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.sses_bias.png",
+      "Type": "GET RELATED VISUALIZATION",
+      "Subtype": "DIRECT DOWNLOAD",
+      "Description": "sses_bias",
+      "MimeType": "image/png"
+    },
+    {
+      "URL": "https://archive.swot.podaac.uat.earthdata.nasa.gov/podaac-swot-uat-cumulus-public/AVHRR19_G-NAVO-L2P-v1.0/20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.sses_standard_deviation.png",
+      "Type": "GET RELATED VISUALIZATION",
+      "Subtype": "DIRECT DOWNLOAD",
+      "Description": "sses_standard_deviation",
+      "MimeType": "image/png"
+    },
+    {
+      "URL": "https://archive.swot.podaac.uat.earthdata.nasa.gov/podaac-swot-uat-cumulus-public/AVHRR19_G-NAVO-L2P-v1.0/20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.wind_speed.png",
+      "Type": "GET RELATED VISUALIZATION",
+      "Subtype": "DIRECT DOWNLOAD",
+      "Description": "wind_speed",
+      "MimeType": "image/png"
+    },
+    {
+      "URL": "https://archive.swot.podaac.uat.earthdata.nasa.gov/podaac-swot-uat-cumulus-public/AVHRR19_G-NAVO-L2P-v1.0/20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.dt_analysis.png",
+      "Type": "GET RELATED VISUALIZATION",
+      "Subtype": "DIRECT DOWNLOAD",
+      "Description": "dt_analysis",
+      "MimeType": "image/png"
+    },
+    {
+      "URL": "https://archive.swot.podaac.uat.earthdata.nasa.gov/podaac-swot-uat-cumulus-public/AVHRR19_G-NAVO-L2P-v1.0/20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.quality_level.png",
+      "Type": "GET RELATED VISUALIZATION",
+      "Subtype": "DIRECT DOWNLOAD",
+      "Description": "quality_level",
+      "MimeType": "image/png"
+    }
+  ]
+}

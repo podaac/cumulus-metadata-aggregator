@@ -1,11 +1,10 @@
 package gov.nasa.cumulus.metadata.aggregator.processor;
 
 import com.google.gson.*;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
+import com.vividsolutions.jts.algorithm.CGAlgorithms;
 import cumulus_message_adapter.message_parser.AdapterLogger;
 import gov.nasa.cumulus.metadata.umm.adapter.UMMGCollectionAdapter;
 import gov.nasa.cumulus.metadata.umm.adapter.UMMGListAdapter;
@@ -98,7 +97,7 @@ public class FootprintProcessor extends ProcessorBase{
     }
 
     /**
-     * footprint WKT (Well-Known Text) represnts MultiPolygon, Polygon MultilineString and Linestring
+     * footprint WKT (Well-Known Text) represents MultiPolygon, Polygon MultilineString and Linestring
      * We will be using vividsolutions JTS library to transfer the WKT to datastructure.
      * <p>
      * Hence the getGeometryType API could return the following strings (vividsolutions did not implement them as
@@ -150,88 +149,111 @@ public class FootprintProcessor extends ProcessorBase{
      * @param cmrStr   cmr json string read from cmr file
      */
     public String geometryToUMMG(Geometry geometry, String cmrStr) {
-        /**
-         * SpatialExtent requires either GranuleLocalities, HorizontalSpatialDomain or VerticalSpatialDomains
-         * HorizontalSpatialDomain requires either Geometry or Orbit (Track is not required)
-         * First code section here is to de-serialize cmr json string.  2020/12/22 : UMM-G schema version 1.6
-         */
-
         Gson gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
                 .registerTypeHierarchyAdapter(Collection.class, new UMMGCollectionAdapter())
                 .registerTypeHierarchyAdapter(List.class, new UMMGListAdapter())
                 .registerTypeHierarchyAdapter(Map.class, new UMMGMapAdapter())
                 .create();
+
         JsonObject cmrJsonObj = JsonParser.parseString(cmrStr).getAsJsonObject();
         JsonObject spatialExtentJsonObj = cmrJsonObj.getAsJsonObject("SpatialExtent");
-        SpatialExtentType spatialExtentType = null;
-        if (spatialExtentJsonObj != null) {
-            spatialExtentType = gsonBuilder.fromJson(
-                    gsonBuilder.toJson(spatialExtentJsonObj), SpatialExtentType.class);
-        } else {
-            spatialExtentType = new SpatialExtentType();
-        }
+        SpatialExtentType spatialExtentType = spatialExtentJsonObj != null
+                ? gsonBuilder.fromJson(gsonBuilder.toJson(spatialExtentJsonObj), SpatialExtentType.class)
+                : new SpatialExtentType();
+
         GeometryType geometryType = spatialExtentType.getHorizontalSpatialDomain().getGeometry();
-        // If CMR is down during the process, the cmr.json might be written successfully
-        // then if re-execute this step, the code will keep appending to the existing CLine and GPolygon.
-        // Hence, we remove the CLine and Polygon list each time before trying
         geometryType.getGPolygons().clear();
         geometryType.getLines().clear();
 
-        /**
-         * Section 2 use vividsolution JTS api to de-serialize WKT into geometry objects and extract the coordinates.
-         * Marshell coordinates into CMR UMMG data model (objects)
-         */
-        String jtsGeometryTypeStr = geometry.getGeometryType();
-        int numberOfGeometry = geometry.getNumGeometries();
         LinkedHashSet<LineType> lineTypes = new LinkedHashSet<>();
         LinkedHashSet<GPolygonType> gPolygonTypes = new LinkedHashSet<>();
 
-        for (int i = 0; i < numberOfGeometry; i++) {
-            Geometry singleGeometry = geometry.getGeometryN(i);
-            if (StringUtils.equalsIgnoreCase(jtsGeometryTypeStr, GeometryTypeEnum.LineString.toString()) ||
-                    StringUtils.equalsIgnoreCase(jtsGeometryTypeStr, GeometryTypeEnum.MultiLineString.toString())) {
-                LineType lineType = new LineType();
-                List<PointType> pointTypes = getPointArray(singleGeometry);
-                lineType.setPoints(pointTypes);
-                lineTypes.add(lineType);
+        processGeometryRecursively(geometry, lineTypes, gPolygonTypes);
 
-            } else if (StringUtils.equalsIgnoreCase(jtsGeometryTypeStr, GeometryTypeEnum.Polygon.toString()) ||
-                    StringUtils.equalsIgnoreCase(jtsGeometryTypeStr, GeometryTypeEnum.MultiPolygon.toString())) {
-                /** One GPolygonType has only one Boundary object as required. One ExclusiveZone as optional */
+        if (!lineTypes.isEmpty()) geometryType.setLines(lineTypes);
+        if (!gPolygonTypes.isEmpty()) geometryType.setGPolygons(gPolygonTypes);
 
-                GPolygonType gPolygonType = new GPolygonType();
-
-                //Process polygons with holes only with polygons
-                if (StringUtils.equalsIgnoreCase(jtsGeometryTypeStr, GeometryTypeEnum.Polygon.toString())){
-                    if(((Polygon)geometry).getNumInteriorRing() > 0){
-                        //Set Interior Ring
-                        ExclusiveZoneType exclusiveZones = getExclusiveZones(singleGeometry);
-                        gPolygonType.setExclusiveZone(exclusiveZones);
-                    }
-                }
-
-                //Set Exterior Ring
-                List<PointType> pointTypes = getReversedPointArray(singleGeometry);
-                BoundaryType boundaryType = new BoundaryType();
-                boundaryType.setPoints(pointTypes);
-                gPolygonType.setBoundary(boundaryType);
-                gPolygonTypes.add(gPolygonType);
-
-            } else {
-                AdapterLogger.LogFatal(this.className + " Severe Problem: Footprint is not LineString, " +
-                        "MultiLineString, Polygon or MultiPolygon");
-            }
-        }
-        if (lineTypes.size() > 0) geometryType.setLines(lineTypes);
-        if (gPolygonTypes.size() > 0) geometryType.setGPolygons(gPolygonTypes);
-        // Remove the BoundingRectangles if Footprint appeared
         spatialExtentType = removeBBX(spatialExtentType);
         String spatialExtentStr = gsonBuilder.toJson(spatialExtentType);
         AdapterLogger.LogInfo(this.className + " SpatialExtent:" + spatialExtentStr);
+
         cmrJsonObj.add("SpatialExtent", gsonBuilder.toJsonTree(spatialExtentType).getAsJsonObject());
         String outputCMRStr = gsonBuilder.toJson(cmrJsonObj);
         AdapterLogger.LogInfo(this.className + " CMR String after appending Footprint:" + spatialExtentStr);
+
         return outputCMRStr;
+    }
+
+    /**
+     *
+     * @param geometry : input geometry
+     * @param lineTypes : Output lineType Array, in case input geometry is single line or multiple line types
+     * @param gPolygonTypes : Output gPolygonType array in case input geometry is MultiPolygon or Polygon
+     *
+     *  Since java can not return multiple parameters.  We are coding in a way to make 2 input parameters to carry
+     *                      the output
+     */
+    private void processGeometryRecursively(Geometry geometry, LinkedHashSet<LineType> lineTypes,
+                                            LinkedHashSet<GPolygonType> gPolygonTypes) {
+        String geometryTypeStr = geometry.getGeometryType();
+
+        if (StringUtils.equalsIgnoreCase(geometryTypeStr, GeometryTypeEnum.LineString.toString())) {
+            // Process single LineString
+            LineType lineType = new LineType();
+            List<PointType> pointTypes = getPointArray(geometry);
+            lineType.setPoints(pointTypes);
+            lineTypes.add(lineType);
+
+        } else if (StringUtils.equalsIgnoreCase(geometryTypeStr, GeometryTypeEnum.MultiLineString.toString())) {
+            // Process each LineString in MultiLineString
+            for (int i = 0; i < geometry.getNumGeometries(); i++) {
+                processGeometryRecursively(geometry.getGeometryN(i), lineTypes, gPolygonTypes);
+            }
+
+        } else if (StringUtils.equalsIgnoreCase(geometryTypeStr, GeometryTypeEnum.Polygon.toString())) {
+            // Process single Polygon
+            GPolygonType gPolygonType = createGPolygonType((Polygon) geometry);
+            gPolygonTypes.add(gPolygonType);
+
+        } else if (StringUtils.equalsIgnoreCase(geometryTypeStr, GeometryTypeEnum.MultiPolygon.toString())) {
+            // Process each Polygon in MultiPolygon
+            for (int i = 0; i < geometry.getNumGeometries(); i++) {
+                processGeometryRecursively(geometry.getGeometryN(i), lineTypes, gPolygonTypes);
+            }
+        } else {
+            AdapterLogger.LogFatal(this.className + " Severe Problem: Footprint is not LineString, " +
+                    "MultiLineString, Polygon, or MultiPolygon");
+        }
+    }
+
+    private GPolygonType createGPolygonType(Polygon polygon) {
+        GPolygonType gPolygonType = new GPolygonType();
+
+        // Set Exterior Ring
+//        List<PointType> exteriorPoints = getReversedPointArray(polygon.getExteriorRing());
+        List<PointType> exteriorPoints = getPointArray(polygon.getExteriorRing());
+        BoundaryType boundaryType = new BoundaryType();
+        boundaryType.setPoints(exteriorPoints);
+        gPolygonType.setBoundary(boundaryType);
+
+        // Set Interior Rings (if any)
+        if (polygon.getNumInteriorRing() > 0) {
+            ExclusiveZoneType exclusiveZoneType = new ExclusiveZoneType();
+            List<BoundaryType> interiorBoundaries = new ArrayList<>();
+
+            for (int i = 0; i < polygon.getNumInteriorRing(); i++) {
+                LineString interiorRing = polygon.getInteriorRingN(i);
+//                List<PointType> interiorPoints = getReversedPointArray(interiorRing);
+                List<PointType> interiorPoints = getPointArray(interiorRing);
+                BoundaryType interiorBoundary = new BoundaryType();
+                interiorBoundary.setPoints(interiorPoints);
+                interiorBoundaries.add(interiorBoundary);
+            }
+            exclusiveZoneType.setBoundaries(interiorBoundaries);
+            gPolygonType.setExclusiveZone(exclusiveZoneType);
+        }
+
+        return gPolygonType;
     }
 
     private SpatialExtentType removeBBX(SpatialExtentType spatialExtentType) {
@@ -289,14 +311,36 @@ public class FootprintProcessor extends ProcessorBase{
      */
     public List<PointType> getPointArray(Geometry geometry) {
         List<PointType> points = new ArrayList<>();
-        Coordinate[] coordinates = geometry.getCoordinates();
-        for (int j = 0; j < coordinates.length; j++) {
-            PointType p = new PointType();
-            p.setLongitude(Double.valueOf(coordinates[j].x));
-            p.setLatitude(Double.valueOf(coordinates[j].y));
-            points.add(p);
+        Coordinate[] coordinates;
+
+        if (geometry instanceof LineString) {
+            coordinates = geometry.getCoordinates();
+        } else if (geometry instanceof Polygon) {
+            coordinates = ((Polygon) geometry).getExteriorRing().getCoordinates();
+        } else {
+            throw new IllegalArgumentException("Unsupported geometry type: " + geometry.getGeometryType());
+        }
+
+        // Check if coordinates are in clockwise order and reverse if needed
+        if (!CGAlgorithms.isCCW(coordinates)) {
+            coordinates = reverseCoordinates(coordinates);
+        }
+
+        for (Coordinate coordinate : coordinates) {
+            PointType point = new PointType();
+            point.setLongitude(coordinate.x);
+            point.setLatitude(coordinate.y);
+            points.add(point);
         }
         return points;
+    }
+
+    private Coordinate[] reverseCoordinates(Coordinate[] coordinates) {
+        Coordinate[] reversed = new Coordinate[coordinates.length];
+        for (int i = 0; i < coordinates.length; i++) {
+            reversed[i] = coordinates[coordinates.length - 1 - i];
+        }
+        return reversed;
     }
 
     /**
