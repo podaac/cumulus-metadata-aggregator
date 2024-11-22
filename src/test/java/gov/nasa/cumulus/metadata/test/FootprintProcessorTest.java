@@ -218,6 +218,30 @@ public class FootprintProcessorTest {
     }
 
     @Test
+    public void testUMMGAppendFP() throws ParseException, IOException {
+        FootprintProcessor processor = new FootprintProcessor();
+        String fpStr =  processor.getStringByType(fpFileContentString,"FOOTPRINT");
+        String extentStr =  processor.getStringByType(fpFileContentString,"EXTENT");
+        ClassLoader classLoader = getClass().getClassLoader();
+
+        File inputCMRJsonFile = new File(classLoader.getResource("20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.cmr.json").getFile());
+        String originalCmrStr = new String(Files.readAllBytes(inputCMRJsonFile.toPath()));
+
+        File inputFPFile = new File(classLoader.getResource("20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.fp").getFile());
+
+        String newCMRStr = processor.appendFootPrint(inputFPFile.getAbsolutePath(),
+                originalCmrStr);
+        JsonElement jsonElement = JsonParser.parseString(newCMRStr);
+        JsonObject cmrJsonObj = jsonElement.getAsJsonObject();
+        JsonArray gPolygonArray= cmrJsonObj.getAsJsonObject("SpatialExtent").getAsJsonObject("HorizontalSpatialDomain")
+                .getAsJsonObject("Geometry").getAsJsonArray("GPolygons");
+        assertTrue(gPolygonArray.isJsonArray());
+        assertEquals(1,gPolygonArray.size());
+        System.out.println("newCMRStr: " + newCMRStr);
+    }
+
+
+    @Test
     public void testCreateOutputMessage() {
         FootprintProcessor processor = new FootprintProcessor();
         String output =  processor.createOutputMessage(cmaString, 334411,

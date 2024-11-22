@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **PODAAC-6181**
   - add relatedUrl subType BROWSE IMAGE SOURCE
+- **PODAAC-6537**
+  - New code to work with Multi polygon
 ### Deprecated
 ### Changed
 - **PODAAC-6185**
