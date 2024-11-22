@@ -224,11 +224,19 @@ public class FootprintProcessorTest {
         String extentStr =  processor.getStringByType(fpFileContentString,"EXTENT");
         ClassLoader classLoader = getClass().getClassLoader();
 
-        File inputCMAJsonFile = new File(classLoader.getResource("20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.cmr.json").getFile());
-        String originalCmrStr = new String(Files.readAllBytes(inputCMAJsonFile.toPath()));
+        File inputCMRJsonFile = new File(classLoader.getResource("20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.cmr.json").getFile());
+        String originalCmrStr = new String(Files.readAllBytes(inputCMRJsonFile.toPath()));
 
-        String newCMRStr = processor.appendFootPrint("/Users/eyen/development/cloud/cumulus-lambda-java/metadata-publish-opensource2/src/test/resources/20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.fp",
+        File inputFPFile = new File(classLoader.getResource("20200331041254-NAVO-L2P_GHRSST-SST1m-AVHRR19_G-v02.0-fv01.0.fp").getFile());
+
+        String newCMRStr = processor.appendFootPrint(inputFPFile.getAbsolutePath(),
                 originalCmrStr);
+        JsonElement jsonElement = JsonParser.parseString(newCMRStr);
+        JsonObject cmrJsonObj = jsonElement.getAsJsonObject();
+        JsonArray gPolygonArray= cmrJsonObj.getAsJsonObject("SpatialExtent").getAsJsonObject("HorizontalSpatialDomain")
+                .getAsJsonObject("Geometry").getAsJsonArray("GPolygons");
+        assertTrue(gPolygonArray.isJsonArray());
+        assertEquals(1,gPolygonArray.size());
         System.out.println("newCMRStr: " + newCMRStr);
     }
 

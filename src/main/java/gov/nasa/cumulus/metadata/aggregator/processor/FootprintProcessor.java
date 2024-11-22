@@ -1,7 +1,10 @@
 package gov.nasa.cumulus.metadata.aggregator.processor;
 
 import com.google.gson.*;
-import com.vividsolutions.jts.geom.*;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.algorithm.CGAlgorithms;
@@ -230,7 +233,6 @@ public class FootprintProcessor extends ProcessorBase{
         GPolygonType gPolygonType = new GPolygonType();
 
         // Set Exterior Ring
-//        List<PointType> exteriorPoints = getReversedPointArray(polygon.getExteriorRing());
         List<PointType> exteriorPoints = getPointArray(polygon.getExteriorRing());
         BoundaryType boundaryType = new BoundaryType();
         boundaryType.setPoints(exteriorPoints);
@@ -243,7 +245,6 @@ public class FootprintProcessor extends ProcessorBase{
 
             for (int i = 0; i < polygon.getNumInteriorRing(); i++) {
                 LineString interiorRing = polygon.getInteriorRingN(i);
-//                List<PointType> interiorPoints = getReversedPointArray(interiorRing);
                 List<PointType> interiorPoints = getPointArray(interiorRing);
                 BoundaryType interiorBoundary = new BoundaryType();
                 interiorBoundary.setPoints(interiorPoints);
