@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+### Deprecated
+### Changed
+### Removed
+### Fixed
+### Security
+
+## [8.8.0]
+### Added
+### Deprecated
+### Changed
+   - Update CHANGELOG.md
+### Removed
+### Fixed
+### Security
+
+## [8.7.0]
+### Added
 - **PODAAC-6181**
   - add relatedUrl subType BROWSE IMAGE SOURCE
 - **PODAAC-6537**
