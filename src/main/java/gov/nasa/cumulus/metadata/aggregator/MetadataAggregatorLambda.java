@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -11,14 +12,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 
+import gov.nasa.cumulus.metadata.aggregator.bo.TaskConfigBO;
+import gov.nasa.cumulus.metadata.aggregator.factory.TaskConfigFactory;
 import gov.nasa.cumulus.metadata.aggregator.processor.DMRPPProcessor;
 import gov.nasa.cumulus.metadata.aggregator.processor.FootprintProcessor;
 import gov.nasa.cumulus.metadata.aggregator.processor.ImageProcessor;
-import gov.nasa.cumulus.metadata.state.MENDsIsoXMLSpatialTypeEnum;
+import gov.nasa.cumulus.metadata.aggregator.processor.RelatedUrlsProcessor;
 import gov.nasa.cumulus.metadata.state.WorkflowTypeEnum;
 import gov.nasa.cumulus.metadata.util.S3Utils;
 import org.apache.commons.io.FileUtils;
@@ -57,11 +59,7 @@ public class MetadataAggregatorLambda implements ITask {
 		 * this will help the logic in postIngestProcess function.
 		 */
 		this.setWorkFlowType((String) config.get("stateMachine"));
-		// This is a switch to determine, shall footprint, orbit or boundingbox shall be processed from iso.xml
-		// while ingesting swot collections
-		JSONArray isoXMLSpatialTypeJsonArray = (JSONArray) config.get("isoXMLSpatialType");
-		HashSet isoXMLSpatialTypeHashSet = createIsoXMLSpatialTypeSet(isoXMLSpatialTypeJsonArray);
-
+		TaskConfigBO taskConfigBO = TaskConfigFactory.createTaskConfigBO(config);
 
 		String isoRegex = (String) config.get("isoRegex");
 		String archiveXmlRegex = (String) config.get("archiveXmlRegex");
@@ -81,7 +79,7 @@ public class MetadataAggregatorLambda implements ITask {
 		}
 
 		/*
-		Typically should only have 1 file tagged with "Data"
+		Typically should only have 1 file tagged as "data"
 		*/
 		//data location
 		String s3Location = null;
@@ -154,8 +152,7 @@ public class MetadataAggregatorLambda implements ITask {
 
 		MetadataFilesToEcho mtfe;
         boolean isIsoFile = (iso != null);
-
-        mtfe = new MetadataFilesToEcho(isIsoFile, isoXMLSpatialTypeHashSet);
+		mtfe = new MetadataFilesToEcho(isIsoFile, taskConfigBO.getIsoXMLSpatialTypeHashSet());
 		//set the name/granuleId
 		mtfe.getGranule().setName(granuleId);
         mtfe.setDatasetValues(collectionName, collectionVersion, rangeIs360, boundingBox, additionalAttributes);
@@ -190,20 +187,29 @@ public class MetadataAggregatorLambda implements ITask {
 			}
 		}
 
-		//write UMM-G to file
+		/**
+		 * generate the ummg json object.  Use RelatedUrlsProcessor to append more items to RelateUrls.
+		 * See RelatedUrls java doc to know detailed logic to process payload.granules[0].files[]
+		 */
+		String cmrFilePath = "/tmp/" + granuleId + ".cmr.json";
 		try {
-			mtfe.writeJson("/tmp/" + granuleId + ".cmr.json");
+			JSONObject granuleJson = mtfe.createJson();
+			if(taskConfigBO.getSubTypeHashArray().size() > 0) {
+				RelatedUrlsProcessor relatedUrlsProcessor = new RelatedUrlsProcessor();
+				granuleJson = relatedUrlsProcessor.appendSubTypes(granuleJson, taskConfigBO, files);
+			}
+			FileUtils.writeStringToFile(new File(cmrFilePath), granuleJson.toJSONString(), StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			AdapterLogger.LogError(this.className + " mtfe.writeJson error:" + e.getMessage());
 			e.printStackTrace();
 			throw e;
 		}
 
-		//copy new file to S3
 		/*
+		 * Upload cmr.json to s3 bucket
 		 * Add UMM-G file to payload/file objects
 		 */
-		File cmrFile = new File("/tmp/" + granuleId + ".cmr.json");
+		File cmrFile = new File(cmrFilePath);
 		s3Utils.upload(region, internalBucket,
 				Paths.get(stagingDirectory, "/" + granuleId + ".cmr.json").toString(),
 				cmrFile);
@@ -237,34 +243,6 @@ public class MetadataAggregatorLambda implements ITask {
 		}
 		return returnable.toJSONString();
 	}
-
-	public HashSet<MENDsIsoXMLSpatialTypeEnum> createIsoXMLSpatialTypeSet(JSONArray isoXMLSpatialTypeConfigJSONArray) throws IllegalArgumentException{
-		HashSet<MENDsIsoXMLSpatialTypeEnum> isoSpatialTypes = new HashSet<>();
-		// if not containing isoXMLTypes, then return an empty HashSet
-		if(isoXMLSpatialTypeConfigJSONArray == null || isoXMLSpatialTypeConfigJSONArray.size()==0) {
-			return isoSpatialTypes;
-		}
-		isoXMLSpatialTypeConfigJSONArray.forEach(item -> {
-			String t = (String) item;
-			MENDsIsoXMLSpatialTypeEnum en = MENDsIsoXMLSpatialTypeEnum.getEnum(getIsoXMLSpatialTypeStr(t));
-			isoSpatialTypes.add(en);
-		});
-		AdapterLogger.LogDebug(this.className + " isoSpatialTypes HashSet: " + isoSpatialTypes);
-		return isoSpatialTypes;
-	}
-
-	public String getIsoXMLSpatialTypeStr(String token) {
-		final String trimmedToken = StringUtils.trim(token);
-		String s;
-		try {
-			s = MENDsIsoXMLSpatialTypeEnum.getEnumValuList().stream()
-					.filter(e -> StringUtils.equals(trimmedToken, e)).findFirst().get();
-		} catch (java.util.NoSuchElementException e) {
-			s = "";
-		}
-		return s;
-	}
-
 	/**
 	 * get S3 fileStaging direction from S3 full key
 	 *

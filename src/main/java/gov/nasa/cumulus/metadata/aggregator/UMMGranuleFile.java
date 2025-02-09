@@ -63,6 +63,9 @@ public class UMMGranuleFile {
         this(granule, dataset,rangeIs360, new HashSet<MENDsIsoXMLSpatialTypeEnum>() );
     }
 
+    public UMMGranuleFile() {
+    }
+
     public UMMGranuleFile(Granule granule, Dataset dataset, boolean rangeIs360,
                           HashSet<MENDsIsoXMLSpatialTypeEnum> inputIsoXMLSpatialTypeEnumHashSet) {
         this.granule = granule;

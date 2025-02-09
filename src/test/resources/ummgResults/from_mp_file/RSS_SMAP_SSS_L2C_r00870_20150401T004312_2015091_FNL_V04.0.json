@@ -1,0 +1,57 @@
+{
+  "TemporalExtent": {
+    "RangeDateTime": {
+      "EndingDateTime": "2015-04-01T02:24:53.000Z",
+      "BeginningDateTime": "2015-04-01T00:43:12.000Z"
+    }
+  },
+  "MetadataSpecification": {
+    "Version": "1.6.6",
+    "URL": "https://cdn.earthdata.nasa.gov/umm/granule/v1.6.6",
+    "Name": "UMM-G"
+  },
+  "OrbitCalculatedSpatialDomains": [
+    {
+      "OrbitNumber": 870
+    }
+  ],
+  "ProviderDates": [
+    {
+      "Type": "Insert",
+      "Date": "2024-04-17T00:46:13.029Z"
+    },
+    {
+      "Type": "Update",
+      "Date": "2024-04-17T00:46:13.041Z"
+    }
+  ],
+  "SpatialExtent": {
+    "HorizontalSpatialDomain": {
+      "Geometry": {
+        "BoundingRectangles": [
+          {
+            "WestBoundingCoordinate": 0.006,
+            "SouthBoundingCoordinate": -86.607,
+            "EastBoundingCoordinate": 359.993,
+            "NorthBoundingCoordinate": 86.515
+          }
+        ]
+      }
+    }
+  },
+  "DataGranule": {
+    "DayNightFlag": "Unspecified",
+    "ProductionDateTime": "2019-07-28T13:29:28.000Z"
+  },
+  "CollectionReference": {
+    "Version": "4.2",
+    "ShortName": "MODIS_T-JPL-L2P-v2014.0"
+  },
+  "RelatedUrls": [
+    {
+      "Type": "GET DATA",
+      "Description": "The base directory location for the granule.",
+      "URL": "s3://a/path/to/s3"
+    }
+  ]
+}

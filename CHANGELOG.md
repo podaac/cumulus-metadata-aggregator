@@ -5,12 +5,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+### Deprecated
+### Changed
+### Removed
+### Fixed
+### Security
+
+## [8.8.0]
+### Added
+### Deprecated
+### Changed
+   - Update CHANGELOG.md
+### Removed
+### Fixed
+### Security
+
+## [8.7.0]
+### Added
+- **PODAAC-6181**
+  - add relatedUrl subType BROWSE IMAGE SOURCE
+- **PODAAC-6537**
+  - New code to work with Multi polygon
+### Deprecated
+### Changed
+- **PODAAC-6185**
+  - java 11->17
+### Removed
+### Fixed
+### Security
+
 ## [8.6.0]
 ### Added
 - **PODAAC-5876**
   - Update to use CMA 2.0.0, thus allowing 2.0.3 layer for lambda
   - Update build to use java 11
   - To generate java 11 compatible UMMG schema POJOs, jsonschema2pojo shall make use of command line parameter: --target-version 1.11 
+- **PODAAC-6169**
+  - SWOT iso.xml
+  - OPERA iso.xml
+  - SWOT archive.xml
+  - .mp
+  - SWOT CalVal XML
+  - Does/does not cross the IDL
 ### Deprecated
 ### Removed
 ### Fixed

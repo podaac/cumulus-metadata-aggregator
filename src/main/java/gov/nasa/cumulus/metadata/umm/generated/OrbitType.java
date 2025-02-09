@@ -3,6 +3,7 @@ package gov.nasa.cumulus.metadata.umm.generated;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.processing.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,6 +12,7 @@ import com.google.gson.annotations.SerializedName;
  * This entity stores orbital coverage information of the granule. This coverage is an alternative way of expressing granule spatial coverage. This information supports orbital backtrack searching on a granule.
  * 
  */
+@Generated("jsonschema2pojo")
 public class OrbitType {
 
     /**
@@ -36,7 +38,7 @@ public class OrbitType {
      */
     @SerializedName("StartDirection")
     @Expose
-    private OrbitType.OrbitDirectionTypeEnum startDirection;
+    private OrbitDirectionTypeEnum startDirection;
     /**
      * The latitude value of a spatially referenced point, in degrees. Latitude values range from -90 to 90.
      * (Required)
@@ -52,7 +54,7 @@ public class OrbitType {
      */
     @SerializedName("EndDirection")
     @Expose
-    private OrbitType.OrbitDirectionTypeEnum endDirection;
+    private OrbitDirectionTypeEnum endDirection;
 
     /**
      * The longitude value of a spatially referenced point, in degrees. Longitude values range from -180 to 180.
@@ -95,7 +97,7 @@ public class OrbitType {
      * (Required)
      * 
      */
-    public OrbitType.OrbitDirectionTypeEnum getStartDirection() {
+    public OrbitDirectionTypeEnum getStartDirection() {
         return startDirection;
     }
 
@@ -104,7 +106,7 @@ public class OrbitType {
      * (Required)
      * 
      */
-    public void setStartDirection(OrbitType.OrbitDirectionTypeEnum startDirection) {
+    public void setStartDirection(OrbitDirectionTypeEnum startDirection) {
         this.startDirection = startDirection;
     }
 
@@ -131,7 +133,7 @@ public class OrbitType {
      * (Required)
      * 
      */
-    public OrbitType.OrbitDirectionTypeEnum getEndDirection() {
+    public OrbitDirectionTypeEnum getEndDirection() {
         return endDirection;
     }
 
@@ -140,7 +142,7 @@ public class OrbitType {
      * (Required)
      * 
      */
-    public void setEndDirection(OrbitType.OrbitDirectionTypeEnum endDirection) {
+    public void setEndDirection(OrbitDirectionTypeEnum endDirection) {
         this.endDirection = endDirection;
     }
 
@@ -204,6 +206,7 @@ public class OrbitType {
      * Orbit start and end direction. A for ascending orbit and D for descending.
      * 
      */
+    @Generated("jsonschema2pojo")
     public enum OrbitDirectionTypeEnum {
 
         @SerializedName("A")
@@ -211,10 +214,10 @@ public class OrbitType {
         @SerializedName("D")
         D("D");
         private final String value;
-        private final static Map<String, OrbitType.OrbitDirectionTypeEnum> CONSTANTS = new HashMap<String, OrbitType.OrbitDirectionTypeEnum>();
+        private final static Map<String, OrbitDirectionTypeEnum> CONSTANTS = new HashMap<String, OrbitDirectionTypeEnum>();
 
         static {
-            for (OrbitType.OrbitDirectionTypeEnum c: values()) {
+            for (OrbitDirectionTypeEnum c: values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
@@ -232,8 +235,8 @@ public class OrbitType {
             return this.value;
         }
 
-        public static OrbitType.OrbitDirectionTypeEnum fromValue(String value) {
-            OrbitType.OrbitDirectionTypeEnum constant = CONSTANTS.get(value);
+        public static OrbitDirectionTypeEnum fromValue(String value) {
+            OrbitDirectionTypeEnum constant = CONSTANTS.get(value);
             if (constant == null) {
                 throw new IllegalArgumentException(value);
             } else {

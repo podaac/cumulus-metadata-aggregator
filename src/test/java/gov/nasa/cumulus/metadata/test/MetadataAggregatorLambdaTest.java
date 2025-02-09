@@ -1,8 +1,11 @@
 package gov.nasa.cumulus.metadata.test;
 
 import gov.nasa.cumulus.metadata.aggregator.MetadataAggregatorLambda;
+import gov.nasa.cumulus.metadata.aggregator.bo.TaskConfigBO;
+import gov.nasa.cumulus.metadata.aggregator.factory.TaskConfigFactory;
 import gov.nasa.cumulus.metadata.state.MENDsIsoXMLSpatialTypeEnum;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,22 +45,16 @@ public class MetadataAggregatorLambdaTest {
     }
 
     @Test
-    public void testGetIsoXMLSpatialTypeStr() {
-        MetadataAggregatorLambda lambda = new MetadataAggregatorLambda();
-        assertEquals(lambda.getIsoXMLSpatialTypeStr("footprint"), "footprint");
-        assertEquals(lambda.getIsoXMLSpatialTypeStr("orbit"), "orbit");
-        assertEquals(lambda.getIsoXMLSpatialTypeStr("bbox"), "bbox");
-        assertEquals(lambda.getIsoXMLSpatialTypeStr("xxxx"), "");
-    }
-
-    @Test
     public void testCreateIsoXMLSpatialTypeSet() {
         MetadataAggregatorLambda lambda = new MetadataAggregatorLambda();
         org.json.simple.JSONArray array = new JSONArray();
         array.add("footprint");
         array.add("orbit");
+        JSONObject config = new JSONObject();
+        config.put("isoXMLSpatialType", array);
+        TaskConfigBO taskConfigBO = TaskConfigFactory.createTaskConfigBO(config);
         //HashSet<MENDsIsoXMLSpatialTypeEnum> h = lambda.createIsoXMLSpatialTypeSet("[footprint,orbit]");
-        HashSet<MENDsIsoXMLSpatialTypeEnum> h = lambda.createIsoXMLSpatialTypeSet(array);
+        HashSet<MENDsIsoXMLSpatialTypeEnum> h = taskConfigBO.getIsoXMLSpatialTypeHashSet();
         assertTrue(h.contains(MENDsIsoXMLSpatialTypeEnum.FOOTPRINT));
         assertTrue(h.contains(MENDsIsoXMLSpatialTypeEnum.ORBIT));
         assertFalse(h.contains(MENDsIsoXMLSpatialTypeEnum.BBOX));
@@ -69,8 +66,10 @@ public class MetadataAggregatorLambdaTest {
         array.add("bbox");
         array.add("eebb");
         array.add("ccmm");
-        //h = lambda.createIsoXMLSpatialTypeSet("[footprint,orbit,bbox,eebb,ccmm]");
-        h = lambda.createIsoXMLSpatialTypeSet(array);
+        config = new JSONObject();
+        config.put("isoXMLSpatialType", array);
+        taskConfigBO = TaskConfigFactory.createTaskConfigBO(config);
+        h = taskConfigBO.getIsoXMLSpatialTypeHashSet();
         assertTrue(h.contains(MENDsIsoXMLSpatialTypeEnum.FOOTPRINT));
         assertTrue(h.contains(MENDsIsoXMLSpatialTypeEnum.ORBIT));
         assertTrue(h.contains(MENDsIsoXMLSpatialTypeEnum.BBOX));

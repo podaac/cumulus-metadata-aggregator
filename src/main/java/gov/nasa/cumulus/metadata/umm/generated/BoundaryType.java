@@ -3,6 +3,7 @@ package gov.nasa.cumulus.metadata.umm.generated;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.processing.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,6 +12,7 @@ import com.google.gson.annotations.SerializedName;
  * A boundary is set of points connected by straight lines representing a polygon on the earth. It takes a minimum of three points to make a boundary. Points must be specified in counter-clockwise order and closed (the first and last vertices are the same).
  * 
  */
+@Generated("jsonschema2pojo")
 public class BoundaryType {
 
     /**

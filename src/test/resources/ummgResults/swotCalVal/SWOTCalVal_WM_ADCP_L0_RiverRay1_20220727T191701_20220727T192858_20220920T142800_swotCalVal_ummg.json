@@ -1,0 +1,46 @@
+{
+  "TemporalExtent": {
+    "RangeDateTime": {
+      "EndingDateTime": "2022-07-27T19:28:58.000Z",
+      "BeginningDateTime": "2022-07-27T19:17:01.000Z"
+    }
+  },
+  "MetadataSpecification": {
+    "Version": "1.6.6",
+    "URL": "https://cdn.earthdata.nasa.gov/umm/granule/v1.6.6",
+    "Name": "UMM-G"
+  },
+  "GranuleUR": "SWOTCalVal_WM_ADCP_L0_RiverRay1_20220727T191701_20220727T192858_20220920T142800",
+  "ProviderDates": [
+    {
+      "Type": "Insert",
+      "Date": "2024-04-16T01:22:44.289Z"
+    },
+    {
+      "Type": "Update",
+      "Date": "2024-04-16T01:22:44.295Z"
+    }
+  ],
+  "SpatialExtent": {
+    "HorizontalSpatialDomain": {
+      "Geometry": {
+        "BoundingRectangles": [
+          {
+            "WestBoundingCoordinate": -123.304,
+            "SouthBoundingCoordinate": 44.506,
+            "EastBoundingCoordinate": -123.029,
+            "NorthBoundingCoordinate": 44.697
+          }
+        ]
+      }
+    }
+  },
+  "DataGranule": {
+    "DayNightFlag": "Unspecified",
+    "ProductionDateTime": "2022-09-20T14:28:00.000Z"
+  },
+  "CollectionReference": {
+    "Version": "4.2",
+    "ShortName": "MODIS_T-JPL-L2P-v2014.0"
+  }
+}

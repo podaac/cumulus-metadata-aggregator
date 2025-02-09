@@ -3,6 +3,7 @@ package gov.nasa.cumulus.metadata.umm.generated;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import javax.annotation.processing.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,6 +12,7 @@ import com.google.gson.annotations.SerializedName;
  * This entity holds the geometry representing the spatial coverage information of a granule.
  * 
  */
+@Generated("jsonschema2pojo")
 public class GeometryType {
 
     /**

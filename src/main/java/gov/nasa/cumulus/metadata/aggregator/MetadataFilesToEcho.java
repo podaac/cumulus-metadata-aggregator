@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -99,7 +100,6 @@ public class MetadataFilesToEcho {
 				(Boolean) metadata.get("rangeIs360"),
 				null,
 				additionalAttributes);
-
 	}
 
 	/**
@@ -1074,14 +1074,14 @@ public class MetadataFilesToEcho {
 		granule.setIngestTime(new Date());
 		UMMGranuleFile granuleFile = new UMMGranuleFile(granule, dataset, rangeIs360, this.isoXMLSpatialTypeEnumHashSet);
 		JSONObject granuleJson = granuleFile.defineGranule();
+		JSONUtils.cleanJSON(granuleJson);
 		return granuleJson;
 	}
 
 	public void writeJson(String outputLocation)
 			throws IOException, ParseException, URISyntaxException{
 		JSONObject granuleJson = createJson();
-        JSONUtils.cleanJSON(granuleJson);
-        FileUtils.writeStringToFile(new File(outputLocation), granuleJson.toJSONString());
+        FileUtils.writeStringToFile(new File(outputLocation), granuleJson.toJSONString(), StandardCharsets.UTF_8);
 	}
 
 	public Dataset getDataset(){

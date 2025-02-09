@@ -1,0 +1,388 @@
+{
+  "InputGranules": [
+    "SWOT_GranulePolygons_Nom_20230213T142900_v05.json",
+    "SWOT_INT_LR_XOverCal_20231106T233827_20231107T233918_PIB0_01.nc",
+    "SWOT_L2_LR_PreCalSSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01.nc",
+    "SWOT_L2_LR_PreCalSSH_Expert_006_143_20231107T150730_20231107T155607_PIB0_01.nc",
+    "SWOT_L2_LR_PreCalSSH_Unsmoothed_006_143_20231107T150440_20231107T155606_PIB0_01.nc",
+    "SWOT_L2_LR_PreCalSSH_WindWave_006_143_20231107T150730_20231107T155607_PIB0_01.nc",
+    "SWOT_NC_Compression_L2_LR_SSH_Basic_20210728T100000_v004.yaml",
+    "SWOT_NC_Compression_L2_LR_SSH_Expert_20210728T100000_v004.yaml",
+    "SWOT_NC_Compression_L2_LR_SSH_Unsmoothed_20210728T100000_v004.yaml",
+    "SWOT_NC_Compression_L2_LR_SSH_WindWave_20210728T100000_v004.yaml",
+    "SWOT_ORF_AXXCNE20231109_104300_20230720_200750_20231124_075610"
+  ],
+  "TemporalExtent": {
+    "RangeDateTime": {
+      "EndingDateTime": "2023-11-07T15:56:22.407Z",
+      "BeginningDateTime": "2023-11-07T15:04:24.790Z"
+    }
+  },
+  "MetadataSpecification": {
+    "Version": "1.6.6",
+    "URL": "https://cdn.earthdata.nasa.gov/umm/granule/v1.6.6",
+    "Name": "UMM-G"
+  },
+  "Platforms": [
+    {
+      "Instruments": [
+        {
+          "ShortName": "KaRIn"
+        }
+      ],
+      "ShortName": "SWOT"
+    }
+  ],
+  "GranuleUR": "SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01",
+  "ProviderDates": [
+    {
+      "Type": "Insert",
+      "Date": "2024-04-15T23:00:42.217Z"
+    },
+    {
+      "Type": "Update",
+      "Date": "2024-04-15T23:00:42.217Z"
+    }
+  ],
+  "MeasuredParameters": [
+    {
+      "QAStats": {
+        "QAPercentMissingData": 0.0,
+        "QAPercentOutOfBoundsData": 0.0
+      },
+      "ParameterName": "N/A"
+    }
+  ],
+  "SpatialExtent": {
+    "HorizontalSpatialDomain": {
+      "Geometry": {
+        "GPolygons": [
+          {
+            "Boundary": {
+              "Points": [
+                {
+                  "Latitude": -77.089598228,
+                  "Longitude": -121.56652283899999
+                },
+                {
+                  "Latitude": -78.236115915,
+                  "Longitude": -121.56652283899999
+                },
+                {
+                  "Latitude": -76.876353092,
+                  "Longitude": -95.245089678
+                },
+                {
+                  "Latitude": -73.481988386,
+                  "Longitude": -76.96015316400002
+                },
+                {
+                  "Latitude": -69.017288841,
+                  "Longitude": -65.63322022
+                },
+                {
+                  "Latitude": -64.027313382,
+                  "Longitude": -58.444391250000024
+                },
+                {
+                  "Latitude": -58.761539499,
+                  "Longitude": -53.60629767299997
+                },
+                {
+                  "Latitude": -53.337452313,
+                  "Longitude": -50.161069277000024
+                },
+                {
+                  "Latitude": -47.815098058,
+                  "Longitude": -47.586810222
+                },
+                {
+                  "Latitude": -42.227832282,
+                  "Longitude": -45.583396859000004
+                },
+                {
+                  "Latitude": -36.5956463,
+                  "Longitude": -43.967991487999996
+                },
+                {
+                  "Latitude": -30.93139442,
+                  "Longitude": -42.62300134700001
+                },
+                {
+                  "Latitude": -25.243922948,
+                  "Longitude": -41.46885623999998
+                },
+                {
+                  "Latitude": -19.539745533,
+                  "Longitude": -40.44897850299998
+                },
+                {
+                  "Latitude": -13.823991705,
+                  "Longitude": -39.52101994700001
+                },
+                {
+                  "Latitude": -8.100972727,
+                  "Longitude": -38.65145055400001
+                },
+                {
+                  "Latitude": -2.374539997,
+                  "Longitude": -37.81198303999997
+                },
+                {
+                  "Latitude": 0.488816703,
+                  "Longitude": -37.395484400999976
+                },
+                {
+                  "Latitude": 6.213560933,
+                  "Longitude": -36.55337174800002
+                },
+                {
+                  "Latitude": 11.932599736,
+                  "Longitude": -35.67772328000001
+                },
+                {
+                  "Latitude": 17.641983548,
+                  "Longitude": -34.74051516100002
+                },
+                {
+                  "Latitude": 23.337243263,
+                  "Longitude": -33.70876345900001
+                },
+                {
+                  "Latitude": 29.013029157,
+                  "Longitude": -32.54118567799998
+                },
+                {
+                  "Latitude": 34.662546094,
+                  "Longitude": -31.183259725000028
+                },
+                {
+                  "Latitude": 40.276622422,
+                  "Longitude": -29.559408804999975
+                },
+                {
+                  "Latitude": 45.842100123,
+                  "Longitude": -27.559952510000016
+                },
+                {
+                  "Latitude": 51.338911739,
+                  "Longitude": -25.018224615999998
+                },
+                {
+                  "Latitude": 56.734470077,
+                  "Longitude": -21.668558564000023
+                },
+                {
+                  "Latitude": 61.972216352,
+                  "Longitude": -17.066154213999994
+                },
+                {
+                  "Latitude": 66.946763054,
+                  "Longitude": -10.433090223000022
+                },
+                {
+                  "Latitude": 71.447935666,
+                  "Longitude": -0.39442901799998253
+                },
+                {
+                  "Latitude": 75.044865485,
+                  "Longitude": 15.185708156
+                },
+                {
+                  "Latitude": 76.968276197,
+                  "Longitude": 37.662916096
+                },
+                {
+                  "Latitude": 78.102910198,
+                  "Longitude": 36.899181012
+                },
+                {
+                  "Latitude": 76.019975969,
+                  "Longitude": 12.769937871
+                },
+                {
+                  "Latitude": 72.220320073,
+                  "Longitude": -3.1137959949999754
+                },
+                {
+                  "Latitude": 67.558606653,
+                  "Longitude": -12.942241278999973
+                },
+                {
+                  "Latitude": 62.468077627,
+                  "Longitude": -19.285798596999996
+                },
+                {
+                  "Latitude": 57.14621816,
+                  "Longitude": -23.631973963999997
+                },
+                {
+                  "Latitude": 51.688178369,
+                  "Longitude": -26.775112310999987
+                },
+                {
+                  "Latitude": 46.143853744,
+                  "Longitude": -29.154443990999994
+                },
+                {
+                  "Latitude": 40.541623404,
+                  "Longitude": -31.02701495299999
+                },
+                {
+                  "Latitude": 34.898867444,
+                  "Longitude": -32.552058708000004
+                },
+                {
+                  "Latitude": 29.226993856,
+                  "Longitude": -33.833589115999985
+                },
+                {
+                  "Latitude": 23.534015403,
+                  "Longitude": -34.94304256800001
+                },
+                {
+                  "Latitude": 17.825953694,
+                  "Longitude": -35.93198489600002
+                },
+                {
+                  "Latitude": 12.107646429,
+                  "Longitude": -36.83964491199998
+                },
+                {
+                  "Latitude": 6.383237199,
+                  "Longitude": -37.69765486900002
+                },
+                {
+                  "Latitude": 0.656492138,
+                  "Longitude": -38.533258386
+                },
+                {
+                  "Latitude": -2.206626058,
+                  "Longitude": -38.950569207
+                },
+                {
+                  "Latitude": -7.930093263,
+                  "Longitude": -39.79983851100002
+                },
+                {
+                  "Latitude": -13.646733081,
+                  "Longitude": -40.69051906300001
+                },
+                {
+                  "Latitude": -19.352469895,
+                  "Longitude": -41.65184012899999
+                },
+                {
+                  "Latitude": -25.042615437,
+                  "Longitude": -42.71887793000002
+                },
+                {
+                  "Latitude": -30.711458165,
+                  "Longitude": -43.93628115199999
+                },
+                {
+                  "Latitude": -36.351610213,
+                  "Longitude": -45.36390657999999
+                },
+                {
+                  "Latitude": -41.952914779,
+                  "Longitude": -47.08588716700001
+                },
+                {
+                  "Latitude": -47.500530492,
+                  "Longitude": -49.226003091999985
+                },
+                {
+                  "Latitude": -52.971396993,
+                  "Longitude": -51.975021656000024
+                },
+                {
+                  "Latitude": -58.327328868,
+                  "Longitude": -55.64154334599999
+                },
+                {
+                  "Latitude": -63.500646942,
+                  "Longitude": -60.749701372000004
+                },
+                {
+                  "Latitude": -68.362496198,
+                  "Longitude": -68.224467973
+                },
+                {
+                  "Latitude": -72.651811342,
+                  "Longitude": -79.67691136100001
+                },
+                {
+                  "Latitude": -75.841080029,
+                  "Longitude": -97.33596427600003
+                },
+                {
+                  "Latitude": -77.089598228,
+                  "Longitude": -121.56652283899999
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "Track": {
+        "Cycle": 6,
+        "Passes": [
+          {
+            "Pass": 143
+          }
+        ]
+      }
+    }
+  },
+  "PGEVersionClass": {
+    "PGEName": "PGE_L2_LR_SSH",
+    "PGEVersion": "4.3.0"
+  },
+  "DataGranule": {
+    "DayNightFlag": "Unspecified",
+    "Identifiers": [
+      {
+        "Identifier": "SWOT_L2_LR_SSH_Basic_006_143_20231107T150730_20231107T155607_PIB0_01.nc",
+        "IdentifierType": "ProducerGranuleId"
+      },
+      {
+        "Identifier": "PIB0",
+        "IdentifierType": "CRID"
+      },
+      {
+        "Identifier": "1.1",
+        "IdentifierType": "Other",
+        "IdentifierName": "SASVersionId"
+      },
+      {
+        "Identifier": "4.3.0",
+        "IdentifierType": "Other",
+        "IdentifierName": "PGEVersionId"
+      },
+      {
+        "Identifier": "ICV01 CollectionVersion filler",
+        "IdentifierType": "Other",
+        "IdentifierName": "ScienceAlgorithmVersionId"
+      },
+      {
+        "Identifier": "01",
+        "IdentifierType": "Other",
+        "IdentifierName": "ProductCounter"
+      }
+    ],
+    "ReprocessingPlanned": "None",
+    "ProductionDateTime": "2023-11-10T01:03:13.602Z"
+  },
+  "CollectionReference": {
+    "Version": "4.2",
+    "ShortName": "MODIS_T-JPL-L2P-v2014.0"
+  },
+  "RelatedUrls": [
+    {
+      "Type": "GET DATA",
+      "Description": "The base directory location for the granule.",
+      "URL": "s3://fake_bucket/fake_dir/fake.nc.iso.xml"
+    }
+  ]
+}
