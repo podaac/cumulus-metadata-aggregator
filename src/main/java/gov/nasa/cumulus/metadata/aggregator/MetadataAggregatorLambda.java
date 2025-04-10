@@ -64,21 +64,12 @@ public class MetadataAggregatorLambda implements ITask {
 		HashSet isoXMLSpatialTypeHashSet = createIsoXMLSpatialTypeSet(isoXMLSpatialTypeJsonArray);
 
 		Pattern isoRegexPat;
-		Pattern archiveXmlRegexPat;
-		Pattern calValXmlRegexPat;
-		
 		String isoRegex = (String) config.get("isoRegex");
 		if (isoRegex != null) {
 			isoRegexPat = Pattern.compile(isoRegex);
 		} 
 		String archiveXmlRegex = (String) config.get("archiveXmlRegex");
-		if (archiveXmlRegex != null) {
-			archiveXmlRegexPat = Pattern.compile(archiveXmlRegex);
-		}
 		String calValXmlRegex = (String) config.get("calValXmlRegex");
-		if (calValXmlRegex != null) {
-			calValXmlRegexPat = Pattern.compile(calValXmlRegex);
-		}
 		String granuleId = (String) config.get("granuleId");
 		context.getLogger().log("Started processing: " + granuleId);
 		String internalBucket = (String) config.get("internalBucket");
@@ -147,10 +138,10 @@ public class MetadataAggregatorLambda implements ITask {
 			} else if (filename.endsWith(".xfdumanifest.xml")) {
 				xfdumanifest = s3Utils.download(region, (String) file.get("bucket"), key,
 						Paths.get("/tmp", filename).toString());
-			} else if (archiveXmlRegexPat != null && archiveXmlRegexPat.matcher(filename).find()) {
+			} else if (archiveXmlRegex != null && filename.matches(archiveXmlRegex)) {
 				archiveXml = s3Utils.download(region, (String) file.get("bucket"), key,
 						Paths.get("/tmp", filename).toString());
-			} else if (calValXmlRegexPat != null && calValXmlRegexPat.matcher(filename).find()) {
+			} else if (calValXmlRegex != null && filename.matches(calValXmlRegex)) {
                 AdapterLogger.LogDebug(this.className + " download CalVal XML from bucket:" +
                         file.get("bucket") + "  key" + file.get("key") + " to:" + Paths.get("/tmp", filename));
                 calValXml = s3Utils.download(region, (String) file.get("bucket"), key,
