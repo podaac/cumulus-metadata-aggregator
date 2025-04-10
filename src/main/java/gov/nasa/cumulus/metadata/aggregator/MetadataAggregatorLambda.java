@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Pattern;
 
 import gov.nasa.cumulus.metadata.aggregator.processor.DMRPPProcessor;
 import gov.nasa.cumulus.metadata.aggregator.processor.FootprintProcessor;
@@ -62,10 +63,22 @@ public class MetadataAggregatorLambda implements ITask {
 		JSONArray isoXMLSpatialTypeJsonArray = (JSONArray) config.get("isoXMLSpatialType");
 		HashSet isoXMLSpatialTypeHashSet = createIsoXMLSpatialTypeSet(isoXMLSpatialTypeJsonArray);
 
-
+		Pattern isoRegexPat;
+		Pattern archiveXmlRegexPat;
+		Pattern calValXmlRegexPat;
+		
 		String isoRegex = (String) config.get("isoRegex");
+		if (isoRegex != null) {
+			isoRegexPat = Pattern.compile(isoRegex);
+		} 
 		String archiveXmlRegex = (String) config.get("archiveXmlRegex");
+		if (archiveXmlRegex != null) {
+			archiveXmlRegexPat = Pattern.compile(archiveXmlRegex);
+		}
 		String calValXmlRegex = (String) config.get("calValXmlRegex");
+		if (calValXmlRegex != null) {
+			calValXmlRegexPat = Pattern.compile(calValXmlRegex);
+		}
 		String granuleId = (String) config.get("granuleId");
 		context.getLogger().log("Started processing: " + granuleId);
 		String internalBucket = (String) config.get("internalBucket");
@@ -126,7 +139,7 @@ public class MetadataAggregatorLambda implements ITask {
 				footprint = s3Utils.download(region, (String) file.get("bucket"), key,
 						Paths.get("/tmp", filename).toString());
 				objectList.add(f);
-			} else if (isoRegex != null && filename.matches(isoRegex)) {
+			} else if (isoRegexPat != null && isoRegexPat.matcher(filename).find()) {
 				AdapterLogger.LogDebug(this.className + " download isoRegrex from bucket:" + file.get("bucket") +
 						"  key" + file.get("key") + " to:" + Paths.get("/tmp", filename));
 				iso = s3Utils.download(region, (String) file.get("bucket"), key,
@@ -134,10 +147,10 @@ public class MetadataAggregatorLambda implements ITask {
 			} else if (filename.endsWith(".xfdumanifest.xml")) {
 				xfdumanifest = s3Utils.download(region, (String) file.get("bucket"), key,
 						Paths.get("/tmp", filename).toString());
-			} else if (archiveXmlRegex != null && filename.matches(archiveXmlRegex)) {
+			} else if (archiveXmlRegexPat != null && archiveXmlRegexPat.matcher(filename).find()) {
 				archiveXml = s3Utils.download(region, (String) file.get("bucket"), key,
 						Paths.get("/tmp", filename).toString());
-			} else if (calValXmlRegex != null && filename.matches(calValXmlRegex)) {
+			} else if (calValXmlRegexPat != null && calValXmlRegexPat.matcher(filename).find()) {
                 AdapterLogger.LogDebug(this.className + " download CalVal XML from bucket:" +
                         file.get("bucket") + "  key" + file.get("key") + " to:" + Paths.get("/tmp", filename));
                 calValXml = s3Utils.download(region, (String) file.get("bucket"), key,
