@@ -323,8 +323,10 @@ public class FootprintProcessor extends ProcessorBase{
         }
 
         // Check if coordinates are in clockwise order and reverse if needed
-        if (!CGAlgorithms.isCCW(coordinates)) {
-            coordinates = reverseCoordinates(coordinates);
+        if (coordinates.length > 3) {
+            if (!CGAlgorithms.isCCW(coordinates)) {
+                coordinates = reverseCoordinates(coordinates);
+            }
         }
 
         for (Coordinate coordinate : coordinates) {

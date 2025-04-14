@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 ### Deprecated
 ### Changed
+- **PODAAC-6729**
+   - Added a check coordinates length when checking if footprint points are counter clockwise
 ### Removed
 ### Fixed
 ### Security
