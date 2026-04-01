@@ -3,7 +3,6 @@ package gov.nasa.cumulus.metadata.umm.generated;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.processing.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,12 +11,11 @@ import com.google.gson.annotations.SerializedName;
  * This entity contains the type and value for the granule's vertical spatial domain.
  * 
  */
-@Generated("jsonschema2pojo")
 public class VerticalSpatialDomainType {
 
     @SerializedName("Type")
     @Expose
-    private VerticalSpatialDomainTypeEnum type;
+    private VerticalSpatialDomainType.VerticalSpatialDomainTypeEnum type;
     /**
      * Describes the extent of the area of vertical space covered by the granule. Use this for Atmosphere profiles or for a specific value.
      * 
@@ -45,13 +43,13 @@ public class VerticalSpatialDomainType {
      */
     @SerializedName("Unit")
     @Expose
-    private Unit unit;
+    private VerticalSpatialDomainType.Unit unit;
 
-    public VerticalSpatialDomainTypeEnum getType() {
+    public VerticalSpatialDomainType.VerticalSpatialDomainTypeEnum getType() {
         return type;
     }
 
-    public void setType(VerticalSpatialDomainTypeEnum type) {
+    public void setType(VerticalSpatialDomainType.VerticalSpatialDomainTypeEnum type) {
         this.type = type;
     }
 
@@ -107,7 +105,7 @@ public class VerticalSpatialDomainType {
      * Describes the unit of the vertical extent value.
      * 
      */
-    public Unit getUnit() {
+    public VerticalSpatialDomainType.Unit getUnit() {
         return unit;
     }
 
@@ -115,7 +113,7 @@ public class VerticalSpatialDomainType {
      * Describes the unit of the vertical extent value.
      * 
      */
-    public void setUnit(Unit unit) {
+    public void setUnit(VerticalSpatialDomainType.Unit unit) {
         this.unit = unit;
     }
 
@@ -179,7 +177,6 @@ public class VerticalSpatialDomainType {
      * Describes the unit of the vertical extent value.
      * 
      */
-    @Generated("jsonschema2pojo")
     public enum Unit {
 
         @SerializedName("Fathoms")
@@ -203,10 +200,10 @@ public class VerticalSpatialDomainType {
         @SerializedName("InchesOfWater")
         INCHES_OF_WATER("InchesOfWater");
         private final String value;
-        private final static Map<String, Unit> CONSTANTS = new HashMap<String, Unit>();
+        private final static Map<String, VerticalSpatialDomainType.Unit> CONSTANTS = new HashMap<String, VerticalSpatialDomainType.Unit>();
 
         static {
-            for (Unit c: values()) {
+            for (VerticalSpatialDomainType.Unit c: values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
@@ -224,8 +221,8 @@ public class VerticalSpatialDomainType {
             return this.value;
         }
 
-        public static Unit fromValue(String value) {
-            Unit constant = CONSTANTS.get(value);
+        public static VerticalSpatialDomainType.Unit fromValue(String value) {
+            VerticalSpatialDomainType.Unit constant = CONSTANTS.get(value);
             if (constant == null) {
                 throw new IllegalArgumentException(value);
             } else {
@@ -235,7 +232,6 @@ public class VerticalSpatialDomainType {
 
     }
 
-    @Generated("jsonschema2pojo")
     public enum VerticalSpatialDomainTypeEnum {
 
         @SerializedName("Atmosphere Layer")
@@ -247,10 +243,10 @@ public class VerticalSpatialDomainType {
         @SerializedName("Depth")
         DEPTH("Depth");
         private final String value;
-        private final static Map<String, VerticalSpatialDomainTypeEnum> CONSTANTS = new HashMap<String, VerticalSpatialDomainTypeEnum>();
+        private final static Map<String, VerticalSpatialDomainType.VerticalSpatialDomainTypeEnum> CONSTANTS = new HashMap<String, VerticalSpatialDomainType.VerticalSpatialDomainTypeEnum>();
 
         static {
-            for (VerticalSpatialDomainTypeEnum c: values()) {
+            for (VerticalSpatialDomainType.VerticalSpatialDomainTypeEnum c: values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
@@ -268,8 +264,8 @@ public class VerticalSpatialDomainType {
             return this.value;
         }
 
-        public static VerticalSpatialDomainTypeEnum fromValue(String value) {
-            VerticalSpatialDomainTypeEnum constant = CONSTANTS.get(value);
+        public static VerticalSpatialDomainType.VerticalSpatialDomainTypeEnum fromValue(String value) {
+            VerticalSpatialDomainType.VerticalSpatialDomainTypeEnum constant = CONSTANTS.get(value);
             if (constant == null) {
                 throw new IllegalArgumentException(value);
             } else {

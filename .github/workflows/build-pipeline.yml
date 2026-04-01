@@ -18,16 +18,19 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-java@v4
         with:
-          distribution: 'adopt'
-          java-version: '17.0.12'
-      - uses: gradle/gradle-build-action@v3
+          distribution: 'temurin'
+          java-version: '25'
+      - uses: stCarolas/setup-maven@v5
         with:
-          gradle-version: 8.0.1
+          maven-version: 3.9.12
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 9.4.0
       - name: Install Python 3
         uses: actions/setup-python@v2
         with:
@@ -36,7 +39,7 @@ jobs:
         run: |
           pip3 install -r builder/requirements.txt
       - name: Extract Maven project version
-        run: echo ::set-output name=current_version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+        run: echo "current_version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)" >> "$GITHUB_OUTPUT"
         id: get-version
       - name: Show extracted Maven project version
         run: |
