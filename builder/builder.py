@@ -104,7 +104,7 @@ def process(project_dir:str, artifact_base_name:str, version:str) -> None:
     run_command('{} dependency:copy-dependencies'.format(mvn_executable))
     if gradle_executable is None:
         raise RuntimeError('gradle executable not found in PATH')
-    run_command('{} -x test build'.format(gradle_executable))
+    run_command('{} -x test build --stacktrace'.format(gradle_executable))
     logger.info('Artifact created')
     # Check if ./releases directory existed, otherwise, create
     release_dir: str = os.path.join(project_dir, 'release')

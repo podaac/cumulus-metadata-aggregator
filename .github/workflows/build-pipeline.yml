@@ -33,7 +33,7 @@ jobs:
           node-version: '22'
       - uses: gradle/actions/setup-gradle@v5
         with:
-          gradle-version: 8.10
+          gradle-version: 9.1.0
       - name: Install Python 3
         uses: actions/setup-python@v6
         with:
