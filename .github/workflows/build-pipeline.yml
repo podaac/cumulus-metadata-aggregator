@@ -3,7 +3,7 @@ name: Build
 on:
   # Triggers the workflow on push events
   push:
-    branches: [ develop, release/**, feature/**, master, main ]
+    branches: [ develop, release/**, feature/**, master ]
 
     # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -78,8 +78,8 @@ jobs:
           new_ver="${base_ver}-rc.${bump_ver}"
           echo "software_version=$new_ver" >> $GITHUB_ENV
       - name: Release version
-        # If triggered by push to the master or main branch
-        if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
+        # If triggered by push to the master branch
+        if: ${{ github.ref == 'refs/heads/master'}}
         run: |
           new_ver="${base_ver}"
           echo "software_version=$new_ver" >> $GITHUB_ENV
@@ -99,8 +99,8 @@ jobs:
           fi
           echo "ARTIFACT_PATH=$artifact_path" >> $GITHUB_ENV
       - name: Create Release
-        if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
         uses: softprops/action-gh-release@v2
+        if: ${{ startsWith(github.ref, 'refs/heads/master')  || startsWith(github.ref, 'refs/heads/release/') || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/feature/') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -114,28 +114,11 @@ jobs:
           fail_on_unmatched_files: true
           draft: false
           prerelease: false
-      - name: Create PreRelease
-        if: ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/main' }}
-        uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ env.software_version }}
-          name: Release v${{ env.software_version }} - ${{ github.ref_name }}
-          body: |
-            Changes in this release:
-            ${{ github.event.head_commit.message }}
-          files: ${{ env.ARTIFACT_PATH }}
-          overwrite_files: true
-          fail_on_unmatched_files: true
-          draft: false
-          prerelease: true
       - name: Commit Version Bump
-        # If building develop, a release branch, master or main then we commit the version bump back to the repo
+        # If building develop, a release branch, or master then we commit the version bump back to the repo
         if: |
           github.ref == 'refs/heads/develop' ||
           github.ref == 'refs/heads/master'  ||
-          github.ref == 'refs/heads/main'    ||
           startsWith(github.ref, 'refs/heads/release')
         run: |
           git config --global user.name 'podaac-cloud-IandA'
