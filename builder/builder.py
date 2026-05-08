@@ -2,12 +2,22 @@ import click
 import os
 import sys
 import logging
+import shutil
+import subprocess
+from typing import Optional
 
 TIMESTAMP_FORMAT = '%Y-%m-%dT%H:%M:%S'
 SHORT_TIMESTAMP_FORMAT = '%Y-%m-%d'
 
 logger:object = logging.getLogger('Artifact Builder ===>')
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+
+
+def run_command(command: str, cwd: Optional[str] = None) -> None:
+    logger.info('Running command: %s', command)
+    subprocess.run(command, shell=True, cwd=cwd, check=True)
+
+
 class builder:
     def __init__(self, *args, **kwargs) -> None:
         print('Builder started')
@@ -86,19 +96,15 @@ def process(project_dir:str, artifact_base_name:str, version:str) -> None:
 
     # Maven clean and TEST
     # find if TEST has Failue case equals 0 then advance otherwise, exit the program
-    os.system('{} clean'.format(mvn_executable))
-    stream_mvn_test = os.popen('{} test'.format(mvn_executable))
-    str_test_result: str = stream_mvn_test.read()
-    logger.info('Entire MVN TEST output: {}'.format(str_test_result))
-    if str_test_result.find('Failed tests:') == -1:
-        logger.info('MAVEN TEST SUCCEEDED.  Continue ...')
-    else:
-        logger.error('MAVEN TEST FAILURE.  Existing ...')
-        exit(1)
+    run_command('{} clean'.format(mvn_executable))
+    run_command('{} test'.format(mvn_executable))
+    logger.info('MAVEN TEST SUCCEEDED. Continue ...')
     # Build artifact using maven and gradle commands
     logger.info('Artifact is creating')
-    os.system('mvn dependency:copy-dependencies')
-    os.system('gradle -x test build')
+    run_command('{} dependency:copy-dependencies'.format(mvn_executable))
+    if gradle_executable is None:
+        raise RuntimeError('gradle executable not found in PATH')
+    run_command('{} -x test build'.format(gradle_executable))
     logger.info('Artifact created')
     # Check if ./releases directory existed, otherwise, create
     release_dir: str = os.path.join(project_dir, 'release')
@@ -108,9 +114,10 @@ def process(project_dir:str, artifact_base_name:str, version:str) -> None:
     # Move build artifact to release directory.
     logger.info('Moving built artifact to /release')
     build_zip:str = os.path.join(project_dir,'build/distributions/{}.zip'.format(artifact_base_name))
-    release_zip:str = os.path.join(release_dir,artifact_base_name)
-    release_zip = os.path.join(release_dir,'{}-{}.zip'.format(artifact_base_name, version))
-    os.system('mv {} {}'.format(build_zip, release_zip))
+    release_zip:str = os.path.join(release_dir,'{}-{}.zip'.format(artifact_base_name, version))
+    if not os.path.isfile(build_zip):
+        raise FileNotFoundError('Expected build artifact not found: {}'.format(build_zip))
+    shutil.move(build_zip, release_zip)
     logger.info('finished moving built artifact to /release')
 
     # create version.txt
@@ -123,7 +130,7 @@ def process(project_dir:str, artifact_base_name:str, version:str) -> None:
     # Modify the pom file and commit/push
     logger.info('Modifying pom file version to : {}'.format(version))
     pom_modify_version:str = 'mvn versions:set -DnewVersion={} versions:commit'.format(version)
-    os.system(pom_modify_version)
+    run_command(pom_modify_version)
     logger.info('Finished modifying pom file version to : {}'.format(version))
 
     # Clean up target directory

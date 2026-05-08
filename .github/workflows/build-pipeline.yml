@@ -91,7 +91,13 @@ jobs:
         run: |
           artifact_file_name="${{ env.ARTIFACT_BASE_NAME }}-${{ env.software_version }}.zip"
           echo "ARTIFACT_FILE=$artifact_file_name" >> $GITHUB_ENV
-          cp release/*.zip "$artifact_file_name"
+          artifact_path="release/$artifact_file_name"
+          if [[ ! -f "$artifact_path" ]]; then
+            echo "Expected artifact not found: $artifact_path"
+            ls -R release || true
+            exit 1
+          fi
+          echo "ARTIFACT_PATH=$artifact_path" >> $GITHUB_ENV
       - name: Create Release
         if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
         uses: softprops/action-gh-release@v2
@@ -103,7 +109,7 @@ jobs:
           body: |
             Changes in this release:
             ${{ github.event.head_commit.message }}
-          files: release/*.zip
+          files: ${{ env.ARTIFACT_PATH }}
           overwrite_files: true
           fail_on_unmatched_files: true
           draft: false
@@ -119,7 +125,7 @@ jobs:
           body: |
             Changes in this release:
             ${{ github.event.head_commit.message }}
-          files: release/*.zip
+          files: ${{ env.ARTIFACT_PATH }}
           overwrite_files: true
           fail_on_unmatched_files: true
           draft: false
