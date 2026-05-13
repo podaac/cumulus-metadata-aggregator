@@ -2,22 +2,12 @@ import click
 import os
 import sys
 import logging
-import shutil
-import subprocess
-from typing import Optional
 
 TIMESTAMP_FORMAT = '%Y-%m-%dT%H:%M:%S'
 SHORT_TIMESTAMP_FORMAT = '%Y-%m-%d'
 
 logger:object = logging.getLogger('Artifact Builder ===>')
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-
-
-def run_command(command: str, cwd: Optional[str] = None) -> None:
-    logger.info('Running command: %s', command)
-    subprocess.run(command, shell=True, cwd=cwd, check=True)
-
-
 class builder:
     def __init__(self, *args, **kwargs) -> None:
         print('Builder started')
@@ -58,9 +48,7 @@ class builder:
               help='Project working directory', required=True, type=str)
 @click.option('-a', '--artifact-base-name',
               help='artifact base name without .zip. Ex. cnmToGranule', required=True, type=str)
-@click.option('-v', '--version',
-              help='New version Ex. 2.0.0-shahash', required=True, type=str)
-def process(project_dir:str, artifact_base_name:str, version:str) -> None:
+def process(project_dir:str, artifact_base_name:str) -> None:
     '''
         this entire process is meant to run either through command line or inside a docker container
         which contains java 8, python 3 , pipe and zip utilities.
@@ -87,24 +75,28 @@ def process(project_dir:str, artifact_base_name:str, version:str) -> None:
     stream_pom_version = os.popen('mvn help:evaluate -Dexpression=project.version -q -DforceStdout')
     pom_version: str = stream_pom_version.read()
     logger.info('Read version from pom.xml:{}'.format(pom_version))
-    # if pom_version.lower().find('snapshot') == -1:
-    #     logger.info('There is no SNAPSHOT in pom version. Stopping build ...')
-    #     exit(0)
-    # else:
-    #     release_version:str = pom_version.lower().replace('-snapshot','')
-    #     logger.info('After removing SNAPSHOT, release version:{}'.format(release_version))
+    if pom_version.lower().find('snapshot') == -1:
+        logger.info('There is no SNAPSHOT in pom version. Stopping build ...')
+        exit(0)
+    else:
+        release_version:str = pom_version.lower().replace('-snapshot','')
+        logger.info('After removing SNAPSHOT, release version:{}'.format(release_version))
 
     # Maven clean and TEST
     # find if TEST has Failue case equals 0 then advance otherwise, exit the program
-    run_command('{} clean'.format(mvn_executable))
-    run_command('{} test'.format(mvn_executable))
-    logger.info('MAVEN TEST SUCCEEDED. Continue ...')
+    os.system('{} clean'.format(mvn_executable))
+    stream_mvn_test = os.popen('{} test'.format(mvn_executable))
+    str_test_result: str = stream_mvn_test.read()
+    logger.info('Entire MVN TEST output: {}'.format(str_test_result))
+    if str_test_result.find('Failed tests:') == -1:
+        logger.info('MAVEN TEST SUCCEEDED.  Continue ...')
+    else:
+        logger.error('MAVEN TEST FAILURE.  Existing ...')
+        exit(1)
     # Build artifact using maven and gradle commands
     logger.info('Artifact is creating')
-    run_command('{} dependency:copy-dependencies'.format(mvn_executable))
-    if gradle_executable is None:
-        raise RuntimeError('gradle executable not found in PATH')
-    run_command('{} -x test build --stacktrace'.format(gradle_executable))
+    os.system('mvn dependency:copy-dependencies')
+    os.system('gradle -x test build')
     logger.info('Artifact created')
     # Check if ./releases directory existed, otherwise, create
     release_dir: str = os.path.join(project_dir, 'release')
@@ -114,24 +106,23 @@ def process(project_dir:str, artifact_base_name:str, version:str) -> None:
     # Move build artifact to release directory.
     logger.info('Moving built artifact to /release')
     build_zip:str = os.path.join(project_dir,'build/distributions/{}.zip'.format(artifact_base_name))
-    release_zip:str = os.path.join(release_dir,'{}-{}.zip'.format(artifact_base_name, version))
-    if not os.path.isfile(build_zip):
-        raise FileNotFoundError('Expected build artifact not found: {}'.format(build_zip))
-    shutil.move(build_zip, release_zip)
+    release_zip:str = os.path.join(release_dir,artifact_base_name)
+    release_zip = os.path.join(release_dir,'{}-{}.zip'.format(artifact_base_name, release_version))
+    os.system('mv {} {}'.format(build_zip, release_zip))
     logger.info('finished moving built artifact to /release')
 
     # create version.txt
-    logger.info('Opening and writing version.txt with release version: '.format(version))
+    logger.info('Opening and writing version.txt with release version: '.format(release_version))
     f = open(os.path.join(release_dir,'version.txt'), "w")
-    f.write(version)
+    f.write(release_version)
     f.close()
     logger.info('Version.txt created')
 
     # Modify the pom file and commit/push
-    logger.info('Modifying pom file version to : {}'.format(version))
-    pom_modify_version:str = 'mvn versions:set -DnewVersion={} versions:commit'.format(version)
-    run_command(pom_modify_version)
-    logger.info('Finished modifying pom file version to : {}'.format(version))
+    logger.info('Modifying pom file version to : {}'.format(release_version))
+    pom_modify_version:str = 'mvn versions:set -DnewVersion={} versions:commit'.format(release_version)
+    os.system(pom_modify_version)
+    logger.info('Finished modifying pom file version to : {}'.format(release_version))
 
     # Clean up target directory
     logger.info('Final cleaning up and openup directories')
