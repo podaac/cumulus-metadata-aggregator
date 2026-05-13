@@ -5,14 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [8.11.0]
+### Added
+### Deprecated
+### Changed
+- **PODAAC-7411**
+  - Upgrade to Java 21
+### Removed
+### Fixed
+### Security
+
+## [8.10.0]
 ### Added
 ### Deprecated
 ### Changed
 - **PODAAC-6729**
    - Added a check coordinates length when checking if footprint points are counter clockwise
-- **PODAAC-7411**
-  - Upgrade to Java 21
 ### Removed
 ### Fixed
 ### Security
