@@ -96,14 +96,10 @@ jobs:
           cp release/*.zip "$artifact_file_name"
       - name: Create Release
         uses: softprops/action-gh-release@v3
-        if: ${{ startsWith(github.ref, 'refs/heads/master')  || startsWith(github.ref, 'refs/heads/release/') || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/feature/') }}
         with:
           tag_name: "v${{ env.software_version }}"
+          target_commitish: "${{ github.sha }}"
           name: "Release v${{ env.software_version }}"
-          body: |
-            Changes in this release:
-            ${{ github.event.head_commit.message }}
-          draft: false
           prerelease: ${{ ! (startsWith(github.ref, 'refs/heads/master'))}}
           files: |
             ${{ env.ARTIFACT_FILE }}
