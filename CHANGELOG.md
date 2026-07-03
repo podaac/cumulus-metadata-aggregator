@@ -10,7 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 ### Changed
 - **PODAAC-7411**
-  - Upgrade to Java 21
+  - Upgrade to JDK21
+  - Upgrade dependencies
 ### Removed
 ### Fixed
 ### Security
