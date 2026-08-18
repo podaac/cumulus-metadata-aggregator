@@ -88,7 +88,6 @@ public class ImageProcessor extends ProcessorBase{
                 if(isImageFile(filename)) {  //process image file link.
                     // If it is consolidated cumulus env.  Pull the file from CC public bucket
                     // and uplad the image file to legacy PODAAC public bucket
-                    extendedConsolidatedProcess(bucketStr, f);
                     if(StringUtils.contains(bucketStr, "cnsld-") ||
                             StringUtils.contains(bucketStr, "willow-")){
                         S3Utils s3Utils = new S3Utils();
@@ -138,6 +137,7 @@ public class ImageProcessor extends ProcessorBase{
 
                     String downloadUrl = getImageDownloadUrl(distribution_endpoint, bucketStr,
                             fileObj.get("key").getAsString());
+                    f.getAsJsonObject().addProperty("bucket", bucketStr);
 
                     // remove the related url if it already exists in related urls
                     removeExistingUrls(relatedUrls, downloadUrl);
@@ -152,7 +152,6 @@ public class ImageProcessor extends ProcessorBase{
                     if(fileObj.has("description")){
                         relatedUrlType.setDescription(fileObj.get("description").getAsString());
                     }
-
                     String relatedUrlTypeStr = gsonBuilder.toJson(relatedUrlType);
                     relatedUrls.add(JsonParser.parseString(relatedUrlTypeStr));
                 }
@@ -163,58 +162,6 @@ public class ImageProcessor extends ProcessorBase{
             AdapterLogger.LogFatal(this.className + " constructing relatedURLs error:" + ipe);
             throw ipe;
         }
-    }
-
-    protected String extendedConsolidatedProcess(String bucketStr, JsonElement f)
-    {
-        String filename = StringUtils.trim(f.getAsJsonObject().get("fileName").getAsString());
-        if(StringUtils.contains(bucketStr, "cnsld-") ||
-                StringUtils.contains(bucketStr, "willow-")){
-            S3Utils s3Utils = new S3Utils();
-            if (StringUtils.startsWith(bucketStr, "cnsld-cumulus-prod")) { //upload to podaac-ops-cumulus-public
-                // download image to local /tmp directory
-                String keyStr =  StringUtils.trim(f.getAsJsonObject().get("key").getAsString());
-                String imageFileStr = s3Utils.download(this.region, bucketStr, keyStr,
-                        Paths.get("/tmp", filename).toString());
-                if (StringUtils.startsWith(collectionName, "SWOT")){
-                    bucketStr = "podaac-swot-ops-cumulus-public";
-                    s3Utils.upload(this.region, bucketStr, keyStr, new File(imageFileStr));
-                } else {
-                    bucketStr = "podaac-ops-cumulus-public";
-                    s3Utils.upload(this.region, bucketStr, keyStr, new File(imageFileStr));
-                }
-            } else if(StringUtils.startsWith(bucketStr, "cnsld-cumulus-uat")){ // upload to podaac-uat-cumulus-public
-                // download image to local /tmp directory
-                AdapterLogger.LogDebug(this.className + " UAT bucketStr: " + bucketStr);
-                String keyStr =  StringUtils.trim(f.getAsJsonObject().get("key").getAsString());
-                String imageFileStr = s3Utils.download(this.region, bucketStr, keyStr,
-                        Paths.get("/tmp", filename).toString());
-                AdapterLogger.LogDebug(this.className + " Downloaded image file to /tmp: " + imageFileStr);
-                if (StringUtils.startsWith(collectionName, "SWOT")){
-                    bucketStr = "podaac-swot-uat-cumulus-public";
-                    s3Utils.upload(this.region, bucketStr, keyStr, new File(imageFileStr));
-                } else {
-                    bucketStr = "podaac-uat-cumulus-public";
-                    s3Utils.upload(this.region, bucketStr, keyStr, new File(imageFileStr));
-                    AdapterLogger.LogDebug(this.className + " Uploaded to podaac-uat-cumulus-public successfully .... ");
-                }
-            }  else { //upload to podaac-sit-cumulus-public
-                // download image to local /tmp directory
-                String keyStr =  StringUtils.trim(f.getAsJsonObject().get("key").getAsString());
-                String imageFileStr = s3Utils.download(this.region, bucketStr, keyStr,
-                        Paths.get("/tmp", filename).toString());
-                if (StringUtils.startsWith(collectionName, "SWOT")){
-                    bucketStr = "podaac-swot-sit-cumulus-public";
-                    s3Utils.upload(this.region, bucketStr, keyStr, new File(imageFileStr));
-                } else {
-                    bucketStr = "podaac-sit-cumulus-public";
-                    s3Utils.upload(this.region, bucketStr, keyStr, new File(imageFileStr));
-                }
-            }
-        } else {  //If not dealing with Consolidated Cumulus Env.
-            bucketStr = StringUtils.trim(fileObj.get("bucket").getAsString());
-        }
-        return bucketStr;
     }
 
     public boolean isDownloadUrlAlreadyExist(JsonArray relatedUrls, String downloadUrl)
