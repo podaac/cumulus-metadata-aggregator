@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **PODAAC-7411**
   - Upgrade to JDK21
   - Upgrade dependencies
+  - Image Processor enhancement for Consolidation Cumulus env.
+    - image will be copied from Consolidated Cumulus env to legacy Cumulu env.
+    - relatedUrl subType BROWSE IMAGE SOURCE will be added to the UMMG json.
 ### Removed
 ### Fixed
 ### Security
